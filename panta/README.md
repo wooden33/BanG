@@ -38,7 +38,7 @@ Using OPENAI models as an example, to run Panta,  execute the following command:
 
 ```
 export OPENAI_API_KEY='OPENAI_API_KEY'
-cd guided-test-generation/panta/panta
+cd src/
 python main.py
 ```
 

@@ -137,7 +137,7 @@ def get_d4j_subject_classes():
 
 def fill_config_and_execute(src_f, proj_name, model):
     config_data = extract_config_data(src_f, proj_name, model)
-    fill_config(config_data, filename="../panta/config.ini")
+    fill_config(config_data, filename="../src/config.ini")
     cmd = ["python", "main.py"]  # Example: Python script execution
     process = subprocess.Popen(cmd, cwd="../panta", stdout=subprocess.PIPE, text=True)
     for line in process.stdout:
