@@ -92,7 +92,7 @@ if __name__ == '__main__':
     defects4j_subjects = ["Csv-16f", "Gson-16f", "Collections-28f"]
     for p_name in defects4j_subjects:
         print(p_name)
-        with open(os.path.join("defects4j-subjects", f"{p_name}-codefiles.json"), 'r') as f:
+        with open(os.path.join("defects4j-codefiles", f"{p_name}-codefiles.json"), 'r') as f:
             data = json.load(f)
         count_1 = 0
         count_2 = 0

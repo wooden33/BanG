@@ -139,7 +139,7 @@ if __name__ == '__main__':
         proj_dir = os.path.join("../../defects4j-subjects", p_name)
         files_object, cyc_complexity, num_of_testable = analyze_code_files_at_project_level(proj_dir, language)
 
-        with open(os.path.join("defects4j-subjects", f"{p_name}-codefiles.json"), 'w') as f:
+        with open(os.path.join("defects4j-codefiles", f"{p_name}-codefiles.json"), 'w') as f:
             json.dump(files_object, f)
 
         count += 1

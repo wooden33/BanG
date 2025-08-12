@@ -157,7 +157,7 @@ if __name__ == '__main__':
                           "Time-13f", "Lang-4f", "Math-2f"]
     for p_name in defects4j_subjects:
         # print(p_name)
-        with open(os.path.join("defects4j-subjects", f"{p_name}-codefiles.json"), 'r') as f:
+        with open(os.path.join("defects4j-codefiles", f"{p_name}-codefiles.json"), 'r') as f:
             data = json.load(f)
 
         file_objects = data["src_test_exact_match"] + data["src_test_fuzz_match"] + data["src_without_tests"]
