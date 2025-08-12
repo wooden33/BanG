@@ -24,11 +24,11 @@ __pycache__/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-lance/lance/cfg/src/comex.egg-info/
+src/panta/cfg/src/comex.egg-info/
 
-lance/lance/*.json
-lance/lance/*.html
-
+src/panta/*.json
+src/panta/*.html
+poetry.lock
 .ssh/
 *.pem
 
