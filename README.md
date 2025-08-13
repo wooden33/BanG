@@ -26,17 +26,17 @@ conda create --name panta-env python=3.11
 conda activate panta-env
 ```
 
-Execute the following command to the project related dependencies:
+Execute the following command to install the project related dependencies:
 ```
 poetry install
 ```
 
-##### Export the dependencies to a file
+##### Export the dependencies to a file (optional)
 ```
 conda env export --no-builds | grep -v "^prefix: " > panta-env.yml
 ```
 
-Please update the `pyproject.toml` file with the latest dependencies, if you have added or modified any new dependencies. 
+You can update the `pyproject.toml` file with the latest dependencies, if you have added or modified any new dependencies. 
 
 ### Configuration: Select LLM Model, Source File, and Parameters
 
