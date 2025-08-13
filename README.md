@@ -38,7 +38,10 @@ conda env export --no-builds | grep -v "^prefix: " > panta-env.yml
 
 Please update the `pyproject.toml` file with the latest dependencies, if you have added or modified any new dependencies. 
 
-##### Chosing models
+### Configuration: Select LLM Model, Source File, and Parameters
+
+Choose your targeted _llm model_, _src file_, etc. The configrations can be filled in `config.ini` under `src/panta`
+
 We support various LLMs. The full list of supported models is provided below:
 - gpt-4o
 - gpt-4o-mini
@@ -47,7 +50,6 @@ We support various LLMs. The full list of supported models is provided below:
 - claude3-5
 - mistral-large
 
-Choose your targeted _llm model_, _src file_, etc. The configrations can be filled in ```config.ini```
 
 ### Running the application
 We use AWS Bedrock for open-source models (llama and mistral), you will need to set up your own aws credentials.

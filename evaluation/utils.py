@@ -16,11 +16,12 @@ def get_all_code_files(project_directory, language):
 def separate_test_code_files(code_files):
     test_file_paths = set()
     code_file_paths = set()
-    for filename in code_files:
+    for filepath in code_files:
+        filename = os.path.basename(filepath)  # get only the filename
         if 'test' in filename.lower():
-            test_file_paths.add(filename)
+            test_file_paths.add(filepath)
         else:
-            code_file_paths.add(filename)
+            code_file_paths.add(filepath)
 
     return test_file_paths, code_file_paths
 

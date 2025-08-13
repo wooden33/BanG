@@ -9,7 +9,7 @@ import logging
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.cfg.src.comex.codeviews.CFG.CFG_driver import CFGDriver
+from src.panta.cfg.src.comex.codeviews.CFG.CFG_driver import CFGDriver
 from utils import get_all_code_files, get_code_test_file_mapping, get_filename_from_path
 
 
@@ -75,7 +75,7 @@ def run_test_coverage(repo_dir_path):
 
 def get_d4j_subjects():
     d4j_subjects = []
-    with open('d4j-fixed-version.csv', 'r') as file:
+    with open('data/d4j-fixed-version.csv', 'r') as file:
         reader = csv.reader(file)
         next(reader)
 
@@ -134,9 +134,9 @@ if __name__ == '__main__':
     create_csv_file(subjects_file, header)
 
     count = 0
-    for p_name in defects4j_subjects:
+    for p_name in defects4j_subjects[:1]:
         print(p_name)
-        proj_dir = os.path.join("../../defects4j-subjects", p_name)
+        proj_dir = os.path.join("../defects4j-subjects-notests", p_name)
         files_object, cyc_complexity, num_of_testable = analyze_code_files_at_project_level(proj_dir, language)
 
         with open(os.path.join("defects4j-codefiles", f"{p_name}-codefiles.json"), 'w') as f:

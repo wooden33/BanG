@@ -10,10 +10,11 @@ from bs4 import BeautifulSoup
 
 def extract_config_data(src_file_obj, project_name, model):
     if project_name == "Gson-16f":
-        project_dir = "../../defects4j-subjects-notests/" + project_name + "/gson"
+        project_dir = "defects4j-subjects-notests/" + project_name + "/gson"
     else:
-        project_dir = "../../defects4j-subjects-notests/" + project_name
+        project_dir = "defects4j-subjects-notests/" + project_name
     src_path = src_file_obj["src_path"].replace("defects4j-subjects", "defects4j-subjects-notests")
+    src_path = src_path.lstrip("../")
     # test_path = src_file_obj["test_path"].replace("defects4j-subjects", "defects4j-subjects-notests")
     file_name = os.path.basename(src_path)
     dir_name = os.path.dirname(src_path)
@@ -70,18 +71,6 @@ def fill_config(config_data, filename="config.ini"):
     print(f"Configuration written to {filename}")
 
 
-def get_d4j_subjects():
-    d4j_subjects = []
-    with open('d4j-fixed-version.csv', 'r') as file:
-        reader = csv.reader(file)
-        next(reader)
-
-        for row in reader:
-            # Append the first column value to the list
-            d4j_subjects.append(row[0])
-    return d4j_subjects
-
-
 def read_html_file(file_name, file_path):
     with open(f"{file_path}/{file_name}", 'r', encoding='utf-8') as file:
         return file.read()
@@ -119,7 +108,7 @@ def parse_line_branch_coverage(class_name: str, prompt_type: str, file_path, mod
 
 def get_d4j_subject_classes():
     d4j_subjects = {}
-    with open('class_list.csv', 'r') as file:
+    with open('data/class_list.csv', 'r') as file:
         reader = csv.reader(file)
         next(reader)
 
@@ -137,9 +126,9 @@ def get_d4j_subject_classes():
 
 def fill_config_and_execute(src_f, proj_name, model):
     config_data = extract_config_data(src_f, proj_name, model)
-    fill_config(config_data, filename="../panta/config.ini")
-    cmd = ["python", "main.py"]  # Example: Python script execution
-    process = subprocess.Popen(cmd, cwd="../panta", stdout=subprocess.PIPE, text=True)
+    fill_config(config_data, filename="../src/panta/config.ini")
+    cmd = ["python", "-m", "panta.main"]  # Example: Python script execution
+    process = subprocess.Popen(cmd, cwd="../", stdout=subprocess.PIPE, text=True)
     for line in process.stdout:
         print(line, end='')
 

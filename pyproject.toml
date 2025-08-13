@@ -14,7 +14,6 @@ packages = [
 python = ">=3.9,<3.13"
 jinja2 = "^3.1.3"
 beautifulsoup4 = "^4.12.3"
-poetry-dynamic-versioning = "^1.3.0"
 
 # LLM Dependencies
 litellm = "1.63.2"
@@ -51,6 +50,7 @@ panta = "panta.main:main"
 
 [tool.poetry-dynamic-versioning]
 enable = true
+source = "file"
 
 [tool.poetry-dynamic-versioning.from-file]
-source = "panta/version.txt"
+source = "src/panta/version.txt"
