@@ -68,4 +68,5 @@ python -m panta.main
 ```
 
 
-## Instructions to replicate the evaluation is under `evaluation/README.md`
+## Replication
+Instructions to replicate the evaluation are under `evaluation/README.md`
