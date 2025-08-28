@@ -1,6 +1,6 @@
 # Panta: Hybrid Program Analysis-Guided Test Generation
 
-This is the replication package of our ICSE 2026 paper titled "LLM Test Generation via Iterative Hybrid Program Analysis". Read the preprint version: https://arxiv.org/abs/2503.13580
+This is the replication package of our ICSE 2026 paper titled "LLM Test Generation via Iterative Hybrid Program Analysis". Read the preprint version: https://arxiv.org/pdf/2503.13580
 
 ## Project Structure
     .
