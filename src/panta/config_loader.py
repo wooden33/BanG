@@ -11,6 +11,7 @@ SETTINGS_FILES = [
     "java_templates/test_headers_indentation_prompt.toml",
     "java_templates/analyze_suite_test_insert_line.toml",
     "java_templates/failed_test_feedback_prompt.toml",
+    "java_templates/failed_test_feedback_prompt_with_MCTS.toml",
     "python_templates/test_generation_prompt_if_test_code_already_exixts.toml",
     "python_templates/test_headers_indentation_prompt.toml",
     "python_templates/analyze_suite_test_insert_line.toml",

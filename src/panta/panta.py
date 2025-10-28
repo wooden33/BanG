@@ -55,12 +55,23 @@ class Panta:
             target_coverage=args.target_coverage,
             prompt_type=args.prompt_type,
             additional_instructions=args.additional_instructions,
+            test_generation_strategy=args.test_generation_strategy,
+            fix_type=args.fix_type,
             llm_model=args.model)
 
     def extract_test_dependency(self):
+        """
+        Extract test dependencies by running the test dependency command.
+        
+        Returns:
+            str: The output of the test dependency command, or empty string if failed.
+        """
         try:
-            stdout, stderr, exit_code, time_of_command, command_duration = CommandExecutor.run_command(
-                command=self.args.test_dependency_command, cwd=self.args.test_code_command_dir
+            stdout, stderr, exit_code, time_of_command, command_duration = (
+                CommandExecutor.run_command(
+                    command=self.args.test_dependency_command, 
+                    cwd=self.args.test_code_command_dir
+                )
             )
             output = ""
             if exit_code == 0:
@@ -74,6 +85,12 @@ class Panta:
             return ""
 
     def validate_paths(self):
+        """
+        Validate that the source code file exists and create test file if needed.
+        
+        Raises:
+            FileNotFoundError: If the source code file is not found.
+        """
         if not os.path.isfile(self.args.source_code_file):
             raise FileNotFoundError(f"Source file not found at {self.args.source_code_file}")
 
@@ -84,18 +101,22 @@ class Panta:
             os.makedirs(test_file_dir, exist_ok=True)
 
         # Create an empty test file if it does not exist
-        if not os.path.isfile(self.args.test_code_file) or os.path.getsize(self.args.test_code_file) == 0:
+        if (not os.path.isfile(self.args.test_code_file) or 
+            os.path.getsize(self.args.test_code_file) == 0):
             self.initial_test_class_skeleton(test_class_name)
 
     def initial_test_class_skeleton(self, test_class_name):
         """
-        In the case, the test class is empty, we create a test class skeleton with basic package, imports and dummy test
+        In the case, the test class is empty, we create a test class skeleton 
+        with basic package, imports and dummy test
         :return:
         """
         language = get_code_language(self.args.source_code_file)
         src_code = read_file(self.args.source_code_file)
         cfg_driver = CFGDriver(language, src_code)
-        _, node_id_to_line_numbers_mapping = line_number_to_node_id_mapping(src_code, cfg_driver.CFG_nodes)
+        _, node_id_to_line_numbers_mapping = line_number_to_node_id_mapping(
+            src_code, cfg_driver.CFG_nodes
+        )
         imports_lines = cfg_driver.file_obj["imports"]
         src_code_lines = src_code.split('\n')
         f = open(self.args.test_code_file, 'a')
@@ -146,8 +167,21 @@ class Panta:
                     self.logger.info(f"initial tests generation using baseline type of prompt")
                     generated_tests_dict, gen_token_count = self.test_gen.generate_init_tests(g_label, max_tokens=4096)
                 else:
-                    generated_tests_dict, gen_token_count = self.test_gen.generate_tests(g_label, max_tokens=4096,
-                                                                        pick_two_paths=self.args.pick_two_paths)
+                    # Check if branch coverage optimization is needed
+                    if self.test_gen.branch_missed and len(self.test_gen.branch_missed) > 0:
+                        self.logger.info(f"generating branch-focused tests to improve branch coverage")
+                        # Generate tests focused on branch coverage
+                        branch_tests_dict, branch_token_count = self.test_gen.generate_branch_focused_tests()
+                        if branch_tests_dict and branch_tests_dict.get("new_tests"):
+                            generated_tests_dict = branch_tests_dict
+                            gen_token_count = branch_token_count
+                        else:
+                            # If branch test generation fails, fall back to regular test generation
+                            generated_tests_dict, gen_token_count = self.test_gen.generate_tests(g_label, max_tokens=4096,
+                                                                                pick_two_paths=self.args.pick_two_paths)
+                    else:
+                        generated_tests_dict, gen_token_count = self.test_gen.generate_tests(g_label, max_tokens=4096,
+                                                                            pick_two_paths=self.args.pick_two_paths)
                 token_count += gen_token_count
 
                 for generated_test in (generated_tests_dict.get("new_tests") or []):

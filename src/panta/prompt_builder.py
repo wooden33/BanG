@@ -4,6 +4,7 @@ from .config_loader import get_settings
 from .templates import ADDITIONAL_INCLUDES_TEXT, ADDITIONAL_INSTRUCTIONS_TEXT, FAILED_TESTS_TEXT
 from jinja2 import Environment, StrictUndefined
 from .cfg.src.comex.codeviews.combined_graph.combined_driver import CombinedDriver
+from .cfg_branch_analyzer import CFGBranchAnalyzer
 import random
 
 from .utils import read_file
@@ -52,6 +53,8 @@ class PromptBuilder:
         self.path_history = path_history
         self.test_dependencies = test_dependencies
 
+        # Initialize CFG branch analyzer
+        self.cfg_branch_analyzer = CFGBranchAnalyzer(self.language, self.source_file)
         self.cfa_guided_methods_under_test = self.extract_cfa_info_for_each_method_under_test()
 
         self.logger = pantaLogger.initialize_logger(__name__)
@@ -86,7 +89,10 @@ class PromptBuilder:
         self.failed_test_runs = failed_test_runs
 
     def identify_method_under_tests_with_missed_lines(self, method):
-        lines = [line for node_id in method["method_declaration"]["nodes"] for line in self.cfg_node_to_line[node_id]]
+        lines = [
+            line for node_id in method["method_declaration"]["nodes"] 
+            for line in self.cfg_node_to_line[node_id]
+        ]
         method_name = method["method_declaration"]["name"]
         cyc_complexity = method["method_declaration"]["complexity"]
         method_missed_lines = []
@@ -102,15 +108,25 @@ class PromptBuilder:
     def generate_paths_to_be_covered(self, method, missed_lines, missed_branches):
         paths = method["paths"]
         candidate_paths = []
-        method_label = f"{method['method_declaration']['name']}_{method['method_declaration']['id']}"
+        method_label = (
+            f"{method['method_declaration']['name']}_"
+            f"{method['method_declaration']['id']}"
+        )
         for index, path in enumerate(paths):
             path_label = f"{method_label}_{index}"
             path_node_ids = [node['id'] for node in path["path"]]
-            path_lines = [line for node_id in path_node_ids for line in self.cfg_node_to_line[node_id]]
+            path_lines = [
+                line for node_id in path_node_ids 
+                for line in self.cfg_node_to_line[node_id]
+            ]
             path_covered_missed_lines = [value for value in missed_lines if value in path_lines]
-            path_covered_missed_branches = [value for value in missed_branches if value in path_lines]
-            path_nodes = [(self.cfg_node_to_line[node['id']], node['statement'], node['conditional']) for node in
-                          path["path"]]
+            path_covered_missed_branches = [
+                value for value in missed_branches if value in path_lines
+            ]
+            path_nodes = [
+                (self.cfg_node_to_line[node['id']], node['statement'], node['conditional']) 
+                for node in path["path"]
+            ]
             if len(path_covered_missed_lines) or len(path_covered_missed_branches):
                 path_conditions_str = ""
 
@@ -200,6 +216,8 @@ class PromptBuilder:
         Returns:
             str: The formatted prompt string.
         """
+        # generate branch coverage guidance
+        branch_coverage_guidance = self.generate_branch_coverage_guidance()
         variables = {
             "source_file_name": self.source_file_name,
             "test_file_name": self.test_file_name,
@@ -215,7 +233,8 @@ class PromptBuilder:
             "additional_instructions_text": self.additional_instructions,
             "language": self.language,
             "max_tests": MAX_TESTS_PER_RUN,
-            "processed_source_code": self.processed_source_code
+            "processed_source_code": self.processed_source_code,
+            "branch_coverage_guidance": branch_coverage_guidance
         }
 
         environment = Environment(undefined=StrictUndefined)
@@ -289,6 +308,23 @@ class PromptBuilder:
 
     def get_current_path_history(self):
         return self.path_history
+
+    def generate_branch_coverage_guidance(self) -> str:
+        """
+        generate branch coverage guidance
+        """
+        if not self.branch_missed:
+            return ""
+        # Use CFG branch analyzer to generate guidance information
+        branch_guidance = self.cfg_branch_analyzer.generate_branch_coverage_prompt(self.branch_missed)
+
+        if branch_guidance:
+            return branch_guidance
+        # If no CFG guidance, provide basic uncovered branch information
+        basic_guidance = "\n=== Branch Coverage Information ===\n"
+        basic_guidance += f"The following branch lines need coverage: {self.branch_missed}\n"
+        basic_guidance += "Please generate test cases to cover these branch conditions.\n\n"
+        return basic_guidance
 
     def build_prompt(self, coverage_enabled=False) -> dict:
         """
@@ -373,7 +409,7 @@ class PromptBuilder:
 
         return {"system": system_prompt, "user": user_prompt}
 
-    def build_prompt_for_fixing(self) -> dict:
+    def build_prompt_for_fixing(self, fix_type: str) -> dict:
         variables = {
             "source_file_name": self.source_file_name,
             "test_file_name": self.test_file_name,
@@ -385,12 +421,20 @@ class PromptBuilder:
         }
         environment = Environment(undefined=StrictUndefined)
         try:
-            system_prompt = environment.from_string(
-                get_settings().failed_test_prompt.system
-            ).render(variables)
-            user_prompt = environment.from_string(get_settings().failed_test_prompt.user).render(
-                variables
-            )
+            if fix_type == 'MCTS':
+                system_prompt = environment.from_string(
+                    get_settings().failed_test_prompt_with_MCTS.system
+                ).render(variables)
+                user_prompt = environment.from_string(get_settings().failed_test_prompt_with_MCTS.user).render(
+                    variables
+                )
+            else:
+                system_prompt = environment.from_string(
+                    get_settings().failed_test_prompt.system
+                ).render(variables)
+                user_prompt = environment.from_string(get_settings().failed_test_prompt.user).render(
+                    variables
+                )
             self.logger.debug(f"system_prompt: {system_prompt}")
             self.logger.debug(f"user_prompt: {user_prompt}")
         except Exception as e:

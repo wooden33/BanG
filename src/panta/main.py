@@ -32,6 +32,8 @@ def config_to_namespace(config):
         enable_fixing=config.getint("enable_fixing"),
         run_symprompt=config.getboolean("run_symprompt"),
         prompt_type=config.get('prompt_type'),
+        test_generation_strategy=config.get('test_generation_strategy', 'cfg_branch_analyzer'),
+        fix_type=config.get('fix_type', 'MCTS'),
         pick_two_paths=config.getboolean("pick_two_paths"),
         additional_instructions=config.get('additional_instructions')
     )

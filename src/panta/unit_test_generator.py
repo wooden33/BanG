@@ -14,6 +14,7 @@ from .utils import get_code_language
 from .yaml_parser_utils import load_yaml
 from .cfg.src.comex.codeviews.combined_graph.combined_driver import line_number_to_node_id_mapping
 from .cfg.src.comex.codeviews.CFG.CFG_driver import CFGDriver
+from .cfg_branch_analyzer import CFGBranchAnalyzer
 from .utils import read_file
 
 
@@ -56,7 +57,9 @@ class UnitTestGenerator:
                  coverage_type="jacoco",
                  target_coverage: int = 100,
                  prompt_type: str = "baseline",
-                 additional_instructions: str = ""):
+                 additional_instructions: str = "",
+                 test_generation_strategy: str = "cfg_branch_analyzer",
+                 fix_type: str = "fix"):
 
         self.relevant_line_number_to_insert_tests_after = None
         self.relevant_line_number_to_insert_imports_after = None
@@ -78,19 +81,31 @@ class UnitTestGenerator:
         self.target_coverage = target_coverage
         self.additional_instructions = additional_instructions
         self.language = get_code_language(source_code_file)
+        self.test_generation_strategy = test_generation_strategy
+        self.fix_type = fix_type
 
         self.llm_invoker = LLMInvocation(model=llm_model)
 
         self.logger = pantaLogger.initialize_logger(__name__)
-
+        self.logger.info(f"Using test generation strategy: {self.test_generation_strategy}")
+        self.logger.info(f"Using fix type: {self.fix_type}")
+        
         self.preprocessor = FilePreprocessor(self.test_code_file)
         self.failed_test_runs = []
         self.coverage_invalid_tests = []
         self.run_coverage()
         self.prompt_type = prompt_type
         self.path_history = {}
-        # self.prompt = self.build_prompt(self.prompt_type)
+        # self.prompt = self.build_prompt(self.prompt_type)  # Commented out for now
         self.prompt = ""
+        
+        # Initialize CFG branch analyzer if needed
+        if self.test_generation_strategy == "cfg_branch_analyzer":
+            self.cfg_branch_analyzer = CFGBranchAnalyzer(
+                self.language, read_file(self.source_code_file)
+            )
+        else:
+            self.cfg_branch_analyzer = None
 
     def run_coverage(self):
         """
@@ -98,8 +113,11 @@ class UnitTestGenerator:
         """
         self.logger.info(f'generate baseline coverage report: "{self.test_execution_command}"')
         try:
-            stdout, stderr, exit_code, time_of_test_execution_command, command_duration = CommandExecutor.run_command(
-                command=self.test_execution_command, cwd=self.test_code_command_dir
+            stdout, stderr, exit_code, time_of_test_execution_command, command_duration = (
+                CommandExecutor.run_command(
+                    command=self.test_execution_command, 
+                    cwd=self.test_code_command_dir
+                )
             )
 
             if exit_code != 0:
@@ -124,7 +142,8 @@ class UnitTestGenerator:
             else:
                 raise ValueError(f"Unsupported coverage type: {self.coverage_type}")
 
-            # Use the process_coverage_report method of Coverage, passing in the time the test command was executed
+            # Use the process_coverage_report method of Coverage, 
+            # passing in the time the test command was executed
             try:
                 self.lines_missed, self.branch_missed, line_percentage, branch_percentage = (
                     coverage_processor.process_coverage_report(
@@ -134,10 +153,12 @@ class UnitTestGenerator:
 
                 # Process the extracted coverage metrics
                 self.current_coverage = (line_percentage, branch_percentage)
-                self.code_coverage_report = f"Lines missed: {self.lines_missed}\n" \
-                                            f"Branches missed: {self.branch_missed}\n" \
-                                            f"Line coverage: {round(line_percentage * 100, 2)}%\n" \
-                                            f"Branch coverage: {round(branch_percentage * 100, 2)}%"
+                self.code_coverage_report = (
+                    f"Lines missed: {self.lines_missed}\n"
+                    f"Branches missed: {self.branch_missed}\n"
+                    f"Line coverage: {round(line_percentage * 100, 2)}%\n"
+                    f"Branch coverage: {round(branch_percentage * 100, 2)}%"
+                )
             except AssertionError as error:
                 self.logger.error(f"Error in coverage processing: {error}")
                 raise
@@ -151,6 +172,15 @@ class UnitTestGenerator:
 
     @staticmethod
     def get_included_files(included_files):
+        """
+        Process included files and return their content as a formatted string.
+        
+        Args:
+            included_files: List of file paths to include, or None.
+            
+        Returns:
+            str: Formatted string containing file contents, or empty string if no files.
+        """
         if included_files:
             included_files_content = []
             file_names = []
@@ -222,14 +252,24 @@ class UnitTestGenerator:
             path_history=self.path_history,
             test_dependencies=self.test_dependencies
         )
-        if prompt_type == "control":
-            prompt = self.prompt_builder.build_prompt_cfa_guided(pick_two_paths)
-            self.path_history = self.prompt_builder.get_current_path_history()
-            return prompt
-        elif prompt_type == "coverage":
-            return self.prompt_builder.build_prompt(coverage_enabled=True)
+        
+        # CFG guided test generation strategy
+        if self.test_generation_strategy == "cfg_branch_analyzer":
+            if prompt_type == "control":
+                prompt = self.prompt_builder.build_prompt_cfa_guided(pick_two_paths)
+                self.path_history = self.prompt_builder.get_current_path_history()
+                return prompt
+            elif prompt_type == "coverage":
+                return self.prompt_builder.build_prompt(coverage_enabled=True)
+            else:
+                return self.prompt_builder.build_prompt(coverage_enabled=False)
         else:
-            return self.prompt_builder.build_prompt(coverage_enabled=False)
+            # default strategy
+            self.logger.warning(f"Unknown test generation strategy: {self.test_generation_strategy}, using default")
+            if prompt_type == "coverage":
+                return self.prompt_builder.build_prompt(coverage_enabled=True)
+            else:
+                return self.prompt_builder.build_prompt(coverage_enabled=False)
 
     def initial_test_suite_analysis(self):
         """
@@ -624,7 +664,7 @@ class UnitTestGenerator:
         )
         # reset failed tests
         self.failed_test_runs = []
-        return prompt_builder.build_prompt_for_fixing()
+        return prompt_builder.build_prompt_for_fixing(self.fix_type)
 
     def fix_failed_tests(self, f_label, iter_num, max_tokens=4096):
         # Check for existence of failed tests, fix until failed tests are empty or at most 5 iterations
@@ -644,3 +684,132 @@ class UnitTestGenerator:
             except Exception as e:
                 self.logger.error(f"Error processing failed test runs: {e}")
         return fix_results_list, token_count
+    
+    def analyze_branch_coverage_opportunities(self):
+        """
+        Analyze branch coverage opportunities to provide guidance for test generation
+        """
+        if not self.branch_missed:
+            return {}
+        
+        # Use CFG branch analyzer to analyze uncovered branches
+        branch_analysis = {}
+        
+        for branch_line in self.branch_missed:
+            # Get branch information for this line
+            branch_hints = self.cfg_branch_analyzer.get_branch_coverage_hints([branch_line])
+            if branch_hints:
+                branch_analysis[branch_line] = branch_hints[0]
+        
+        return branch_analysis
+    
+    def generate_branch_focused_tests(self, method_name: str = None):
+        """
+        Generate test cases focused on branch coverage
+        """
+        branch_analysis = self.analyze_branch_coverage_opportunities()
+        
+        if not branch_analysis:
+            return {}, 0
+        
+        # Build prompt focused on branch coverage
+        branch_prompt = self.build_branch_focused_prompt(branch_analysis, method_name)
+        
+        # Generate test cases
+        tests_dict, token_count = self.generate_test_by_prompt_llm(branch_prompt, max_tokens=4096)
+        
+        return tests_dict, token_count
+    
+    def build_branch_focused_prompt(self, branch_analysis: dict, method_name: str = None) -> dict:
+        """
+        Build prompt focused on branch coverage
+        """
+        # Build branch coverage guidance information
+        branch_guidance = "\n=== Branch Coverage Guidance ===\n"
+        branch_guidance += "The following branches need special attention to improve branch coverage:\n\n"
+        
+        for line, analysis in branch_analysis.items():
+            branch_guidance += f"Line {line}: {analysis['statement']}\n"
+            branch_guidance += f"Branch type: {analysis['branch_type']}\n"
+            branch_guidance += f"Complexity: {analysis['complexity']}\n"
+            branch_guidance += "Suggested test conditions:\n"
+            for condition in analysis['suggested_test_conditions']:
+                branch_guidance += f"- {condition}\n"
+            branch_guidance += "\n"
+        
+        # Build complete prompt
+        variables = {
+            "source_file_name": self.source_code_file.split("/")[-1],
+            "test_file_name": self.test_code_file.split("/")[-1],
+            "source_file": read_file(self.source_code_file),
+            "test_file": read_file(self.test_code_file),
+            "code_coverage_report": self.code_coverage_report,
+            "branch_guidance": branch_guidance,
+            "method_name": method_name or "all methods",
+            "language": self.language
+        }
+        
+        # Use template to build prompt
+        from jinja2 import Environment
+        environment = Environment()
+        
+        system_template = """
+You are a professional unit test generator specialized in generating high-quality test cases to improve code branch coverage.
+
+Your tasks are:
+1. Analyze the branch structure in the source code
+2. Generate targeted test cases based on branch coverage guidance information
+3. Ensure test cases can cover the specified branch conditions
+4. Generate clear and executable test code
+
+Focus on:
+- True and false paths of conditional branches
+- Entry and exit conditions of loops
+- Exception handling branches
+- Boundary condition tests
+
+Please generate test cases to cover the following branches:
+{{ branch_guidance }}
+"""
+        
+        user_template = """
+Please generate test cases for the following code, with special focus on branch coverage:
+
+Source code file: {{ source_file_name }}
+Test file: {{ test_file_name }}
+
+Source code:
+```
+{{ source_file }}
+```
+
+Current test file:
+```
+{{ test_file }}
+```
+
+Code coverage report:
+```
+{{ code_coverage_report }}
+```
+
+Branch coverage guidance:
+{{ branch_guidance }}
+
+Please generate test cases to cover the above branches, ensuring:
+1. Both true and false paths of each conditional branch are tested
+2. Boundary conditions of loops are tested
+3. Exception cases are properly handled
+4. Test cases are clear and maintainable
+
+{% if method_name != "all methods" %}
+Special focus on method: {{ method_name }}
+{% endif %}
+
+Please return test cases in YAML format.
+"""
+        
+        system_prompt = environment.from_string(system_template).render(variables)
+        user_prompt = environment.from_string(user_template).render(variables)
+        
+        return {"system": system_prompt, "user": user_prompt}
