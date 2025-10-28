@@ -3,4 +3,4 @@ cd evaluation
 
 conda activate panta-env
 
-python execute_ours.py control azure-gpt-4o
+python execute_ours.py control gpt-4o

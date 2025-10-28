@@ -2,6 +2,7 @@ import time
 import random
 
 import litellm
+import openai
 
 
 class LLMInvocation:
@@ -53,13 +54,15 @@ class LLMInvocation:
                 chunks = []
                 try:
                     for chunk in response:
-                        print(chunk.choices[0].delta.content or "", end="", flush=True)
+                        print(
+                            chunk.choices[0].delta.content or "", end="", flush=True)
                         chunks.append(chunk)
                         time.sleep(0.01)
                 except Exception as e:
                     print(f"Error during streaming: {e}")
                 print("\n")
-                model_response = litellm.stream_chunk_builder(chunks, messages=messages)
+                model_response = litellm.stream_chunk_builder(
+                    chunks, messages=messages)
                 return (
                     model_response["choices"][0]["message"]["content"],
                     int(model_response["usage"]["prompt_tokens"]),
@@ -72,4 +75,71 @@ class LLMInvocation:
                       f"(Attempt {attempt + 1}/{max_retries})")
                 time.sleep(delay)
 
-        raise RuntimeError("Max retries exceeded. Could not complete API call.")
+        raise RuntimeError(
+            "Max retries exceeded. Could not complete API call.")
+
+
+
+class OpenAIInvocation(LLMInvocation):
+    def __init__(self, model: str, base_url: str, api_version: str, ak: str):
+        super().__init__(model)
+        self.client = openai.AzureOpenAI(
+            azure_endpoint=base_url,
+            api_version=api_version,
+            api_key=ak,
+        )
+        
+    def call_model(self, prompt: dict, max_tokens=4096, temperature=0.2):
+        if "system" not in prompt or "user" not in prompt:
+            raise KeyError(
+                "The prompt dictionary must contain 'system' and 'user' keys.")
+
+        if prompt["system"] == "":
+            messages = [{"role": "user", "content": prompt["user"]}]
+        else:
+            messages = [
+                {"role": "system", "content": prompt["system"]},
+                {"role": "user", "content": prompt["user"]},
+            ]
+
+        completion_params = {
+            "model": self.model,
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "stream": True,
+            "temperature": temperature,
+            "extra_headers": {"X-TT-LOGID": ""},
+        }
+        
+        max_retries = 5
+        base_delay = 2  # base delay in seconds
+
+        for attempt in range(max_retries):
+            try:
+                response = self.client.chat.completions.create(**completion_params)
+                chunks = []
+                try:
+                    for chunk in response:
+                        print(
+                            chunk.choices[0].delta.content or "", end="", flush=True)
+                        chunks.append(chunk)
+                        time.sleep(0.01)
+                except Exception as e:
+                    print(f"Error during streaming: {e}")
+                print("\n")
+                model_response = litellm.stream_chunk_builder(
+                    chunks, messages=messages)
+                return (
+                    model_response["choices"][0]["message"]["content"],
+                    int(model_response["usage"]["prompt_tokens"]),
+                    int(model_response["usage"]["completion_tokens"]),
+                )
+            except Exception as e:
+                delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                print(f"Rate limit exceeded. "
+                      f"Retrying in {delay:.2f} seconds... "
+                      f"(Attempt {attempt + 1}/{max_retries})")
+                time.sleep(delay)
+
+        raise RuntimeError(
+            "Max retries exceeded. Could not complete API call.")

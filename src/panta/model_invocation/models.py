@@ -28,5 +28,6 @@ class Models:
 def validate_and_map_model(model_name: str) -> str:
     """Validate the model name and map to its full identifier."""
     if model_name not in Models.SHORT_TO_FULL_MODEL_MAP:
-        raise ValueError(f"Invalid model '{model_name}'. Valid options are: {', '.join(Models.SHORT_TO_FULL_MODEL_MAP.keys())}")
+        # raise ValueError(f"Invalid model '{model_name}'. Valid options are: {', '.join(Models.SHORT_TO_FULL_MODEL_MAP.keys())}")
+        print(f"Using custom model: {model_name}")
     return Models.SHORT_TO_FULL_MODEL_MAP[model_name]

@@ -8,7 +8,7 @@ from .coverage.pycov_coverage import PycovCoverage
 from .error_message_parser import extract_error_message, extract_compilation_error_message_java
 from .file_preprocessor import FilePreprocessor
 from .panta_logger import pantaLogger
-from .model_invocation.llm_invocation import LLMInvocation
+from .model_invocation.llm_invocation import LLMInvocation, OpenAIInvocation
 from .prompt_builder import PromptBuilder
 from .utils import get_code_language
 from .yaml_parser_utils import load_yaml
@@ -84,7 +84,14 @@ class UnitTestGenerator:
         self.test_generation_strategy = test_generation_strategy
         self.fix_type = fix_type
 
-        self.llm_invoker = LLMInvocation(model=llm_model)
+        # TODO: 填写OpenAIInvocation的参数
+        # self.llm_invoker = LLMInvocation(model=llm_model)
+        self.llm_invoker = OpenAIInvocation(
+            model=llm_model,
+            base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
+            api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+            ak=os.getenv("AZURE_OPENAI_API_KEY"),
+        )
 
         self.logger = pantaLogger.initialize_logger(__name__)
         self.logger.info(f"Using test generation strategy: {self.test_generation_strategy}")
