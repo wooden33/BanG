@@ -113,7 +113,7 @@ if __name__ == '__main__':
     defects4j_subject_classes = get_d4j_subject_classes()
     prompt = sys.argv[1]
     model = sys.argv[2]
-    result_path = f"../../result-files/{prompt}_{model}"
+    result_path = f"result-files/{prompt}_{model}"
     defects4j_subjects = ["JacksonXml-5f", "Csv-16f", "Collections-28f", "Gson-16f", "Cli-40f", "JacksonCore-26f",
                           "JxPath-22f", "Jsoup-93f", "Codec-18f", "Compress-47f", "JacksonDatabind-112f",
                           "Time-13f", "Lang-4f", "Math-2f"]

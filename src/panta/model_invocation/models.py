@@ -16,7 +16,6 @@ class Models:
     SHORT_TO_FULL_MODEL_MAP = {
         "gpt-4o": GPT_4O,
         "gpt-4o-mini": GPT_4O_MINI,
-        "azure-gpt-4o": AZURE_GPT_4O,
         "llama3-1": META_LLAMA3_1_405b_INSTRUCT_V1_0,
         "llama3-3": META_LLAMA3_3_70b_INSTRUCT_V1_0,
         "deepseek-v3": DEEPSEEK_V3,
@@ -30,4 +29,5 @@ def validate_and_map_model(model_name: str) -> str:
     if model_name not in Models.SHORT_TO_FULL_MODEL_MAP:
         # raise ValueError(f"Invalid model '{model_name}'. Valid options are: {', '.join(Models.SHORT_TO_FULL_MODEL_MAP.keys())}")
         print(f"Using custom model: {model_name}")
+        return model_name
     return Models.SHORT_TO_FULL_MODEL_MAP[model_name]

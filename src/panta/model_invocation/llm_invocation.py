@@ -1,6 +1,6 @@
 import time
 import random
-
+import tiktoken
 import litellm
 import openai
 
@@ -80,7 +80,7 @@ class LLMInvocation:
 
 
 
-class OpenAIInvocation(LLMInvocation):
+class AzureOpenAIInvocation(LLMInvocation):
     def __init__(self, model: str, base_url: str, api_version: str, ak: str):
         super().__init__(model)
         self.client = openai.AzureOpenAI(
@@ -127,15 +127,27 @@ class OpenAIInvocation(LLMInvocation):
                 except Exception as e:
                     print(f"Error during streaming: {e}")
                 print("\n")
-                model_response = litellm.stream_chunk_builder(
-                    chunks, messages=messages)
-                return (
-                    model_response["choices"][0]["message"]["content"],
-                    int(model_response["usage"]["prompt_tokens"]),
-                    int(model_response["usage"]["completion_tokens"]),
+                # fill complete content
+                full_content = "".join(
+                    chunk.choices[0].delta.content or "" 
+                    for chunk in chunks
                 )
+                
+                # calculate token count
+                try:
+                    encoding = tiktoken.encoding_for_model(self.model)
+                    prompt_text = " ".join(msg["content"] for msg in messages)
+                    prompt_tokens = len(encoding.encode(prompt_text))
+                    completion_tokens = len(encoding.encode(full_content))
+                except Exception:
+                    # 如果tiktoken失败，回退到近似计算
+                    prompt_tokens = int(len(" ".join(msg["content"] for msg in messages).split()) * 1.3)
+                    completion_tokens = int(len(full_content.split()) * 1.3)
+                
+                return (full_content, prompt_tokens, completion_tokens)
             except Exception as e:
                 delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                print(f"API Error: {e}")
                 print(f"Rate limit exceeded. "
                       f"Retrying in {delay:.2f} seconds... "
                       f"(Attempt {attempt + 1}/{max_retries})")

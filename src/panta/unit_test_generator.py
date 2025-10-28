@@ -8,7 +8,7 @@ from .coverage.pycov_coverage import PycovCoverage
 from .error_message_parser import extract_error_message, extract_compilation_error_message_java
 from .file_preprocessor import FilePreprocessor
 from .panta_logger import pantaLogger
-from .model_invocation.llm_invocation import LLMInvocation, OpenAIInvocation
+from .model_invocation.llm_invocation import LLMInvocation, AzureOpenAIInvocation
 from .prompt_builder import PromptBuilder
 from .utils import get_code_language
 from .yaml_parser_utils import load_yaml
@@ -86,7 +86,7 @@ class UnitTestGenerator:
 
         # TODO: 填写OpenAIInvocation的参数
         # self.llm_invoker = LLMInvocation(model=llm_model)
-        self.llm_invoker = OpenAIInvocation(
+        self.llm_invoker = AzureOpenAIInvocation(
             model=llm_model,
             base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
             api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
