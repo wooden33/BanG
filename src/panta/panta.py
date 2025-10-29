@@ -163,7 +163,7 @@ class Panta:
 
                 time_start = time.time()
                 token_count = 0
-                if int(cur_line_cov) == 0 and int(cur_branch_cov) == 0:
+                if int(cur_line_cov) == 0 and int(cur_branch_cov) == 0 or iteration_count == 0:
                     self.logger.info(f"initial tests generation using baseline type of prompt")
                     generated_tests_dict, gen_token_count = self.test_gen.generate_init_tests(g_label, max_tokens=4096)
                 else:
@@ -207,7 +207,7 @@ class Panta:
                 if self.args.enable_fixing:
                     # a separate phase to fix the failed tests in current generation iteration
                     iter_num = self.args.enable_fixing
-                    fix_results_list, fix_token_count = self.test_gen.fix_failed_tests(f_label, iter_num, max_tokens=4096)
+                    fix_results_list, fix_token_count = self.test_gen.fix_failed_tests(f_label, iter_num, max_tokens=8192)
                     token_count += fix_token_count
                     for fix_result in fix_results_list:
                         test_results_list.append(fix_result)
@@ -269,7 +269,10 @@ class Panta:
         file_name = file_name.split(".")[0]
         name_list = [file_name, self.args.prompt_type, self.args.report_filepath]
         report_file = "_".join(name_list)
-        report_path = f"../../result-files/{self.report_label}/"
+
+        current_file = os.path.abspath(__file__)
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
+        report_path = os.path.join(project_root, "result-files", self.report_label)
         info_dict = {
             "status": "INFO",
             "reason": "",
@@ -283,8 +286,8 @@ class Panta:
         test_results_list.append(info_dict)
         if not os.path.exists(report_path):
             os.makedirs(report_path)
-        ReportGenerator.generate_report(test_results_list, report_path + report_file)
-        self.logger.info("Report generated successfully at: " + report_path)
+        ReportGenerator.generate_report(test_results_list, os.path.join(report_path, report_file))
+        self.logger.info(f"Report generated successfully at: {os.path.join(report_path, report_file)}")
 
     def run_symprompt(self):
         test_results_list = []
@@ -317,8 +320,11 @@ class Panta:
         file_name = file_name.split(".")[0]
         name_list = [file_name, "symprompt", self.args.report_filepath]
         report_file = "_".join(name_list)
-        report_path = f"../../result-files/{self.report_label}/"
+        
+        current_file = os.path.abspath(__file__)
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
+        report_path = os.path.join(project_root, "result-files", self.report_label)
         if not os.path.exists(report_path):
             os.makedirs(report_path)
-        ReportGenerator.generate_report(test_results_list, report_path + report_file)
-        self.logger.info("Report generated successfully at: " + report_path + report_file)
+        ReportGenerator.generate_report(test_results_list, os.path.join(report_path, report_file))
+        self.logger.info(f"Report generated successfully at: {os.path.join(report_path, report_file)}")

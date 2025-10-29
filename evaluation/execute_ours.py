@@ -113,10 +113,43 @@ if __name__ == '__main__':
     defects4j_subject_classes = get_d4j_subject_classes()
     prompt = sys.argv[1]
     model = sys.argv[2]
-    result_path = f"result-files/{prompt}_{model}"
+    result_path = os.path.join(ROOT, f"result-files/{prompt}_{model}")
     defects4j_subjects = ["JacksonXml-5f", "Csv-16f", "Collections-28f", "Gson-16f", "Cli-40f", "JacksonCore-26f",
                           "JxPath-22f", "Jsoup-93f", "Codec-18f", "Compress-47f", "JacksonDatabind-112f",
                           "Time-13f", "Lang-4f", "Math-2f"]
+    
+    # Count all test samples
+    total_samples = 0
+    project_sample_counts = {}
+    
+    print("=" * 60)
+    print(f"Starting Evaluation - Prompt Type: {prompt}, Model: {model}")
+    print("=" * 60)
+    
+    # First, count all samples
+    for p_name in defects4j_subjects:
+        with open(os.path.join("defects4j-codefiles", f"{p_name}-codefiles.json"), 'r') as f:
+            data = json.load(f)
+        
+        file_objects = data["src_test_exact_match"] + data["src_test_fuzz_match"] + data["src_without_tests"]
+        class_subjects = defects4j_subject_classes[p_name]
+        
+        # Count valid samples for this project (those in class_subjects)
+        valid_samples = sum(1 for src_file in file_objects if src_file["src_name"] in class_subjects.keys())
+        project_sample_counts[p_name] = valid_samples
+        total_samples += valid_samples
+    
+    # Display statistics
+    print(f"Total Test Samples: {total_samples}")
+    print("\nSample Distribution by Project:")
+    for p_name, count in project_sample_counts.items():
+        print(f"  {p_name}: {count} samples")
+    print("=" * 60)
+    print()
+    
+    # Start evaluation execution
+    
+    executed_count = 0
     for p_name in defects4j_subjects:
         #print(p_name)
         with open(os.path.join("defects4j-codefiles", f"{p_name}-codefiles.json"), 'r') as f:
@@ -128,7 +161,12 @@ if __name__ == '__main__':
             html_file = f"{result_path}/{src_file['src_name']}_{prompt}_test_results.html"
             if src_file["src_name"] in class_subjects.keys():
                 max_cc = class_subjects[src_file["src_name"]]
+                executed_count += 1
                 if not os.path.exists(html_file):
-                    print("execute", src_file["src_name"], max_cc)
+                    print(f"Executing [{executed_count}/{total_samples}] {src_file['src_name']} (Complexity: {max_cc})")
                     fill_config_and_execute(src_file, p_name, max_cc, prompt, model)
+    
+    print("\n" + "=" * 60)
+    print(f"Evaluation Complete! Processed {executed_count} samples in total")
+    print("=" * 60)
 

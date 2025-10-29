@@ -3,19 +3,40 @@ import re
 import yaml
 
 from typing import List
+from .panta_logger import pantaLogger
+
+# Initialize logger for this module
+logger = pantaLogger.initialize_logger(__name__)
 
 
 def load_yaml(response_text: str, keys_fix_yaml: List[str] = []) -> dict:
-    response_text = response_text.strip().removeprefix("```yaml").rstrip("`")
+    # Strip whitespace first
+    response_text = response_text.strip()
+    
+    # Find and extract YAML content between ```yaml and ```
+    # This handles cases where ```yaml is not at the beginning of a line
+    yaml_pattern = r'```(?:yaml|YAML)?\s*\n?(.*?)\n?\s*```'
+    match = re.search(yaml_pattern, response_text, re.DOTALL | re.IGNORECASE)
+    
+    if match:
+        # Extract the YAML content from the code block
+        response_text = match.group(1).strip()
+    else:
+        # If no code block found, try to remove any leading text before ```yaml
+        # and trailing ``` 
+        response_text = re.sub(r'.*?```(?:yaml|YAML)?\s*\n?', '', response_text, flags=re.DOTALL | re.IGNORECASE)
+        response_text = re.sub(r'\n?\s*```.*$', '', response_text, flags=re.DOTALL)
+        response_text = response_text.strip()
+    
     try:
         data = yaml.safe_load(response_text)
     except Exception as e:
-        logging.info(
+        logger.error(
             f"Failed to parse AI prediction: {e}. Attempting to fix YAML formatting."
         )
         data = try_fix_yaml(response_text, keys_fix_yaml=keys_fix_yaml)
         if not data:
-            logging.info(f"Failed to parse AI prediction after fixing YAML formatting.")
+            logger.error(f"Failed to parse AI prediction after fixing YAML formatting.")
     return data
 
 
@@ -54,7 +75,7 @@ def try_fix_yaml(response_text: str, keys_fix_yaml: List[str] = []) -> dict:
                 )
     try:
         data = yaml.safe_load("\n".join(modified_lines))
-        logging.info("Successfully parsed YAML after converting lines to multiline format.")
+        logger.info("Successfully parsed YAML after converting lines to multiline format.")
         return data
     except yaml.YAMLError:
         pass
@@ -65,7 +86,7 @@ def try_fix_yaml(response_text: str, keys_fix_yaml: List[str] = []) -> dict:
         snippet_text = yaml_snippet.group()
         try:
             data = yaml.safe_load(snippet_text.lstrip("```yaml").rstrip("`"))
-            logging.info("Successfully parsed YAML after extracting snippet.")
+            logger.info("Successfully parsed YAML after extracting snippet.")
             return data
         except yaml.YAMLError:
             pass
@@ -74,7 +95,7 @@ def try_fix_yaml(response_text: str, keys_fix_yaml: List[str] = []) -> dict:
     stripped_text = response_text.strip().removeprefix("{").removesuffix("}")
     try:
         data = yaml.safe_load(stripped_text)
-        logging.info("Successfully parsed YAML after removing curly brackets.")
+        logger.info("Successfully parsed YAML after removing curly brackets.")
         return data
     except yaml.YAMLError:
         pass
@@ -85,7 +106,7 @@ def try_fix_yaml(response_text: str, keys_fix_yaml: List[str] = []) -> dict:
         try:
             data = yaml.safe_load(temp_text)
             if "language" in data:
-                logging.info(f"Successfully parsed YAML after removing {i} lines.")
+                logger.info(f"Successfully parsed YAML after removing {i} lines.")
                 return data
         except yaml.YAMLError:
             pass
@@ -102,7 +123,7 @@ def try_fix_yaml(response_text: str, keys_fix_yaml: List[str] = []) -> dict:
         yaml_text = response_text[start_idx:end_idx].strip()
         try:
             data = yaml.safe_load(yaml_text)
-            logging.info("Successfully parsed YAML using 'language:' as a starting point.")
+            logger.info("Successfully parsed YAML using 'language:' as a starting point.")
             return data
         except yaml.YAMLError:
             pass

@@ -406,7 +406,7 @@ class UnitTestGenerator:
                 "test": response,  # Use the response that led to the error
             }
             # self.failed_test_runs.append(fail_details)
-            tests_dict = []
+            tests_dict = {"new_tests": []}
 
         return tests_dict, token_count
 
@@ -673,7 +673,7 @@ class UnitTestGenerator:
         self.failed_test_runs = []
         return prompt_builder.build_prompt_for_fixing(self.fix_type)
 
-    def fix_failed_tests(self, f_label, iter_num, max_tokens=4096):
+    def fix_failed_tests(self, f_label, iter_num, max_tokens=8192):
         # Check for existence of failed tests, fix until failed tests are empty or at most 5 iterations
         fix_results_list = []
         iter_count = 0
