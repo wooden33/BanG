@@ -4,6 +4,28 @@ import os
 
 class pantaLogger:
     log_file = "panta.log"
+    log_directory = None
+
+    @classmethod
+    def set_log_path(cls, prompt_type, llm_model, project_name, branch_analyzer=None):
+        current_file = os.path.abspath(__file__)
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
+        
+        # Build directory name
+        if branch_analyzer:
+            directory_name = f"{prompt_type}_{llm_model}_{branch_analyzer}"
+        else:
+            directory_name = f"{prompt_type}_{llm_model}"
+        
+        # Create full log directory path
+        cls.log_directory = os.path.join(project_root, "logs", directory_name)
+        
+        # Ensure directory exists
+        os.makedirs(cls.log_directory, exist_ok=True)
+        
+        # Use project name as log filename to avoid multi-threading conflicts
+        log_filename = f"{project_name}.log"
+        cls.log_file = os.path.join(cls.log_directory, log_filename)
 
     @classmethod
     def initialize_logger(cls, name):

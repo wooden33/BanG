@@ -24,7 +24,26 @@ def get_class_name(file_path):
 class Panta:
     def __init__(self, args):
         self.args = args
+        
+        # Extract project name from project directory path
+        project_name = os.path.basename(args.project_directory.rstrip('/'))
+        
+        # Set log path
+        branch_analyzer = None
+        if hasattr(args, 'test_generation_strategy') and args.test_generation_strategy == "cfg_branch_analyzer":
+            branch_analyzer = "cfg_branch_analyzer"
+        
+        pantaLogger.set_log_path(
+            prompt_type=args.prompt_type,
+            llm_model=args.model,
+            project_name=project_name,
+            branch_analyzer=branch_analyzer
+        )
+        
         self.logger = pantaLogger.initialize_logger(__name__)
+        self.logger.info(f"Project name: {project_name}")
+        self.logger.info(f"Log file path: {pantaLogger.log_file}")
+        
         if args.run_symprompt:
             self.report_label = "_".join(['symprompt', args.model])
         else:
@@ -117,13 +136,17 @@ class Panta:
         _, node_id_to_line_numbers_mapping = line_number_to_node_id_mapping(
             src_code, cfg_driver.CFG_nodes
         )
-        imports_lines = cfg_driver.file_obj["imports"]
+        # Only write the package declaration from source file, avoid copying source imports
+        # which may include classes not available in test compile scope
         src_code_lines = src_code.split('\n')
+        package_line = None
+        for line in src_code_lines:
+            if line.strip().startswith('package '):
+                package_line = line
+                break
         f = open(self.args.test_code_file, 'a')
-        if imports_lines:
-            last_import_id = imports_lines[-1]["id"]
-            last_line_for_imports = node_id_to_line_numbers_mapping[last_import_id][-1]
-            f.writelines("\n".join(src_code_lines[:last_line_for_imports]))
+        if package_line:
+            f.writelines(package_line + "\n\n")
 
         # TODO: get the junit version from dependencies instead of user input
         if self.args.junit_version == 3:
@@ -141,6 +164,18 @@ class Panta:
             shutil.copy(self.args.test_code_file, self.args.test_file_output_path)
         else:
             self.args.test_file_output_path = self.args.test_code_file
+
+    def cleanup_test_file(self):
+        """Remove the generated/used test file after run completes."""
+        try:
+            path = self.args.test_file_output_path if self.args.test_file_output_path else self.args.test_code_file
+            if path and os.path.isfile(path):
+                os.remove(path)
+                self.logger.info(f"Cleaned up test file: {path}")
+            else:
+                self.logger.info(f"No test file to clean: {path}")
+        except Exception as e:
+            self.logger.error(f"Failed to cleanup test file: {str(e)}")
 
     def run(self):
         iteration_count = 0
@@ -168,7 +203,7 @@ class Panta:
                     generated_tests_dict, gen_token_count = self.test_gen.generate_init_tests(g_label, max_tokens=4096)
                 else:
                     # Check if branch coverage optimization is needed
-                    if self.test_gen.branch_missed and len(self.test_gen.branch_missed) > 0:
+                    if self.test_gen.cfg_branch_analyzer and self.test_gen.branch_missed and len(self.test_gen.branch_missed) > 0:
                         self.logger.info(f"generating branch-focused tests to improve branch coverage")
                         # Generate tests focused on branch coverage
                         branch_tests_dict, branch_token_count = self.test_gen.generate_branch_focused_tests()
@@ -288,6 +323,8 @@ class Panta:
             os.makedirs(report_path)
         ReportGenerator.generate_report(test_results_list, os.path.join(report_path, report_file))
         self.logger.info(f"Report generated successfully at: {os.path.join(report_path, report_file)}")
+        # Cleanup test file after run
+        self.cleanup_test_file()
 
     def run_symprompt(self):
         test_results_list = []
@@ -328,3 +365,5 @@ class Panta:
             os.makedirs(report_path)
         ReportGenerator.generate_report(test_results_list, os.path.join(report_path, report_file))
         self.logger.info(f"Report generated successfully at: {os.path.join(report_path, report_file)}")
+        # Cleanup test file after run
+        self.cleanup_test_file()

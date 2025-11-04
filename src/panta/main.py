@@ -4,8 +4,19 @@ import os
 from .panta import Panta
 
 
-def load_config():
-    config_path = os.path.join(os.path.dirname(__file__), 'config.ini')
+def load_config(config_file=None):
+    if config_file is None:
+        config_path = os.path.join(os.path.dirname(__file__), 'config.ini')
+    else:
+        # Support both absolute and relative paths
+        if os.path.isabs(config_file):
+            config_path = config_file
+        else:
+            config_path = os.path.join(os.path.dirname(__file__), config_file)
+    
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"Configuration file not found: {config_path}")
+    
     confparser = configparser.ConfigParser()
     confparser.read(config_path)
     return confparser['default']
@@ -32,18 +43,28 @@ def config_to_namespace(config):
         enable_fixing=config.getint("enable_fixing"),
         run_symprompt=config.getboolean("run_symprompt"),
         prompt_type=config.get('prompt_type'),
-        test_generation_strategy=config.get('test_generation_strategy', 'cfg_branch_analyzer'),
-        fix_type=config.get('fix_type', 'MCTS'),
+        test_generation_strategy=config.get('test_generation_strategy', None),
+        fix_type=config.get('fix_type', None),
         pick_two_paths=config.getboolean("pick_two_paths"),
         additional_instructions=config.get('additional_instructions')
     )
 
 
 def main():
-    config_parser = load_config()
-    args = config_to_namespace(config_parser)
-    panta = Panta(args)
-    if args.run_symprompt:
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Panta - Automated Unit Test Generation')
+    parser.add_argument('--config', '-c', type=str, default=None,
+                        help='Path to configuration file (default: config.ini)')
+    
+    args = parser.parse_args()
+    
+    # Load configuration
+    config_parser = load_config(args.config)
+    config_args = config_to_namespace(config_parser)
+    
+    # Create and run Panta
+    panta = Panta(config_args)
+    if config_args.run_symprompt:
         panta.run_symprompt()
     else:
         panta.run()

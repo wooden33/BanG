@@ -8,7 +8,7 @@ from .coverage.pycov_coverage import PycovCoverage
 from .error_message_parser import extract_error_message, extract_compilation_error_message_java
 from .file_preprocessor import FilePreprocessor
 from .panta_logger import pantaLogger
-from .model_invocation.llm_invocation import LLMInvocation, AzureOpenAIInvocation
+from .model_invocation.llm_invocation import LLMInvocation, AzureOpenAIInvocation, OllamaInvocation
 from .prompt_builder import PromptBuilder
 from .utils import get_code_language
 from .yaml_parser_utils import load_yaml
@@ -58,8 +58,8 @@ class UnitTestGenerator:
                  target_coverage: int = 100,
                  prompt_type: str = "baseline",
                  additional_instructions: str = "",
-                 test_generation_strategy: str = "cfg_branch_analyzer",
-                 fix_type: str = "fix"):
+                 test_generation_strategy: str = None,
+                 fix_type: str = None):
 
         self.relevant_line_number_to_insert_tests_after = None
         self.relevant_line_number_to_insert_imports_after = None
@@ -107,7 +107,7 @@ class UnitTestGenerator:
         self.prompt = ""
         
         # Initialize CFG branch analyzer if needed
-        if self.test_generation_strategy == "cfg_branch_analyzer":
+        if self.test_generation_strategy and self.test_generation_strategy == "cfg_branch_analyzer":
             self.cfg_branch_analyzer = CFGBranchAnalyzer(
                 self.language, read_file(self.source_code_file)
             )
@@ -261,22 +261,15 @@ class UnitTestGenerator:
         )
         
         # CFG guided test generation strategy
-        if self.test_generation_strategy == "cfg_branch_analyzer":
-            if prompt_type == "control":
-                prompt = self.prompt_builder.build_prompt_cfa_guided(pick_two_paths)
-                self.path_history = self.prompt_builder.get_current_path_history()
-                return prompt
-            elif prompt_type == "coverage":
-                return self.prompt_builder.build_prompt(coverage_enabled=True)
-            else:
-                return self.prompt_builder.build_prompt(coverage_enabled=False)
+        if prompt_type == "control":
+            prompt = self.prompt_builder.build_prompt_cfa_guided(pick_two_paths)
+            self.path_history = self.prompt_builder.get_current_path_history()
+            return prompt
+        elif prompt_type == "coverage":
+            return self.prompt_builder.build_prompt(coverage_enabled=True)
         else:
-            # default strategy
-            self.logger.warning(f"Unknown test generation strategy: {self.test_generation_strategy}, using default")
-            if prompt_type == "coverage":
-                return self.prompt_builder.build_prompt(coverage_enabled=True)
-            else:
-                return self.prompt_builder.build_prompt(coverage_enabled=False)
+            return self.prompt_builder.build_prompt(coverage_enabled=False)
+
 
     def initial_test_suite_analysis(self):
         """
