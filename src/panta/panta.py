@@ -28,28 +28,40 @@ class Panta:
         # Extract project name from project directory path
         project_name = os.path.basename(args.project_directory.rstrip('/'))
         
-        # Set log path
-        branch_analyzer = None
-        if hasattr(args, 'test_generation_strategy') and args.test_generation_strategy == "cfg_branch_analyzer":
-            branch_analyzer = "cfg_branch_analyzer"
         
         pantaLogger.set_log_path(
             prompt_type=args.prompt_type,
             llm_model=args.model,
             project_name=project_name,
-            branch_analyzer=branch_analyzer
+            thinking_enhancement=args.thinking_enhancement,
+            fix_type=args.fix_type
         )
         
         self.logger = pantaLogger.initialize_logger(__name__)
         self.logger.info(f"Project name: {project_name}")
         self.logger.info(f"Log file path: {pantaLogger.log_file}")
         
+        # Build report label with think and mcts flags
         if args.run_symprompt:
-            self.report_label = "_".join(['symprompt', args.model])
+            report_parts = ['symprompt', args.model]
         else:
-            self.report_label = "_".join([args.prompt_type, args.model])
-            if not self.args.pick_two_paths:
-                self.report_label = "_".join([args.prompt_type, args.model, "one"])
+            report_parts = [args.prompt_type, args.model]
+
+        # Add think flag if enabled
+        if args.thinking_enhancement:
+            report_parts.append("think")
+
+        # Add mcts flag if fix_type is MCTS
+        if args.fix_type == "MCTS":
+            report_parts.append("mcts")
+
+        self.report_label = "_".join(report_parts)
+
+        # Add "one" suffix if not pick_two_paths
+        if not self.args.pick_two_paths:
+            # Append "one" to the existing parts to preserve the think/mcts flags
+            report_parts.append("one")
+            self.report_label = "_".join(report_parts)
 
         # Validate and map the model argument before passing it to UnitTestGenerator
         try:
@@ -74,7 +86,7 @@ class Panta:
             target_coverage=args.target_coverage,
             prompt_type=args.prompt_type,
             additional_instructions=args.additional_instructions,
-            test_generation_strategy=args.test_generation_strategy,
+            thinking_enhancement=args.thinking_enhancement,
             fix_type=args.fix_type,
             llm_model=args.model)
 
@@ -198,25 +210,12 @@ class Panta:
 
                 time_start = time.time()
                 token_count = 0
-                if int(cur_line_cov) == 0 and int(cur_branch_cov) == 0 or iteration_count == 0:
+                if int(cur_line_cov) == 0 and int(cur_branch_cov) == 0:
                     self.logger.info(f"initial tests generation using baseline type of prompt")
                     generated_tests_dict, gen_token_count = self.test_gen.generate_init_tests(g_label, max_tokens=4096)
                 else:
-                    # Check if branch coverage optimization is needed
-                    if self.test_gen.cfg_branch_analyzer and self.test_gen.branch_missed and len(self.test_gen.branch_missed) > 0:
-                        self.logger.info(f"generating branch-focused tests to improve branch coverage")
-                        # Generate tests focused on branch coverage
-                        branch_tests_dict, branch_token_count = self.test_gen.generate_branch_focused_tests()
-                        if branch_tests_dict and branch_tests_dict.get("new_tests"):
-                            generated_tests_dict = branch_tests_dict
-                            gen_token_count = branch_token_count
-                        else:
-                            # If branch test generation fails, fall back to regular test generation
-                            generated_tests_dict, gen_token_count = self.test_gen.generate_tests(g_label, max_tokens=4096,
-                                                                                pick_two_paths=self.args.pick_two_paths)
-                    else:
-                        generated_tests_dict, gen_token_count = self.test_gen.generate_tests(g_label, max_tokens=4096,
-                                                                            pick_two_paths=self.args.pick_two_paths)
+                    generated_tests_dict, gen_token_count = self.test_gen.generate_tests(g_label, max_tokens=4096,
+                                                                        pick_two_paths=self.args.pick_two_paths)
                 token_count += gen_token_count
 
                 for generated_test in (generated_tests_dict.get("new_tests") or []):
@@ -281,7 +280,7 @@ class Panta:
 
                 iteration_count += 1
         except Exception as e:
-            self.logger.error("iteration stops due to error: ", e)
+            self.logger.error("iteration stops due to error: %s", e)
 
         if self.test_gen.current_coverage[0] >= (self.test_gen.target_coverage / 100):
             self.logger.info(

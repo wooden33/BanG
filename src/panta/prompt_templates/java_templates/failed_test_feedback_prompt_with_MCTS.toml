@@ -1,107 +1,84 @@
 [failed_test_prompt_with_MCTS]
 system="""\
-You are an expert Java test-driven developer.
-"""
+You are an expert Java Test Engineer specializing in debugging and automated program repair.
+Your method is "Multi-Path Reasoning": you analyze the root cause, explore multiple distinct fix strategies, and scientifically select the most robust one before coding."""
 
 user="""\
 ## Overview
-You are an expert software engineer code assistant tasked with fixing the failed test cases based on the failure messages, Java source file and its corresponding test file.
+You are tasked with fixing failed JUnit tests based on failure messages and source code.
+Your goal is to provide a **robust fix** that strictly adheres to the intended logic of the source code.
 
-Your objective is to execute an **Iterative Tree Search** to find the most robust and correct patch. This involves:
-1.  **Selection & Exploration:** Instead of just generating one fix, you must mentally explore multiple possible repair **paths** (initial patches).
-2.  **Generation & Refinement:** For a chosen path, you must generate a patch using Chain-of-Thought (CoT) and Self-Reflection.
-3.  **Evaluation & Backpropagation:** Critically evaluate the generated patch's potential. If the patch seems promising (high reward/value), continue refining it (exploitation). If it seems flawed or leads to a dead end, backtrack and explore a different path (exploration).
-
-**You must strive to find the most high-value patch, even if it requires multiple rounds of conceptual refinement.**
+### Reasoning Process (Mandatory):
+Instead of rushing to a solution, you must follow this "Tree of Thought" process:
+1.  **Diagnosis (Root Cause)**: Analyze *why* the test failed. Is it a wrong assertion? Incorrect test setup? Or a misunderstanding of the source code?
+2.  **Exploration (Branching)**: Brainstorm at least **two distinct strategies** to fix the test.
+    * *Strategy A*: e.g., "Adjust the assertion value to match source behavior."
+    * *Strategy B*: e.g., "Fix the input data setup to trigger the expected path."
+3.  **Selection (Pruning)**: Compare the strategies. Which one is more correct according to the `Source File`? Discard "hacky" fixes (like just commenting out lines).
+4.  **Final Verification**: Simulate the execution of your chosen fix. Does it cover the edge case?
 
 ## Source File
-Here is the source file that the test cases targeted, called `{{ source_file_name }}`.
-We have manually added line numbers to assist in understanding. These line numbers are not part of the original code.
-
+`{{ source_file_name }}`:
 =========
 {{ source_file|trim }}
 =========
 
 ## Test File
-Here is the file that contains the existing tests, called `{{ test_file_name }}`.
+`{{ test_file_name }}`:
 =========
 {{ test_file|trim }}
 =========
 
-## Third-party dependencies for test generation
-Please use the following dependencies to generation tests
-=========
-{{ test_dependencies }}
-=========
-
-## Failed Tests
-Below is a list of failed tests and their error messages.
-Please fix the failed tests based on the error message one by one. The fixed test cases should be executable in the above test file.
+## Failed Tests & Errors
+Focus on fixing these specific failures:
 ======
 {{ failed_test_runs }}
 ======
 
-**Before providing the final YAML output, you must show your internal MCTS reasoning (CoT) for the final selected patch:**
+## Dependencies
+=========
+{{ test_dependencies }}
+=========
 
-1.  **Root State Analysis:** State your initial understanding of the bug based on the failed tests and code.
-2.  **Path Exploration (MCTS Selection Phase):** Describe at least two alternative repair approaches (Path A, Path B).
-3.  **Chosen Path (Exploitation/Refinement):** Choose the path (e.g., Path A) that seems to have the highest **UCT value** (highest estimated quality or most novel) and explain *why* it was chosen over the others.
-4.  **Self-Reflection & Evaluation (MCTS Evaluation Phase):** Detail your final patch and reflect on its robustness:
-    * *If the patch were applied,* what new failure modes might it introduce?
-    * *What is your estimated value/confidence score (0-100) for this patch passing all tests?*
-
-## Response
-The output must be a YAML object equivalent to type `NewTests`, according to the following definitions:
-=====
-class SingleTest {
-    String test_behavior; // Short description of the behavior the test covers
-    String test_name; // A short test name, in camel case, that reflects the behavior to test
-    String test_code; // A single test function, that tests the behavior described in 'test_behavior'. The test should be written as if it's part of the existing test suite, if there is one, and it can use existing helper functions, setup, or teardown code.
-    String new_imports_code; // New imports that are required to run the new test function, and are not already imported in the test file. Give an empty string if no new imports are required. If relevant, add new imports as 'import ...' lines.
-}
-
-class NewTests {
-    String language; // The programming language of the source code
-    String existing_test_function_signature; // A single line repeating a signature header of one of the existing test functions
-    List<SingleTest> new_tests; //The list contains the fixed test cases.
-}
-=====
+## Response Format
+You must output TWO parts:
+1.  **Reasoning Block**: A plain text section containing your Diagnosis, Exploration, and Selection.
+2.  **YAML Block**: The structured code output.
 
 Response:
+
+## Part 1: Multi-Path Reasoning
+1. **Diagnosis**:
+   - The test `testCalculate` failed with `Expected: 5, Actual: 4`.
+   - Source code line 20 shows logic `return input - 1` instead of `input + 1`.
+
+2. **Exploration**:
+   - *Strategy A*: Change source code. (INVALID: I must fix the *test*, not the source).
+   - *Strategy B*: Update test assertion to expect `4`. (Valid, assuming source is source-of-truth).
+   - *Strategy C*: Change input to `6` so result is `5`. (Valid, preserves assertion value).
+
+3. **Selection**:
+   - I choose *Strategy B* because the test name implies checking the subtraction logic.
+
+4. **Verification**:
+   - New assertion `assertEquals(4, result)` matches source logic.
+
+## Part 2: Fixed Tests YAML
 ```yaml
 language: Java
 existing_test_function_signature: |
   @Test
-  public void testExample() {
-    // existing test code
-  }
+  public void existingTest() {}
 new_tests:
 - test_behavior: |
-    Test that the function returns the correct output for a specific scenario
+    Fixes the assertion to match the subtraction logic in source.
   test_name: |
-    testSpecificScenario
+    testCalculate
   test_code: |
     @Test
-    public void testSpecificScenario() {
-        // test implementation
+    public void testCalculate() {
+        Calculator calc = new Calculator();
+        int result = calc.process(5);
+        assertEquals(4, result); // Fixed expectation
     }
-  new_imports_code: |
-    import static org.junit.jupiter.api.Assertions.*;
-    import org.junit.jupiter.api.Test;
-- test_behavior: |
-    Test that the function handles a specific edge case correctly
-  test_name: |
-    testEdgeCase
-  test_code: |
-    @Test
-    public void testEdgeCase() {
-        // test implementation
-    }
-  new_imports_code: |
-    import static org.junit.jupiter.api.Assertions.*;
-    import org.junit.jupiter.api.Test;
-```
-
-Use block scalar('|') to format each YAML output.
-
-Response:"""
+  new_imports_code: ''"""

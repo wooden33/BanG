@@ -42,6 +42,7 @@ class LLMInvocation:
             completion_params = {
                 "model": self.model,
                 "messages": messages,
+                "api_base": "http://210.28.134.33:11434",
                 "max_tokens": max_tokens,
                 "stream": True,
                 "temperature": temperature,

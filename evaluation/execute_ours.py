@@ -73,7 +73,7 @@ def extract_config_data(src_file_obj, project_name, max_complexity, prompt_type,
             'enable_fixing': '3',
             'run_symprompt': 'false',
             'prompt_type': prompt_type,
-            'test_generation_strategy': 'cfg_branch_analyzer',
+            'thinking_enhancement': 'true',
             'fix_type': 'MCTS',
             'pick_two_paths': 'true',
             'additional_instructions': ''

@@ -1,0 +1,124 @@
+[test_generation_cfg_guided_with_thinking_enabled_prompt]
+system="""\
+You are an expert Java test-driven developer.
+"""
+
+user="""\
+## Overview
+You are an expert software engineer code assistant tasked with generating additional unit tests for a Java source file and its corresponding test file.
+Your objective is to enhance both line coverage and branch coverage by adding new unit tests to the existing test suite.
+
+## Source File
+Here is the source file that you will be writing tests against, called `{{ source_file_name }}`.
+We have manually added line numbers to assist in understanding the code coverage.
+These line numbers are not part of the original code.
+
+=========
+{{ source_file_numbered|trim }}
+=========
+
+## Test File
+Here is the file that contains the existing tests, called `{{ test_file_name }}`.
+=========
+{{ test_file| trim }}
+=========
+
+## Third-party dependencies for test generation
+Please use the following dependencies to generate tests
+=========
+{{ test_dependencies }}
+=========
+
+{%- if failed_tests_section|trim  %}
+{{ failed_tests_section|trim }}
+{% endif %}
+
+## Method Under Test
+**Target**: Please generate tests for the following method under test respectively to increase the overall code coverage:
+{{method_under_test}}
+
+### Thinking Process Guidance(MANDATORY):
+Before generating the YAML output, you must write a Detailed Analysis section. Do not skip this.
+For each uncovered path/branch in the target method, perform Constraint Solving:
+
+1. **Locate the Branch**: Identify the specific line number and condition (e.g., if (x > 5 && y == null)).
+
+2. **Solve Constraints**: Reverse-engineer the input data required to satisfy this condition.
+  
+  - Ask yourself: "What value must registry have? What state must the pattern string be in?"
+  - Example: "To hit the else block at line 45, registry must be non-null, but registry.get(x) must return null."
+
+3. **Plan the Test**:
+  - Setup: How do I construct these objects using existing helpers in {{ test_file_name }}?
+  - Assertion: What happens when this path is taken? (Exception thrown? Return value changes?)
+
+### Example Thinking Process (Applied to a complex path):
+*Target*: Cover the `else` block of `if (config.isValid() || forced)` where `forced` is false.
+1. **Constraints**: `config` must not be null. `config.isValid()` must return `false`. `forced` boolean must be `false`.
+2. **Input**: Create a `Config` object. Call `setValid(false)`. Pass `false` as the second argument.
+3. **Existing Context**: `TestHelper.createBasicConfig()` exists in the test file. I will use it.
+4. **Outcome**: The method should throw `ConfigurationException`.
+
+You should analyze the uncovered paths one by one, state the reason they are uncovered (key variables and critical branch nodes), and then generate unit tests.
+
+Only after completing this thinking process should you proceed to write the tests.
+
+## Response
+
+The output must contain a YAML object equivalent to type `NewTests`, according to the following definitions:
+=====
+class SingleTest {
+    String test_behavior; // Short description of the behavior the test covers
+    String test_name; // A short test name, in camel case, that reflects the behavior to test
+    String test_code; // A single test function, that tests the behavior described in 'test_behavior'. The test should be written as if it's part of the existing test suite, if there is one, and it can use existing helper functions, setup, or teardown code.
+    String new_imports_code; // New imports that are required to run the new test function, and are not already imported in the test file. Give an empty string if no new imports are required. If relevant, add new imports as 'import ...' lines.
+}
+
+class NewTests {
+    String language; // The programming language of the source code
+    String existing_test_function_signature; // A single line repeating a signature header of one of the existing test functions
+    List<SingleTest> new_tests; // A list of new test functions to append to the existing test suite, aiming to increase the code coverage. Each test should run as-is, without requiring any additional inputs or setup code. Don't introduce new dependencies
+}
+=====
+Response:
+## Analysis & Thinking
+[Write your step-by-step constraint solving here as plain text]
+
+## YAML Output
+```yaml
+language: Java
+existing_test_function_signature: |
+  @Test
+  public void testExample() {
+    // existing test code
+  }
+new_tests:
+- test_behavior: |
+    Test that the function returns the correct output for a specific scenario
+  test_name: |
+    testSpecificScenario
+  test_code: |
+    @Test
+    public void testSpecificScenario() {
+        // test implementation
+    }
+  new_imports_code: |
+    import static org.junit.Assert.*;
+    import org.junit.Test;
+- test_behavior: |
+    Test that the function handles a specific edge case correctly
+  test_name: |
+    testEdgeCase
+  test_code: |
+    @Test
+    public void testEdgeCase() {
+        // test implementation
+    }
+  new_imports_code: |
+    import static org.junit.Assert.*;
+    import org.junit.Test;
+```
+
+Use block scalar('|') to format each YAML output.
+
+Response:"""

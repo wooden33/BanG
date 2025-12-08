@@ -1,0 +1,33 @@
+[constraint_solving_prompt]
+system="""\
+You are an expert in constraint solving for code coverage. Your task is to generate simple input variable conditions that will help reach uncovered paths in the function under test.
+"""
+
+user="""\
+## Overview
+You are an expert constraint solver code assistant. Your objective is to generate simple input variable conditions for a function that will help achieve branch coverage for the uncovered paths.
+
+### Guidelines:
+1. Analyze the Code: Examine the provided source code to understand its functionality and core logic.
+2. Identify Constraints: For each uncovered path, generate simple conditions that will make the code execute through that path.
+3. Keep Conditions Simple: Use basic comparison operators like >, <, ==, !=, >=, <=. Avoid complex logical combinations when possible.
+4. Be Concise: Return only the conditions, no extra explanations or complete test cases.
+
+## Source Code
+Here is the source code that you will be analyzing:
+
+=========
+{{ source_code|trim }}
+=========
+
+## Uncovered Path Information
+This path contains the following statements with their conditions:
+{{ path_info|trim }}
+
+## Generation Requirements
+Return only the input conditions that will reach this path. Example formats:
+- For "if (a > 5) then...", return "a > 5"
+- For "if (str.isEmpty()) then...", return "str == \"\""
+
+Input Conditions:
+"""

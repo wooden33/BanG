@@ -14,8 +14,9 @@ from .utils import get_code_language
 from .yaml_parser_utils import load_yaml
 from .cfg.src.comex.codeviews.combined_graph.combined_driver import line_number_to_node_id_mapping
 from .cfg.src.comex.codeviews.CFG.CFG_driver import CFGDriver
-from .cfg_branch_analyzer import CFGBranchAnalyzer
 from .utils import read_file
+from .config_loader import get_settings
+from .llm_constraint_solver import LLMConstraintSolver
 
 
 def count_leading_spaces(text):
@@ -58,7 +59,7 @@ class UnitTestGenerator:
                  target_coverage: int = 100,
                  prompt_type: str = "baseline",
                  additional_instructions: str = "",
-                 test_generation_strategy: str = None,
+                 thinking_enhancement: bool = False,
                  fix_type: str = None):
 
         self.relevant_line_number_to_insert_tests_after = None
@@ -81,20 +82,21 @@ class UnitTestGenerator:
         self.target_coverage = target_coverage
         self.additional_instructions = additional_instructions
         self.language = get_code_language(source_code_file)
-        self.test_generation_strategy = test_generation_strategy
+        self.thinking_enhancement = thinking_enhancement
         self.fix_type = fix_type
 
         # TODO: 填写OpenAIInvocation的参数
-        # self.llm_invoker = LLMInvocation(model=llm_model)
-        self.llm_invoker = AzureOpenAIInvocation(
-            model=llm_model,
-            base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
-            api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-            ak=os.getenv("AZURE_OPENAI_API_KEY"),
-        )
+        self.llm_invoker = LLMInvocation(model=llm_model)
+        # self.llm_invoker = AzureOpenAIInvocation(
+        #     model=llm_model,
+        #     base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
+        #     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+        #     ak=os.getenv("AZURE_OPENAI_API_KEY"),
+        # )
+        
+        self.constraint_solver = LLMConstraintSolver(llm_model)
 
         self.logger = pantaLogger.initialize_logger(__name__)
-        self.logger.info(f"Using test generation strategy: {self.test_generation_strategy}")
         self.logger.info(f"Using fix type: {self.fix_type}")
         
         self.preprocessor = FilePreprocessor(self.test_code_file)
@@ -105,14 +107,6 @@ class UnitTestGenerator:
         self.path_history = {}
         # self.prompt = self.build_prompt(self.prompt_type)  # Commented out for now
         self.prompt = ""
-        
-        # Initialize CFG branch analyzer if needed
-        if self.test_generation_strategy and self.test_generation_strategy == "cfg_branch_analyzer":
-            self.cfg_branch_analyzer = CFGBranchAnalyzer(
-                self.language, read_file(self.source_code_file)
-            )
-        else:
-            self.cfg_branch_analyzer = None
 
     def run_coverage(self):
         """
@@ -257,12 +251,13 @@ class UnitTestGenerator:
             lines_missed=self.lines_missed,
             branch_missed=self.branch_missed,
             path_history=self.path_history,
-            test_dependencies=self.test_dependencies
+            test_dependencies=self.test_dependencies,
+            constraint_solver=self.constraint_solver
         )
         
         # CFG guided test generation strategy
         if prompt_type == "control":
-            prompt = self.prompt_builder.build_prompt_cfa_guided(pick_two_paths)
+            prompt = self.prompt_builder.build_prompt_cfa_guided(pick_two_paths, thinking_enabled=self.thinking_enhancement)
             self.path_history = self.prompt_builder.get_current_path_history()
             return prompt
         elif prompt_type == "coverage":
@@ -368,6 +363,11 @@ class UnitTestGenerator:
         self.prompt = self.build_prompt(self.prompt_type, pick_two_paths)
         # self.logger.info(f"{g_label}: {self.path_history}")
         tests_dict, token_count = self.generate_test_by_prompt_llm(self.prompt, max_tokens)
+
+        # If we have constraints solving capability and tests aren't good enough,
+        # we can enhance them further. However, in our current implementation,
+        # the constraint solving is already integrated into the prompt.
+
         return tests_dict, token_count
 
     def generate_init_tests(self, prompt_type='baseline', max_tokens=4096):
@@ -382,12 +382,22 @@ class UnitTestGenerator:
         self.logger.info(f"Total token count for LLM {self.llm_invoker.model}: "
                          f"{prompt_token_count + response_token_count}")
         token_count = prompt_token_count + response_token_count
+
+        # Check if the response is irrelevant to test generation
+        irrelevant_keywords = ["Congress", "government", "policy", "politics"]
+        for keyword in irrelevant_keywords:
+            if keyword in response:
+                self.logger.error(f"LLM returned irrelevant response containing: {keyword}")
+                self.logger.error(f"Response: {response[:100]}...")  # Log first 100 chars
+                return {"new_tests": []}, token_count
+
         try:
             tests_dict = load_yaml(response, keys_fix_yaml=["test_code",
                                                             "test_name",
                                                             "test_behavior"], )
-            if tests_dict is None:
-                return {}
+            # Ensure tests_dict is a dictionary
+            if tests_dict is None or not isinstance(tests_dict, dict):
+                return {"new_tests": []}, token_count
         except Exception as e:
             self.logger.error(f"Error during test generation: {e}")
             fail_details = {
@@ -671,145 +681,40 @@ class UnitTestGenerator:
         fix_results_list = []
         iter_count = 0
         token_count = 0
-        while self.failed_test_runs and iter_count < iter_num:
-            try:
-                fixing_prompt = self.build_prompt_for_fixing()
-                fixed_tests, tokens = self.generate_test_by_prompt_llm(fixing_prompt, max_tokens)
-                iter_count += 1
-                token_count += tokens
-                for fixed_test in fixed_tests.get("new_tests", []):
-                    test_result = self.validate_test(fixed_test)
-                    test_result['label'] = f"{f_label}_{iter_count}"
-                    fix_results_list.append(test_result)
-            except Exception as e:
-                self.logger.error(f"Error processing failed test runs: {e}")
+
+        # MCTS repair process
+        if self.fix_type == 'MCTS':
+            self.logger.info(f"Using MCTS repair strategy with {iter_num} iterations")
+            while self.failed_test_runs and iter_count < iter_num:
+                try:
+                    fixing_prompt = self.build_prompt_for_fixing()
+                    fixed_tests, tokens = self.generate_test_by_prompt_llm(fixing_prompt, max_tokens)
+                    iter_count += 1
+                    token_count += tokens
+                    for fixed_test in fixed_tests.get("new_tests", []):
+                        test_result = self.validate_test(fixed_test)
+                        test_result['label'] = f"{f_label}_{iter_count}"
+                        fix_results_list.append(test_result)
+
+                except Exception as e:
+                    self.logger.error(f"Error in MCTS repair process: {e}")
+                    # Fall back to traditional repair process
+                    self.fix_type = 'traditional'
+
+        # Traditional repair process
+        if self.fix_type != 'MCTS' and self.failed_test_runs:
+            while self.failed_test_runs and iter_count < iter_num:
+                try:
+                    fixing_prompt = self.build_prompt_for_fixing()
+                    fixed_tests, tokens = self.generate_test_by_prompt_llm(fixing_prompt, max_tokens)
+                    iter_count += 1
+                    token_count += tokens
+                    for fixed_test in fixed_tests.get("new_tests", []):
+                        test_result = self.validate_test(fixed_test)
+                        test_result['label'] = f"{f_label}_{iter_count}"
+                        fix_results_list.append(test_result)
+                except Exception as e:
+                    self.logger.error(f"Error processing failed test runs: {e}")
+
         return fix_results_list, token_count
     
-    def analyze_branch_coverage_opportunities(self):
-        """
-        Analyze branch coverage opportunities to provide guidance for test generation
-        """
-        if not self.branch_missed:
-            return {}
-        
-        # Use CFG branch analyzer to analyze uncovered branches
-        branch_analysis = {}
-        
-        for branch_line in self.branch_missed:
-            # Get branch information for this line
-            branch_hints = self.cfg_branch_analyzer.get_branch_coverage_hints([branch_line])
-            if branch_hints:
-                branch_analysis[branch_line] = branch_hints[0]
-        
-        return branch_analysis
-    
-    def generate_branch_focused_tests(self, method_name: str = None):
-        """
-        Generate test cases focused on branch coverage
-        """
-        branch_analysis = self.analyze_branch_coverage_opportunities()
-        
-        if not branch_analysis:
-            return {}, 0
-        
-        # Build prompt focused on branch coverage
-        branch_prompt = self.build_branch_focused_prompt(branch_analysis, method_name)
-        
-        # Generate test cases
-        tests_dict, token_count = self.generate_test_by_prompt_llm(branch_prompt, max_tokens=4096)
-        
-        return tests_dict, token_count
-    
-    def build_branch_focused_prompt(self, branch_analysis: dict, method_name: str = None) -> dict:
-        """
-        Build prompt focused on branch coverage
-        """
-        # Build branch coverage guidance information
-        branch_guidance = "\n=== Branch Coverage Guidance ===\n"
-        branch_guidance += "The following branches need special attention to improve branch coverage:\n\n"
-        
-        for line, analysis in branch_analysis.items():
-            branch_guidance += f"Line {line}: {analysis['statement']}\n"
-            branch_guidance += f"Branch type: {analysis['branch_type']}\n"
-            branch_guidance += f"Complexity: {analysis['complexity']}\n"
-            branch_guidance += "Suggested test conditions:\n"
-            for condition in analysis['suggested_test_conditions']:
-                branch_guidance += f"- {condition}\n"
-            branch_guidance += "\n"
-        
-        # Build complete prompt
-        variables = {
-            "source_file_name": self.source_code_file.split("/")[-1],
-            "test_file_name": self.test_code_file.split("/")[-1],
-            "source_file": read_file(self.source_code_file),
-            "test_file": read_file(self.test_code_file),
-            "code_coverage_report": self.code_coverage_report,
-            "branch_guidance": branch_guidance,
-            "method_name": method_name or "all methods",
-            "language": self.language
-        }
-        
-        # Use template to build prompt
-        from jinja2 import Environment
-        environment = Environment()
-        
-        system_template = """
-You are a professional unit test generator specialized in generating high-quality test cases to improve code branch coverage.
-
-Your tasks are:
-1. Analyze the branch structure in the source code
-2. Generate targeted test cases based on branch coverage guidance information
-3. Ensure test cases can cover the specified branch conditions
-4. Generate clear and executable test code
-
-Focus on:
-- True and false paths of conditional branches
-- Entry and exit conditions of loops
-- Exception handling branches
-- Boundary condition tests
-
-Please generate test cases to cover the following branches:
-{{ branch_guidance }}
-"""
-        
-        user_template = """
-Please generate test cases for the following code, with special focus on branch coverage:
-
-Source code file: {{ source_file_name }}
-Test file: {{ test_file_name }}
-
-Source code:
-```
-{{ source_file }}
-```
-
-Current test file:
-```
-{{ test_file }}
-```
-
-Code coverage report:
-```
-{{ code_coverage_report }}
-```
-
-Branch coverage guidance:
-{{ branch_guidance }}
-
-Please generate test cases to cover the above branches, ensuring:
-1. Both true and false paths of each conditional branch are tested
-2. Boundary conditions of loops are tested
-3. Exception cases are properly handled
-4. Test cases are clear and maintainable
-
-{% if method_name != "all methods" %}
-Special focus on method: {{ method_name }}
-{% endif %}
-
-Please return test cases in YAML format.
-"""
-        
-        system_prompt = environment.from_string(system_template).render(variables)
-        user_prompt = environment.from_string(user_template).render(variables)
-        
-        return {"system": system_prompt, "user": user_prompt}

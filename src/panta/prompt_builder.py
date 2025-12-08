@@ -4,7 +4,7 @@ from .config_loader import get_settings
 from .templates import ADDITIONAL_INCLUDES_TEXT, ADDITIONAL_INSTRUCTIONS_TEXT, FAILED_TESTS_TEXT
 from jinja2 import Environment, StrictUndefined
 from .cfg.src.comex.codeviews.combined_graph.combined_driver import CombinedDriver
-from .cfg_branch_analyzer import CFGBranchAnalyzer
+from .llm_constraint_solver import LLMConstraintSolver
 import random
 
 from .utils import read_file
@@ -27,7 +27,8 @@ class PromptBuilder:
                  lines_missed=None,
                  branch_missed=None,
                  path_history=None,
-                 test_dependencies=""):
+                 test_dependencies="",
+                 constraint_solver: LLMConstraintSolver = None):
         if lines_missed is None:
             lines_missed = []
         if branch_missed is None:
@@ -54,10 +55,10 @@ class PromptBuilder:
         self.test_dependencies = test_dependencies
 
         # Initialize CFG branch analyzer
-        self.cfg_branch_analyzer = CFGBranchAnalyzer(self.language, self.source_file)
         self.cfa_guided_methods_under_test = self.extract_cfa_info_for_each_method_under_test()
 
         self.logger = pantaLogger.initialize_logger(__name__)
+        self.constraint_solver = constraint_solver
 
         # add line numbers to each line in 'source_file'. start from 1
         self.source_file_numbered = "\n".join(
@@ -206,7 +207,7 @@ class PromptBuilder:
 
         return prioritized_path
 
-    def build_prompt_cfa_guided(self, pick_two_paths=True) -> dict:
+    def build_prompt_cfa_guided(self, pick_two_paths=True, thinking_enabled=True) -> dict:
         """
         Replaces placeholders with the actual content of files read during initialization, and returns the formatted prompt.
 
@@ -216,8 +217,6 @@ class PromptBuilder:
         Returns:
             str: The formatted prompt string.
         """
-        # generate branch coverage guidance
-        branch_coverage_guidance = self.generate_branch_coverage_guidance()
         variables = {
             "source_file_name": self.source_file_name,
             "test_file_name": self.test_file_name,
@@ -234,7 +233,6 @@ class PromptBuilder:
             "language": self.language,
             "max_tests": MAX_TESTS_PER_RUN,
             "processed_source_code": self.processed_source_code,
-            "branch_coverage_guidance": branch_coverage_guidance
         }
 
         environment = Environment(undefined=StrictUndefined)
@@ -260,7 +258,7 @@ class PromptBuilder:
                                                                                       self.path_history)
                         if highest_missed_path and least_visited_path:
                             self.logger.info(
-                                f"select the candidate path that covers the most missed lines for method {method_name}")
+                                f"select the candidate path that covers the most missed lines for method {method_name}: {highest_missed_path[3]}")
                             highest_path_label = highest_missed_path[4]
                             least_path_label = least_visited_path[4]
                             self.path_history[highest_path_label] = self.path_history.get(highest_path_label, 0) + 1
@@ -269,7 +267,7 @@ class PromptBuilder:
                                                                                              candidate_path=path_str)
                             if least_path_label != highest_path_label:
                                 self.logger.info(
-                                    f"select another candidate path with the least time of visits for method {method_name}")
+                                    f"select another candidate path with the least time of visits for method {method_name}: {least_visited_path[3]}")
                                 self.path_history[least_path_label] = self.path_history.get(least_path_label, 0) + 1
                                 path_str = least_visited_path[3]
                                 rendered_template += environment.from_string(template_str).render(method_name=method_name,
@@ -278,7 +276,7 @@ class PromptBuilder:
                         prioritized_path = self.pick_path(candidate_paths, self.path_history)
                         if prioritized_path:
                             self.logger.info(
-                                f"select the path that has highest priority score for method {method_name}")
+                                f"select the path that has highest priority score for method {method_name}: {prioritized_path[3]}")
                             path_label = prioritized_path[4]
                             self.path_history[path_label] = self.path_history.get(path_label, 0) + 1
                             path_str = prioritized_path[3]
@@ -293,9 +291,17 @@ class PromptBuilder:
                             method_name=method_name, missed_lines=missed_lines)
                 rendered_templates += rendered_template
 
-            user_prompt = environment.from_string(
-                get_settings().test_generation_cfg_guided_prompt.user
-            ).render(variables, method_under_test=rendered_templates)
+            if thinking_enabled:
+                # Enhanced with constraint solving
+                constraints = self.constraint_solver.generate_constraints(variables['source_file'], rendered_templates)
+                
+                user_prompt = environment.from_string(
+                    get_settings().test_generation_cfg_guided_with_constraint_solver_prompt.user
+                ).render(variables, method_under_test=rendered_templates, constraints=constraints)
+            else:
+                user_prompt = environment.from_string(
+                    get_settings().test_generation_cfg_guided_prompt.user
+                ).render(variables, method_under_test=rendered_templates)
 
             self.logger.debug(f"system_prompt: {system_prompt}")
             self.logger.debug(f"user_prompt: {user_prompt}")
@@ -309,22 +315,6 @@ class PromptBuilder:
     def get_current_path_history(self):
         return self.path_history
 
-    def generate_branch_coverage_guidance(self) -> str:
-        """
-        generate branch coverage guidance
-        """
-        if not self.branch_missed:
-            return ""
-        # Use CFG branch analyzer to generate guidance information
-        branch_guidance = self.cfg_branch_analyzer.generate_branch_coverage_prompt(self.branch_missed)
-
-        if branch_guidance:
-            return branch_guidance
-        # If no CFG guidance, provide basic uncovered branch information
-        basic_guidance = "\n=== Branch Coverage Information ===\n"
-        basic_guidance += f"The following branch lines need coverage: {self.branch_missed}\n"
-        basic_guidance += "Please generate test cases to cover these branch conditions.\n\n"
-        return basic_guidance
 
     def build_prompt(self, coverage_enabled=False) -> dict:
         """

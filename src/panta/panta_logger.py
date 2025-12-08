@@ -7,19 +7,30 @@ class pantaLogger:
     log_directory = None
 
     @classmethod
-    def set_log_path(cls, prompt_type, llm_model, project_name, branch_analyzer=None):
+    def set_log_path(cls, prompt_type, llm_model, project_name, branch_analyzer=None, thinking_enhancement=False, fix_type=None):
         current_file = os.path.abspath(__file__)
         project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
-        
-        # Build directory name
+
+        # Build directory name with think and mcts flags
+        directory_parts = [prompt_type, llm_model]
+
+        # Add branch_analyzer if present
         if branch_analyzer:
-            directory_name = f"{prompt_type}_{llm_model}_{branch_analyzer}"
-        else:
-            directory_name = f"{prompt_type}_{llm_model}"
-        
+            directory_parts.append(branch_analyzer)
+
+        # Add think flag if enabled
+        if thinking_enhancement:
+            directory_parts.append("think")
+
+        # Add mcts flag if fix_type is MCTS
+        if fix_type == "MCTS":
+            directory_parts.append("mcts")
+
+        directory_name = "_".join(directory_parts)
+
         # Create full log directory path
         cls.log_directory = os.path.join(project_root, "logs", directory_name)
-        
+
         # Ensure directory exists
         os.makedirs(cls.log_directory, exist_ok=True)
         
