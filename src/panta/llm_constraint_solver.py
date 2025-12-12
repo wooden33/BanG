@@ -140,10 +140,12 @@ Generate simple input conditions:
             self.logger.debug(f"Generated constraint prompt: {prompt}")
 
             # Call LLM and get response
-            response = self.llm_invoker.invoke(prompt)
+            response, prompt_tokens, completion_tokens = self.llm_invoker.call_model(prompt)
             constraints = response.strip()
 
+            # Log token usage
             self.logger.info(f"Generated constraints: {constraints}")
+            self.logger.info(f"Prompt tokens: {prompt_tokens}, Completion tokens: {completion_tokens}")
             return constraints
 
         except Exception as e:

@@ -47,7 +47,7 @@ def extract_config_data(src_file_obj, project_name, max_complexity, prompt_type,
     code_coverage_report_path = project_dir + "/target/jacoco/jacoco.csv"
     # Avoid using `clean` to prevent concurrent deletion conflicts; run tests directly
     test_execution_command = (
-        f"mvn -q -DfailIfNoTests=false -Dmaven.test.failure.ignore=true -Dtest={test_file_name} test"
+        f"mvn clean package -q -DfailIfNoTests=false -Dmaven.test.failure.ignore=true -Dtest={test_file_name} test"
     )
     test_code_command_dir = project_dir
     junit_version = '4'
@@ -381,6 +381,10 @@ if __name__ == '__main__':
         executed_count = 0
         for task in tasks:
             src_file, p_name, max_cc, prompt, model = task
+            if p_name != "Math-2f":
+                continue
+            if src_file["src_name"] != "SummaryStatistics":
+                continue
             executed_count += 1
             print(f"Executing [{executed_count}/{pending_tasks}] {src_file['src_name']} (Complexity: {max_cc})")
             fill_config_and_execute(src_file, p_name, max_cc, prompt, model)

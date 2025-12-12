@@ -193,6 +193,8 @@ class Panta:
         iteration_count = 0
         test_results_list = []
         no_coverage_increase = 0
+        # Enhanced path history tracking for comparison
+        detailed_path_history = []
 
         # self.test_gen.initial_test_suite_analysis()
         self.test_gen.initial_test_suite_analysis_AST()
@@ -210,7 +212,7 @@ class Panta:
 
                 time_start = time.time()
                 token_count = 0
-                if int(cur_line_cov) == 0 and int(cur_branch_cov) == 0:
+                if int(cur_line_cov) == 0 and int(cur_branch_cov) == 0 or iteration_count == 0:
                     self.logger.info(f"initial tests generation using baseline type of prompt")
                     generated_tests_dict, gen_token_count = self.test_gen.generate_init_tests(g_label, max_tokens=4096)
                 else:
@@ -278,6 +280,18 @@ class Panta:
                             f"Iteration {iteration_count} cannot increase coverage.")
                         no_coverage_increase += 1
 
+                # Record detailed path history for this iteration
+                iteration_path_data = {
+                    "iteration": iteration_count,
+                    "line_coverage": round(self.test_gen.current_coverage[0] * 100, 2),
+                    "branch_coverage": round(self.test_gen.current_coverage[1] * 100, 2),
+                    "path_history": dict(self.test_gen.path_history),  # Create a copy of the current path history
+                    "lines_missed": list(self.test_gen.lines_missed),  # Copy of missed lines
+                    "branches_missed": list(self.test_gen.branch_missed),  # Copy of missed branches
+                    "timestamp": time.time()
+                }
+                detailed_path_history.append(iteration_path_data)
+
                 iteration_count += 1
         except Exception as e:
             self.logger.error("iteration stops due to error: %s", e)
@@ -322,8 +336,24 @@ class Panta:
             os.makedirs(report_path)
         ReportGenerator.generate_report(test_results_list, os.path.join(report_path, report_file))
         self.logger.info(f"Report generated successfully at: {os.path.join(report_path, report_file)}")
+
+        # Save detailed path history for comparison purposes (first occurrence)
+        if detailed_path_history:
+            import json
+            path_history_file = os.path.splitext(report_file)[0] + "_path_history.json"
+            path_history_path = os.path.join(report_path, path_history_file)
+
+            with open(path_history_path, "w") as f:
+                json.dump(detailed_path_history, f, indent=2)
+
+            self.logger.info(f"Detailed path history saved at: {path_history_path}")
+            # Also log the path history summary
+            for entry in detailed_path_history:
+                self.logger.info(f"Iteration {entry['iteration']}: Line Coverage={entry['line_coverage']}%, "
+                               f"Branch Coverage={entry['branch_coverage']}%, "
+                               f"Paths Explored: {len(entry['path_history'])}")
         # Cleanup test file after run
-        self.cleanup_test_file()
+        # self.cleanup_test_file()
 
     def run_symprompt(self):
         test_results_list = []

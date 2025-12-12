@@ -94,7 +94,7 @@ class UnitTestGenerator:
         #     ak=os.getenv("AZURE_OPENAI_API_KEY"),
         # )
         
-        self.constraint_solver = LLMConstraintSolver(llm_model)
+        self.constraint_solver = LLMConstraintSolver(self.llm_invoker)
 
         self.logger = pantaLogger.initialize_logger(__name__)
         self.logger.info(f"Using fix type: {self.fix_type}")

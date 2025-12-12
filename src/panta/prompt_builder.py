@@ -242,6 +242,8 @@ class PromptBuilder:
             ).render(variables)
 
             rendered_templates = ""
+            selected_paths = []
+
             for method in self.cfa_guided_methods_under_test:
                 method_name = method[0]
                 method_complexity = method[1]
@@ -249,7 +251,7 @@ class PromptBuilder:
                 # print(method_name, missed_lines)
                 # candidate_paths: [(missed_value, path_lines, path_nodes, path_conditions_str, path_label)]
                 candidate_paths = method[4]
-                rendered_template = ""
+                
                 if method_complexity > 1:
                     template_str = "\n=========\nPlease generate test case for method `{{ method_name }}` " \
                                    "to cover the path: {{ candidate_path }}"
@@ -263,15 +265,22 @@ class PromptBuilder:
                             least_path_label = least_visited_path[4]
                             self.path_history[highest_path_label] = self.path_history.get(highest_path_label, 0) + 1
                             path_str = highest_missed_path[3]
+                            selected_paths.append(path_str)
+                            
                             rendered_template = environment.from_string(template_str).render(method_name=method_name,
                                                                                              candidate_path=path_str)
+                            rendered_templates += rendered_template
+                            
                             if least_path_label != highest_path_label:
                                 self.logger.info(
                                     f"select another candidate path with the least time of visits for method {method_name}: {least_visited_path[3]}")
                                 self.path_history[least_path_label] = self.path_history.get(least_path_label, 0) + 1
                                 path_str = least_visited_path[3]
-                                rendered_template += environment.from_string(template_str).render(method_name=method_name,
+                                selected_paths.append(path_str)
+                                
+                                rendered_template = environment.from_string(template_str).render(method_name=method_name,
                                                                                                   candidate_path=path_str)
+                                rendered_templates += rendered_template
                     else:
                         prioritized_path = self.pick_path(candidate_paths, self.path_history)
                         if prioritized_path:
@@ -280,8 +289,11 @@ class PromptBuilder:
                             path_label = prioritized_path[4]
                             self.path_history[path_label] = self.path_history.get(path_label, 0) + 1
                             path_str = prioritized_path[3]
+                            selected_paths.append(path_str)
+                            
                             rendered_template = environment.from_string(template_str).render(method_name=method_name,
                                                                                              candidate_path=path_str)
+                            rendered_templates += rendered_template
                 else:
                     if missed_lines:
                         template_str_missed_lines = "\n=========\nPlease generate test case for method `{{ method_name }}` " \
@@ -289,15 +301,22 @@ class PromptBuilder:
 
                         rendered_template = environment.from_string(template_str_missed_lines).render(
                             method_name=method_name, missed_lines=missed_lines)
-                rendered_templates += rendered_template
+                        rendered_templates += rendered_template
 
-            if thinking_enabled:
+            if thinking_enabled and self.constraint_solver:
                 # Enhanced with constraint solving
-                constraints = self.constraint_solver.generate_constraints(variables['source_file'], rendered_templates)
+                # Batch generate constraints for all selected paths
+                constraints_results = self.constraint_solver.batch_generate_constraints(variables['source_file'], selected_paths)
+                
+                # Format constraints string
+                constraints_str = ""
+                for path, constraint in constraints_results:
+                    if constraint:
+                        constraints_str += f"\nConstraints for path:\n{path}\nSuggested Inputs: {constraint}\n"
                 
                 user_prompt = environment.from_string(
                     get_settings().test_generation_cfg_guided_with_constraint_solver_prompt.user
-                ).render(variables, method_under_test=rendered_templates, constraints=constraints)
+                ).render(variables, method_under_test=rendered_templates, constraints=constraints_str)
             else:
                 user_prompt = environment.from_string(
                     get_settings().test_generation_cfg_guided_prompt.user

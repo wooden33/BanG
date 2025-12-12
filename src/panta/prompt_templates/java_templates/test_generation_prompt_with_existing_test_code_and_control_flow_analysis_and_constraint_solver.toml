@@ -29,7 +29,7 @@ Please use the following dependencies to generate tests
 {{ test_dependencies }}
 =========
 
-{%- if failed_tests_section|trim  %}
+{%- if failed_tests_section|trim  %}
 {{ failed_tests_section|trim }}
 {% endif %}
 
@@ -37,29 +37,30 @@ Please use the following dependencies to generate tests
 **Target**: Please generate tests for the following method under test respectively to increase the overall code coverage:
 {{method_under_test}}
 
-## Constraint Solver Guidance
+## Constraint Solver Guidance (Provided)
 ========
 {{ constraints }}
 ========
+**Note**: The necessary constraints to cover uncovered paths are provided in the section above. Your task is to use this information to construct the required inputs and write the corresponding unit tests.
 
-### Thinking Process Guidance(MANDATORY):
+### Thinking Process Guidance (MANDATORY):
 Before generating the YAML output, you must write a Detailed Analysis section. Do not skip this.
-For each uncovered path/branch in the target method, perform Constraint Solving:
+For each uncovered path/branch in the target method (as indicated by the Constraint Solver Guidance):
 
-1. **Locate the Branch**: Identify the specific line number and condition (e.g., if (x > 5 && y == null)).
+1. **Locate the Branch**: Identify the specific line number and condition.
 
-2. **Solve Constraints**: Reverse-engineer the input data required to satisfy this condition.
-  
-  - Ask yourself: "What value must registry have? What state must the pattern string be in?"
-  - Example: "To hit the else block at line 45, registry must be non-null, but registry.get(x) must return null."
+2. **Apply Constraints**: Use the provided constraint solution to determine the required input data.
+  
+  - Ask yourself: "How do I construct the input objects/values to satisfy the constraints provided in the guidance section?"
+  - Example: "The guidance states `registry` must be non-null and `registry.get(x)` must return null. I need to create a `Registry` object and mock/configure it accordingly."
 
 3. **Plan the Test**:
-  - Setup: How do I construct these objects using existing helpers in {{ test_file_name }}?
-  - Assertion: What happens when this path is taken? (Exception thrown? Return value changes?)
+  - Setup: How do I construct these objects using existing helpers in {{ test_file_name }}?
+  - Assertion: What happens when this path is taken? (Exception thrown? Return value changes?)
 
 ### Example Thinking Process (Applied to a complex path):
 *Target*: Cover the `else` block of `if (config.isValid() || forced)` where `forced` is false.
-1. **Constraints**: `config` must not be null. `config.isValid()` must return `false`. `forced` boolean must be `false`.
+1. **Constraints**: Guidance states: `config` must not be null. `config.isValid()` must return `false`. `forced` boolean must be `false`.
 2. **Input**: Create a `Config` object. Call `setValid(false)`. Pass `false` as the second argument.
 3. **Existing Context**: `TestHelper.createBasicConfig()` exists in the test file. I will use it.
 4. **Outcome**: The method should throw `ConfigurationException`.
@@ -73,16 +74,16 @@ Only after completing this thinking process should you proceed to write the test
 The output must contain a YAML object equivalent to type `NewTests`, according to the following definitions:
 =====
 class SingleTest {
-    String test_behavior; // Short description of the behavior the test covers
-    String test_name; // A short test name, in camel case, that reflects the behavior to test
-    String test_code; // A single test function, that tests the behavior described in 'test_behavior'. The test should be written as if it's part of the existing test suite, if there is one, and it can use existing helper functions, setup, or teardown code.
-    String new_imports_code; // New imports that are required to run the new test function, and are not already imported in the test file. Give an empty string if no new imports are required. If relevant, add new imports as 'import ...' lines.
+    String test_behavior; // Short description of the behavior the test covers
+    String test_name; // A short test name, in camel case, that reflects the behavior to test
+    String test_code; // A single test function, that tests the behavior described in 'test_behavior'. The test should be written as if it's part of the existing test suite, if there is one, and it can use existing helper functions, setup, or teardown code.
+    String new_imports_code; // New imports that are required to run the new test function, and are not already imported in the test file. Give an empty string if no new imports is required. If relevant, add new imports as 'import ...' lines.
 }
 
 class NewTests {
-    String language; // The programming language of the source code
-    String existing_test_function_signature; // A single line repeating a signature header of one of the existing test functions
-    List<SingleTest> new_tests; // A list of new test functions to append to the existing test suite, aiming to increase the code coverage. Each test should run as-is, without requiring any additional inputs or setup code. Don't introduce new dependencies
+    String language; // The programming language of the source code
+    String existing_test_function_signature; // A single line repeating a signature header of one of the existing test functions
+    List<SingleTest> new_tests; // A list of new test functions to append to the existing test suite, aiming to increase the code coverage. Each test should run as-is, without requiring any additional inputs or setup code. Don't introduce new dependencies
 }
 =====
 Response:
@@ -93,37 +94,35 @@ Response:
 ```yaml
 language: Java
 existing_test_function_signature: |
-  @Test
-  public void testExample() {
-    // existing test code
-  }
+  @Test
+  public void testExample() {
+    // existing test code
+  }
 new_tests:
 - test_behavior: |
-    Test that the function returns the correct output for a specific scenario
-  test_name: |
-    testSpecificScenario
-  test_code: |
-    @Test
-    public void testSpecificScenario() {
-        // test implementation
-    }
-  new_imports_code: |
-    import static org.junit.Assert.*;
-    import org.junit.Test;
+    Test that the function returns the correct output for a specific scenario
+  test_name: |
+    testSpecificScenario
+  test_code: |
+    @Test
+    public void testSpecificScenario() {
+        // test implementation
+    }
+  new_imports_code: |
+    import static org.junit.Assert.*;
+    import org.junit.Test;
 - test_behavior: |
-    Test that the function handles a specific edge case correctly
-  test_name: |
-    testEdgeCase
-  test_code: |
-    @Test
-    public void testEdgeCase() {
-        // test implementation
-    }
-  new_imports_code: |
-    import static org.junit.Assert.*;
-    import org.junit.Test;
-```
-
+    Test that the function handles a specific edge case correctly
+  test_name: |
+    testEdgeCase
+  test_code: |
+    @Test
+    public void testEdgeCase() {
+        // test implementation
+    }
+  new_imports_code: |
+    import static org.junit.Assert.*;
+    import org.junit.Test;
 Use block scalar('|') to format each YAML output.
 
 Response:"""
