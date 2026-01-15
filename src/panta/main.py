@@ -35,6 +35,7 @@ def config_to_namespace(config):
         included_files=config.get('included_files'),
         junit_version=config.getint('junit_version'),
         model=config.get('model'),
+        solver_model=config.get('solver_model'),
         coverage_type=config.get('coverage_type'),
         report_filepath=config.get('report_filepath'),
         target_coverage=config.getint('target_coverage'),
@@ -42,8 +43,9 @@ def config_to_namespace(config):
         no_coverage_increase_iterations=config.getint('no_coverage_increase_iterations'),
         enable_fixing=config.getint("enable_fixing"),
         run_symprompt=config.getboolean("run_symprompt"),
+        run_hits=config.getboolean("run_hits"),
         prompt_type=config.get('prompt_type'),
-        thinking_enhancement=config.getboolean("thinking_enhancement"),
+        use_constraints=config.getboolean("use_constraints"),
         fix_type=config.get('fix_type', None),
         pick_two_paths=config.getboolean("pick_two_paths"),
         additional_instructions=config.get('additional_instructions')
@@ -66,6 +68,8 @@ def main():
     panta = Panta(config_args)
     if config_args.run_symprompt:
         panta.run_symprompt()
+    elif config_args.run_hits:
+        panta.run_hits()
     else:
         panta.run()
 

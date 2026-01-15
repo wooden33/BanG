@@ -1,84 +1,82 @@
 [failed_test_prompt_with_MCTS]
 system="""\
-You are an expert Java Test Engineer specializing in debugging and automated program repair.
-Your method is "Multi-Path Reasoning": you analyze the root cause, explore multiple distinct fix strategies, and scientifically select the most robust one before coding."""
+You are an expert Java Debugging Specialist. 
+Your goal is to fix Java test failures by identifying whether an error is a **Compilation Error** (e.g., symbol not found, type mismatch) or a **Runtime Failure** (e.g., AssertionError, NullPointerException). 
+For compilation errors, you focus on syntax and dependency alignment. For runtime failures, you focus on logic and assertion correctness."""
 
 user="""\
 ## Overview
-You are tasked with fixing failed JUnit tests based on failure messages and source code.
-Your goal is to provide a **robust fix** that strictly adheres to the intended logic of the source code.
+You are tasked with fixing failed JUnit tests. Some tests may fail to compile, while others may fail during execution. 
+Your objective is to provide a code fix that is both syntactically correct and logically sound.
 
-### Reasoning Process (Mandatory):
-Instead of rushing to a solution, you must follow this "Tree of Thought" process:
-1.  **Diagnosis (Root Cause)**: Analyze *why* the test failed. Is it a wrong assertion? Incorrect test setup? Or a misunderstanding of the source code?
-2.  **Exploration (Branching)**: Brainstorm at least **two distinct strategies** to fix the test.
-    * *Strategy A*: e.g., "Adjust the assertion value to match source behavior."
-    * *Strategy B*: e.g., "Fix the input data setup to trigger the expected path."
-3.  **Selection (Pruning)**: Compare the strategies. Which one is more correct according to the `Source File`? Discard "hacky" fixes (like just commenting out lines).
-4.  **Final Verification**: Simulate the execution of your chosen fix. Does it cover the edge case?
+## Reasoning Guidelines (Internal Process):
+Before generating the YAML, you must mentally (or via comments) follow these steps:
+1. **Identify Error Type**: 
+   - If 'Compilation Error': Map the error to the specific line. Check if you are calling a method that doesn't exist or missing an import.
+   - If 'Runtime Failure': Compare 'Expected' vs 'Actual'. Check if the test setup correctly reflects the source code logic.
+2. **Apply Fix Strategy**:
+   - For Syntax: Align method calls with the provided `Source File` signatures.
+   - For Logic: Adjust assertions to match the intended behavior of the source code.
 
-## Source File
-`{{ source_file_name }}`:
+## Source File (`{{ source_file_name }}`)
 =========
 {{ source_file|trim }}
 =========
 
-## Test File
-`{{ test_file_name }}`:
+## Test File (`{{ test_file_name }}`)
 =========
 {{ test_file|trim }}
 =========
 
-## Failed Tests & Errors
-Focus on fixing these specific failures:
-======
-{{ failed_test_runs }}
-======
-
-## Dependencies
+## Third-party dependencies
 =========
 {{ test_dependencies }}
 =========
 
+## Failed Tests & Error Logs
+======
+{{ failed_test_runs }}
+======
+
 ## Response Format
-You must output TWO parts:
-1.  **Reasoning Block**: A plain text section containing your Diagnosis, Exploration, and Selection.
-2.  **YAML Block**: The structured code output.
+The output must be a YAML object. Use block scalar('|') for code blocks. 
+Prioritize fixing compilation errors first to ensure the suite is executable.
 
 Response:
-
-## Part 1: Multi-Path Reasoning
-1. **Diagnosis**:
-   - The test `testCalculate` failed with `Expected: 5, Actual: 4`.
-   - Source code line 20 shows logic `return input - 1` instead of `input + 1`.
-
-2. **Exploration**:
-   - *Strategy A*: Change source code. (INVALID: I must fix the *test*, not the source).
-   - *Strategy B*: Update test assertion to expect `4`. (Valid, assuming source is source-of-truth).
-   - *Strategy C*: Change input to `6` so result is `5`. (Valid, preserves assertion value).
-
-3. **Selection**:
-   - I choose *Strategy B* because the test name implies checking the subtraction logic.
-
-4. **Verification**:
-   - New assertion `assertEquals(4, result)` matches source logic.
-
-## Part 2: Fixed Tests YAML
 ```yaml
 language: Java
 existing_test_function_signature: |
   @Test
-  public void existingTest() {}
+  public void testExample() {
+    // existing test code
+  }
 new_tests:
 - test_behavior: |
-    Fixes the assertion to match the subtraction logic in source.
+    Test that the function returns the correct output for a specific scenario
   test_name: |
-    testCalculate
+    testSpecificScenario
   test_code: |
     @Test
-    public void testCalculate() {
-        Calculator calc = new Calculator();
-        int result = calc.process(5);
-        assertEquals(4, result); // Fixed expectation
+    public void testSpecificScenario() {
+        // test implementation
     }
-  new_imports_code: ''"""
+  new_imports_code: |
+    import static org.junit.jupiter.api.Assertions.*;
+    import org.junit.jupiter.api.Test;
+- test_behavior: |
+    Test that the function handles a specific edge case correctly
+  test_name: |
+    testEdgeCase
+  test_code: |
+    @Test
+    public void testEdgeCase() {
+        // test implementation
+    }
+  new_imports_code: |
+    import static org.junit.jupiter.api.Assertions.*;
+    import org.junit.jupiter.api.Test;
+```
+
+Use block scalar('|') to format each YAML output.
+
+Response:"""

@@ -152,15 +152,17 @@ class SymPrompt:
             candidate_paths = method[4]
             method_calls_in_class = method[5]
             focal_method_lines = method[6]
-            print(method_label)
             self.generated_tests[method_label] = []
             for path in candidate_paths:
                 self.prompt = self.build_prompt_for_each_path(method_name, method_signiture, method_label,
                                                               method_calls_in_class, focal_method_lines, path)
 
                 generated_test = self.generate_test_by_prompt_llm(self.prompt, max_tokens)
-                if 'single_test' in generated_test and generated_test['single_test']:
-                    self.generated_tests[method_label].extend(generated_test['single_test'])
+                try:
+                    if 'single_test' in generated_test and generated_test['single_test']:
+                        self.generated_tests[method_label].extend([generated_test['single_test']])
+                except Exception as e:
+                    self.logger.error(f"Error during test generation: {e}")
 
     def generate_test_by_prompt_llm(self, prompt: dict, max_tokens=4096):
         response, prompt_token_count, response_token_count = (

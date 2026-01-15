@@ -8,7 +8,7 @@ from .coverage.pycov_coverage import PycovCoverage
 from .error_message_parser import extract_error_message, extract_compilation_error_message_java
 from .file_preprocessor import FilePreprocessor
 from .panta_logger import pantaLogger
-from .model_invocation.llm_invocation import LLMInvocation, AzureOpenAIInvocation, OllamaInvocation
+from .model_invocation.llm_invocation import LLMInvocation, AzureOpenAIInvocation
 from .prompt_builder import PromptBuilder
 from .utils import get_code_language
 from .yaml_parser_utils import load_yaml
@@ -52,6 +52,7 @@ class UnitTestGenerator:
                  code_coverage_report_path: str,
                  test_execution_command: str,
                  llm_model: str,
+                 solver_model: str,
                  test_code_command_dir: str = os.getcwd(),
                  test_dependencies: str = "",
                  included_files: list = None,
@@ -59,7 +60,7 @@ class UnitTestGenerator:
                  target_coverage: int = 100,
                  prompt_type: str = "baseline",
                  additional_instructions: str = "",
-                 thinking_enhancement: bool = False,
+                 use_constraints: bool = False,
                  fix_type: str = None):
 
         self.relevant_line_number_to_insert_tests_after = None
@@ -82,24 +83,17 @@ class UnitTestGenerator:
         self.target_coverage = target_coverage
         self.additional_instructions = additional_instructions
         self.language = get_code_language(source_code_file)
-        self.thinking_enhancement = thinking_enhancement
+        self.use_constraints = use_constraints
         self.fix_type = fix_type
 
-        # TODO: 填写OpenAIInvocation的参数
         self.llm_invoker = LLMInvocation(model=llm_model)
-        # self.llm_invoker = AzureOpenAIInvocation(
-        #     model=llm_model,
-        #     base_url=os.getenv("AZURE_OPENAI_ENDPOINT"),
-        #     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-        #     ak=os.getenv("AZURE_OPENAI_API_KEY"),
-        # )
         
-        self.constraint_solver = LLMConstraintSolver(self.llm_invoker)
+        self.constraint_solver = LLMConstraintSolver(LLMInvocation(model=solver_model))
 
         self.logger = pantaLogger.initialize_logger(__name__)
         self.logger.info(f"Using fix type: {self.fix_type}")
         
-        self.preprocessor = FilePreprocessor(self.test_code_file)
+        # self.preprocessor = FilePreprocessor(self.test_code_file)
         self.failed_test_runs = []
         self.coverage_invalid_tests = []
         self.run_coverage()
@@ -218,25 +212,6 @@ class UnitTestGenerator:
         self.failed_test_runs = []
 
         no_coverage_increase_tests_value = ""
-        # if self.coverage_invalid_tests:
-        #     try:
-        #         for test in self.coverage_invalid_tests:
-        #             test_dict = test.get("code", {})
-        #             if not test_dict:
-        #                 continue
-        #             test_code = test_dict.get("test_code", "").rstrip()
-        #             test_imports = (test_dict.get("new_imports_code", "") or "").strip()
-        #             test_name = test_dict.get("test_name", "").rstrip()
-        #             no_coverage_increase_tests_value += f"======== No coverage improvement for test {test_name} ========\n"
-        #             no_coverage_increase_tests_value += f"additional imports: {test_imports}\n"
-        #             no_coverage_increase_tests_value += f"{test_code}\n"
-        #             no_coverage_increase_tests_value += f"Code coverage did not increase for the test {test_name}, " \
-        #                                                 f"avoid generating the same test again\n\n"
-        #
-        #     except Exception as e:
-        #         self.logger.error(f"Error processing failed test runs: {e}")
-        #
-        # self.coverage_invalid_tests = []
 
         self.prompt_builder = PromptBuilder(
             project_dir=self.project_dir,
@@ -257,7 +232,7 @@ class UnitTestGenerator:
         
         # CFG guided test generation strategy
         if prompt_type == "control":
-            prompt = self.prompt_builder.build_prompt_cfa_guided(pick_two_paths, thinking_enabled=self.thinking_enhancement)
+            prompt = self.prompt_builder.build_prompt_cfa_guided(pick_two_paths, use_constraints=self.use_constraints)
             self.path_history = self.prompt_builder.get_current_path_history()
             return prompt
         elif prompt_type == "coverage":
@@ -425,14 +400,7 @@ class UnitTestGenerator:
                     test_file.write(processed_test)
                 self.logger.info(f"Test added to the test file: {self.test_code_file}")
                 test_name = generated_test.get("test_name")
-                # if test_name:
-                #     # Now try to run the test so that we can check if the newly added test is valid
-                #     self.logger.info(f'Run test with the command: "{self.test_execution_command}#{test_name}"')
-                #     stdout, stderr, exit_code, time_of_command, command_duration = CommandExecutor.run_command(
-                #         command=f"{self.test_execution_command}#{test_name}", cwd=self.test_code_command_dir, timeout=10
-                #     )
-                # else:
-                # Now try to run the test so that we can check if the newly added test is valid
+
                 self.logger.info(f'Run test with the command: "{self.test_execution_command}"')
                 stdout, stderr, exit_code, time_of_command, command_duration = CommandExecutor.run_command(
                     command=self.test_execution_command, cwd=self.test_code_command_dir, timeout=60
@@ -498,80 +466,6 @@ class UnitTestGenerator:
 
                     return failure_details
 
-                # # We were able to run the test suite
-                # # So we now check for the coverage increase
-                # try:
-                #     if self.coverage_type == "jacoco":
-                #         new_coverage_processor = JacocoCoverage(
-                #             project_dir=self.project_dir,
-                #             file_path=self.code_coverage_report_path,
-                #             src_file_path=self.source_code_file
-                #         )
-                #     elif self.coverage_type == "pycov":
-                #         new_coverage_processor = PycovCoverage(
-                #             file_path=self.code_coverage_report_path,
-                #             src_file_path=self.source_code_file
-                #         )
-                #     else:
-                #         raise ValueError(f"Unsupported coverage type: {self.coverage_type}")
-                #
-                #     _, _, new_line_coverage, new_branch_coverage = (
-                #         new_coverage_processor.process_coverage_report(
-                #             time_of_test_execution_command=time_of_command
-                #         )
-                #     )
-
-                # except Exception as e:
-                #     self.logger.error(f"Error during coverage verification: {e}")
-                #     with open(self.test_code_file, "w") as test_file:
-                #         test_file.write(original_content)
-                #     failure_details = {
-                #         "status": "FAIL",
-                #         "reason": f"Error during coverage verification: {e}",
-                #         "exit_code": exit_code,
-                #         "stderr": stderr,
-                #         "stdout": stdout,
-                #         "test": generated_test,
-                #         "line_coverage": round(self.current_coverage[0] * 100, 2),
-                #         "branch_coverage": round(self.current_coverage[1] * 100, 2)
-                #     }
-                #     self.coverage_invalid_tests.append(
-                #         {
-                #             "code": generated_test,
-                #             "error_message": "Coverage verification failed",
-                #         }
-                #     )
-                #     return failure_details
-
-                # if new_line_coverage <= self.current_coverage[0] and new_branch_coverage <= self.current_coverage[1]:
-                #     self.logger.info(
-                #         "Generated test passed but it did not increase coverage."
-                #     )
-                #
-                #     pass_details = {
-                #         "status": "PASS",
-                #         "reason": "Coverage did not increase",
-                #         "exit_code": exit_code,
-                #         "stderr": stderr,
-                #         "stdout": "",
-                #         "test": generated_test,
-                #         "line_coverage": round(self.current_coverage[0] * 100, 2),
-                #         "branch_coverage": round(self.current_coverage[1] * 100, 2)
-                #     }
-                #     self.coverage_invalid_tests.append(
-                #         {
-                #             "code": generated_test,
-                #             "error_message": "Code coverage did not increase",
-                #         }
-                #     )
-                # else:
-                # If the test passes and the coverage increases, we return the test as a successful test
-                #self.current_coverage = (new_line_coverage, new_branch_coverage)
-
-                # self.logger.info(
-                #     f"Test generated which has passed and coverage increased. "
-                #     f"Now current coverages are Line: {round(new_line_coverage * 100, 2)}%, Branch: {round(new_branch_coverage * 100, 2)}%"
-                # )
                 self.logger.info(f"Generated test has passed: {test_name}")
                 pass_details = {
                     "status": "PASS",

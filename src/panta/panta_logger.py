@@ -7,20 +7,16 @@ class pantaLogger:
     log_directory = None
 
     @classmethod
-    def set_log_path(cls, prompt_type, llm_model, project_name, branch_analyzer=None, thinking_enhancement=False, fix_type=None):
+    def set_log_path(cls, prompt_type, llm_model, project_name, use_constraints=False, fix_type=None):
         current_file = os.path.abspath(__file__)
         project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
 
         # Build directory name with think and mcts flags
         directory_parts = [prompt_type, llm_model]
 
-        # Add branch_analyzer if present
-        if branch_analyzer:
-            directory_parts.append(branch_analyzer)
-
         # Add think flag if enabled
-        if thinking_enhancement:
-            directory_parts.append("think")
+        if use_constraints:
+            directory_parts.append("constraints")
 
         # Add mcts flag if fix_type is MCTS
         if fix_type == "MCTS":
@@ -33,7 +29,7 @@ class pantaLogger:
 
         # Ensure directory exists
         os.makedirs(cls.log_directory, exist_ok=True)
-        
+
         # Use project name as log filename to avoid multi-threading conflicts
         log_filename = f"{project_name}.log"
         cls.log_file = os.path.join(cls.log_directory, log_filename)
@@ -43,6 +39,17 @@ class pantaLogger:
         logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
         logger.propagate = False
+
+        # Only add handlers if log_directory has been set via set_log_path
+        if cls.log_directory is None:
+            # Add stream handler only for console output
+            if not logger.handlers:
+                stream_handler = logging.StreamHandler()
+                stream_handler.setLevel(logging.INFO)
+                stream_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+                stream_handler.setFormatter(stream_formatter)
+                logger.addHandler(stream_handler)
+            return logger
 
         if not logger.handlers:
             file_handler = logging.FileHandler(cls.log_file, mode="w")

@@ -42,11 +42,13 @@ class LLMInvocation:
             completion_params = {
                 "model": self.model,
                 "messages": messages,
-                "api_base": "http://210.28.134.33:11434",
                 "max_tokens": max_tokens,
                 "stream": True,
                 "temperature": temperature,
             }
+            
+        if self.model.startswith("ollama"):
+            completion_params["api_base"] = "http://210.28.134.33:11434"
 
         max_retries = 5
         base_delay = 2  # base delay in seconds
@@ -143,7 +145,6 @@ class AzureOpenAIInvocation(LLMInvocation):
                     prompt_tokens = len(encoding.encode(prompt_text))
                     completion_tokens = len(encoding.encode(full_content))
                 except Exception:
-                    # 如果tiktoken失败，回退到近似计算
                     prompt_tokens = int(len(" ".join(msg["content"] for msg in messages).split()) * 1.3)
                     completion_tokens = int(len(full_content.split()) * 1.3)
                 
@@ -158,89 +159,3 @@ class AzureOpenAIInvocation(LLMInvocation):
 
         raise RuntimeError(
             "Max retries exceeded. Could not complete API call.")
-        
-        
-class OllamaInvocation(LLMInvocation):
-    """
-    Use Ollama to invoke a local LLM.
-    Requires the ollama package: pip install ollama
-    """
-    def __init__(self, model: str, base_url: str = "http://localhost:11434"):
-        super().__init__(model)
-        self.base_url = base_url.rstrip("/")
-        try:
-            self.client = ollama.Client(host=self.base_url)
-        except ImportError:
-            raise RuntimeError(
-                "ollama package not found. Install it with: pip install ollama"
-            )
-
-    def call_model(self, prompt: dict, max_tokens=4096, temperature=0.2):
-        if "system" not in prompt or "user" not in prompt:
-            raise KeyError(
-                "The prompt dictionary must contain 'system' and 'user' keys."
-            )
-
-        if prompt["system"] == "":
-            messages = [{"role": "user", "content": prompt["user"]}]
-        else:
-            messages = [
-                {"role": "system", "content": prompt["system"]},
-                {"role": "user", "content": prompt["user"]},
-            ]
-
-        max_retries = 5
-        base_delay = 2  # base delay in seconds
-
-        for attempt in range(max_retries):
-            try:
-                response = self.client.chat(
-                    model=self.model,
-                    messages=messages,
-                    stream=True,
-                    options={
-                        "temperature": temperature,
-                        "num_predict": max_tokens,
-                    },
-                )
-                chunks = []
-                try:
-                    for chunk in response:
-                        delta = chunk.get("message", {}).get("content", "")
-                        print(delta, end="", flush=True)
-                        chunks.append(delta)
-                        time.sleep(0.01)
-                except Exception as e:
-                    print(f"Error during streaming: {e}")
-                print("\n")
-
-                full_content = "".join(chunks)
-
-                # Token estimation: fallback since Ollama does not return usage
-                try:
-                    encoding = tiktoken.encoding_for_model("gpt-4o")
-                    prompt_text = " ".join(msg["content"] for msg in messages)
-                    prompt_tokens = len(encoding.encode(prompt_text))
-                    completion_tokens = len(encoding.encode(full_content))
-                except Exception:
-                    # Rough approximation if tiktoken unavailable
-                    prompt_tokens = int(
-                        len(" ".join(msg["content"] for msg in messages).split()) * 1.3
-                    )
-                    completion_tokens = int(len(full_content.split()) * 1.3)
-
-                return (full_content, prompt_tokens, completion_tokens)
-
-            except Exception as e:
-                delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
-                print(f"Ollama API Error: {e}")
-                print(
-                    f"Retrying in {delay:.2f} seconds... "
-                    f"(Attempt {attempt + 1}/{max_retries})"
-                )
-                time.sleep(delay)
-
-        raise RuntimeError("Max retries exceeded. Could not complete Ollama call.")
-
-        
-        

@@ -3,10 +3,6 @@ import re
 import yaml
 
 from typing import List
-from .panta_logger import pantaLogger
-
-# Initialize logger for this module
-logger = pantaLogger.initialize_logger(__name__)
 
 
 def load_yaml(response_text: str, keys_fix_yaml: List[str] = []) -> dict:
@@ -31,12 +27,8 @@ def load_yaml(response_text: str, keys_fix_yaml: List[str] = []) -> dict:
     try:
         data = yaml.safe_load(response_text)
     except Exception as e:
-        logger.error(
-            f"Failed to parse AI prediction: {e}. Attempting to fix YAML formatting."
-        )
         data = try_fix_yaml(response_text, keys_fix_yaml=keys_fix_yaml)
-        if not data:
-            logger.error(f"Failed to parse AI prediction after fixing YAML formatting.")
+        print(f"Failed to parse AI prediction: {e}. Attempting to fix YAML formatting.")
     return data
 
 

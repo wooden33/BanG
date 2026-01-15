@@ -1,6 +1,7 @@
 import os
 import shutil
 import time
+import json
 
 from .panta_logger import pantaLogger
 from .model_invocation.models import validate_and_map_model
@@ -8,6 +9,7 @@ from .command_executor import CommandExecutor
 from .report_generator import ReportGenerator
 from .unit_test_generator import UnitTestGenerator
 from .symprompt import SymPrompt
+from .hits import HITS
 from .templates import TEST_CLASS_JUNIT_3, TEST_CLASS_JUNIT_4, TEST_CLASS_JUNIT_5
 from .cfg.src.comex.codeviews.combined_graph.combined_driver import line_number_to_node_id_mapping
 from .cfg.src.comex.codeviews.CFG.CFG_driver import CFGDriver
@@ -33,8 +35,8 @@ class Panta:
             prompt_type=args.prompt_type,
             llm_model=args.model,
             project_name=project_name,
-            thinking_enhancement=args.thinking_enhancement,
-            fix_type=args.fix_type
+            fix_type=args.fix_type,
+            use_constraints=args.use_constraints
         )
         
         self.logger = pantaLogger.initialize_logger(__name__)
@@ -44,28 +46,31 @@ class Panta:
         # Build report label with think and mcts flags
         if args.run_symprompt:
             report_parts = ['symprompt', args.model]
+        elif args.run_hits:
+            report_parts = ['hits', args.model]
         else:
             report_parts = [args.prompt_type, args.model]
 
         # Add think flag if enabled
-        if args.thinking_enhancement:
-            report_parts.append("think")
+        if args.use_constraints:
+            report_parts.append("constraints")
 
         # Add mcts flag if fix_type is MCTS
         if args.fix_type == "MCTS":
             report_parts.append("mcts")
-
+            
+        if args.solver_model:
+            report_parts.append(args.solver_model)
+        
         self.report_label = "_".join(report_parts)
-
-        # Add "one" suffix if not pick_two_paths
-        if not self.args.pick_two_paths:
-            # Append "one" to the existing parts to preserve the think/mcts flags
-            report_parts.append("one")
-            self.report_label = "_".join(report_parts)
 
         # Validate and map the model argument before passing it to UnitTestGenerator
         try:
             self.args.model = validate_and_map_model(args.model)
+            if args.solver_model:
+                self.args.solver_model = validate_and_map_model(args.solver_model)
+            else:
+                self.args.solver_model = self.args.model
         except ValueError as e:
             self.logger.error(str(e))
             raise
@@ -86,9 +91,10 @@ class Panta:
             target_coverage=args.target_coverage,
             prompt_type=args.prompt_type,
             additional_instructions=args.additional_instructions,
-            thinking_enhancement=args.thinking_enhancement,
+            use_constraints=args.use_constraints,
             fix_type=args.fix_type,
-            llm_model=args.model)
+            llm_model=args.model,
+            solver_model=args.solver_model)
 
     def extract_test_dependency(self):
         """
@@ -316,7 +322,8 @@ class Panta:
         file_name = self.args.source_code_file.split("/")[-1]
         file_name = file_name.split(".")[0]
         name_list = [file_name, self.args.prompt_type, self.args.report_filepath]
-        report_file = "_".join(name_list)
+        # report_file = "_".join(name_list)
+        report_file = self.args.report_filepath
 
         current_file = os.path.abspath(__file__)
         project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
@@ -339,21 +346,34 @@ class Panta:
 
         # Save detailed path history for comparison purposes (first occurrence)
         if detailed_path_history:
-            import json
+            # Generate final missed paths information
+            final_line_coverage = round(self.test_gen.current_coverage[0] * 100, 2)
+            final_branch_coverage = round(self.test_gen.current_coverage[1] * 100, 2)
+            final_missed_data = {
+                "final_line_coverage": final_line_coverage,
+                "final_branch_coverage": final_branch_coverage,
+                "final_lines_missed": list(self.test_gen.lines_missed),
+                "final_branches_missed": list(self.test_gen.branch_missed),
+                "detailed_path_history": detailed_path_history
+            }
+
             path_history_file = os.path.splitext(report_file)[0] + "_path_history.json"
             path_history_path = os.path.join(report_path, path_history_file)
 
             with open(path_history_path, "w") as f:
-                json.dump(detailed_path_history, f, indent=2)
+                json.dump(final_missed_data, f, indent=2)
 
             self.logger.info(f"Detailed path history saved at: {path_history_path}")
-            # Also log the path history summary
-            for entry in detailed_path_history:
-                self.logger.info(f"Iteration {entry['iteration']}: Line Coverage={entry['line_coverage']}%, "
-                               f"Branch Coverage={entry['branch_coverage']}%, "
-                               f"Paths Explored: {len(entry['path_history'])}")
+
+            # Log the final coverage status
+            self.logger.info(f"\n=== Final Coverage Status ===")
+            self.logger.info(f"Line Coverage: {final_line_coverage}%")
+            self.logger.info(f"Branch Coverage: {final_branch_coverage}%")
+            self.logger.info(f"Final Missed Lines: {list(self.test_gen.lines_missed)}")
+            self.logger.info(f"Final Missed Branches: {list(self.test_gen.branch_missed)}")
+            self.logger.info(f"Paths Explored: {len(detailed_path_history[-1]['path_history']) if detailed_path_history else 0}")
         # Cleanup test file after run
-        # self.cleanup_test_file()
+        self.cleanup_test_file()
 
     def run_symprompt(self):
         test_results_list = []
@@ -365,6 +385,8 @@ class Panta:
         symprompt.generate_test()
         generated_tests = symprompt.generated_tests
 
+        print('generated_tests', generated_tests)
+        
         for method in generated_tests.keys():
             for index, g_test in enumerate(generated_tests[method]):
                 test_result = self.test_gen.validate_test(g_test)
@@ -385,7 +407,58 @@ class Panta:
         file_name = self.args.source_code_file.split("/")[-1]
         file_name = file_name.split(".")[0]
         name_list = [file_name, "symprompt", self.args.report_filepath]
-        report_file = "_".join(name_list)
+        if self.args.report_filepath:
+            report_file = self.args.report_filepath
+        else:
+            report_file = "_".join(name_list) + ".html"
+        
+        current_file = os.path.abspath(__file__)
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
+        report_path = os.path.join(project_root, "result-files", self.report_label)
+        if not os.path.exists(report_path):
+            os.makedirs(report_path)
+        ReportGenerator.generate_report(test_results_list, os.path.join(report_path, report_file))
+        self.logger.info(f"Report generated successfully at: {os.path.join(report_path, report_file)}")
+        # Cleanup test file after run
+        self.cleanup_test_file()
+        
+    def run_hits(self):
+        test_results_list = []
+
+        self.test_gen.initial_test_suite_analysis_AST()
+
+        hits = HITS(project_dir=self.args.project_directory, source_code_file=self.args.source_code_file,
+                              llm_model=self.args.model, junit_version=self.args.junit_version)
+        
+        hits.generate_tests()
+        generated_tests = hits.generated_tests
+        
+        for method_signature in generated_tests.keys():
+            for index, g_test in enumerate(generated_tests[method_signature]):
+                test_result = self.test_gen.validate_test(g_test)
+                test_result["label"] = f"{method_signature}_{index}"
+                test_results_list.append(test_result)
+        self.test_gen.run_coverage()
+        info_dict = {
+            "status": "INFO",
+            "reason": "",
+            "exit_code": 0,
+            "stderr": "",
+            "stdout": "",
+            "test": "",
+            "line_coverage": round(self.test_gen.current_coverage[0] * 100, 2),
+            "branch_coverage": round(self.test_gen.current_coverage[1] * 100, 2)
+        }
+        
+        
+        test_results_list.append(info_dict)
+        file_name = self.args.source_code_file.split("/")[-1]
+        file_name = file_name.split(".")[0]
+        name_list = [file_name, "hits", self.args.report_filepath]
+        if self.args.report_filepath:
+            report_file = self.args.report_filepath
+        else:
+            report_file = "_".join(name_list) + ".html"
         
         current_file = os.path.abspath(__file__)
         project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))

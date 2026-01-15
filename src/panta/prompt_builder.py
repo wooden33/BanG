@@ -207,7 +207,7 @@ class PromptBuilder:
 
         return prioritized_path
 
-    def build_prompt_cfa_guided(self, pick_two_paths=True, thinking_enabled=True) -> dict:
+    def build_prompt_cfa_guided(self, pick_two_paths=True, use_constraints=True) -> dict:
         """
         Replaces placeholders with the actual content of files read during initialization, and returns the formatted prompt.
 
@@ -237,9 +237,14 @@ class PromptBuilder:
 
         environment = Environment(undefined=StrictUndefined)
         try:
-            system_prompt = environment.from_string(
-                get_settings().test_generation_cfg_guided_prompt.system
-            ).render(variables)
+            if use_constraints:
+                system_prompt = environment.from_string(
+                    get_settings().test_generation_cfg_guided_with_constraint_solver_prompt.system
+                ).render(variables)
+            else:
+                system_prompt = environment.from_string(
+                    get_settings().test_generation_cfg_guided_prompt.system
+                ).render(variables)
 
             rendered_templates = ""
             selected_paths = []
@@ -272,8 +277,8 @@ class PromptBuilder:
                             rendered_templates += rendered_template
                             
                             if least_path_label != highest_path_label:
-                                self.logger.info(
-                                    f"select another candidate path with the least time of visits for method {method_name}: {least_visited_path[3]}")
+                                # self.logger.info(
+                                #     f"select another candidate path with the least time of visits for method {method_name}: {least_visited_path[3]}")
                                 self.path_history[least_path_label] = self.path_history.get(least_path_label, 0) + 1
                                 path_str = least_visited_path[3]
                                 selected_paths.append(path_str)
@@ -281,6 +286,12 @@ class PromptBuilder:
                                 rendered_template = environment.from_string(template_str).render(method_name=method_name,
                                                                                                   candidate_path=path_str)
                                 rendered_templates += rendered_template
+                                
+                                if use_constraints and self.constraint_solver:
+                                    # Generate constraints for the selected path
+                                    constraints = self.constraint_solver.generate_constraints(variables['source_file'], path_str)
+                                    rendered_template += f"\nConstraints: {constraints}"
+                                
                     else:
                         prioritized_path = self.pick_path(candidate_paths, self.path_history)
                         if prioritized_path:
@@ -303,20 +314,10 @@ class PromptBuilder:
                             method_name=method_name, missed_lines=missed_lines)
                         rendered_templates += rendered_template
 
-            if thinking_enabled and self.constraint_solver:
-                # Enhanced with constraint solving
-                # Batch generate constraints for all selected paths
-                constraints_results = self.constraint_solver.batch_generate_constraints(variables['source_file'], selected_paths)
-                
-                # Format constraints string
-                constraints_str = ""
-                for path, constraint in constraints_results:
-                    if constraint:
-                        constraints_str += f"\nConstraints for path:\n{path}\nSuggested Inputs: {constraint}\n"
-                
+            if use_constraints:
                 user_prompt = environment.from_string(
                     get_settings().test_generation_cfg_guided_with_constraint_solver_prompt.user
-                ).render(variables, method_under_test=rendered_templates, constraints=constraints_str)
+                ).render(variables, method_under_test=rendered_templates)
             else:
                 user_prompt = environment.from_string(
                     get_settings().test_generation_cfg_guided_prompt.user

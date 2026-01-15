@@ -104,7 +104,7 @@ Generate simple input conditions:
                 "user": f"Analyze this code:\n{source_code}\n\nPath to reach:\n{path_info}\n\nGenerate input conditions:"
             }
 
-    def generate_constraints(self, source_code: str, uncovered_path: Dict[str, Any]) -> str:
+    def generate_constraints(self, source_code: str, uncovered_path: str) -> str:
         """
         Generate input constraints for a single uncovered path.
 
@@ -120,20 +120,8 @@ Generate simple input conditions:
             return ""
 
         try:
-            # Convert path structure to readable string format
-            path_repr = []
-            if "path" in uncovered_path:
-                for node in uncovered_path["path"]:
-                    node_statements = [stmt.strip() for stmt in node['statement'].split("\n") if stmt.strip()]
-                    for stmt in node_statements:
-                        path_repr.append(stmt)
-
-                    # Add conditional direction information if available
-                    if node['conditional'] is not None:
-                        cond_dir = " (True branch)" if node['conditional'] else " (False branch)"
-                        path_repr[-1] += cond_dir
-
-            path_info = "\n".join(path_repr)
+            # uncovered_path is already a string, use it directly
+            path_info = uncovered_path
 
             # Render the prompt
             prompt = self._render_prompt(source_code, path_info)
@@ -158,14 +146,30 @@ Generate simple input conditions:
 
         Args:
             source_code: Source code of the function under test
-            uncovered_paths: List of uncovered paths
+            uncovered_paths: List of uncovered paths (dict format)
 
         Returns:
             List[Tuple[Dict[str, Any], str]]: Paths with their corresponding constraints
         """
         results = []
         for path in uncovered_paths:
-            constraints = self.generate_constraints(source_code, path)
+            # Convert path dict to string format expected by generate_constraints
+            path_repr = []
+            if "path" in path:
+                for node in path["path"]:
+                    node_statements = [stmt.strip() for stmt in node['statement'].split("\n") if stmt.strip()]
+                    for stmt in node_statements:
+                        path_repr.append(stmt)
+
+                    # Add conditional direction information if available
+                    if node['conditional'] is not None:
+                        cond_dir = " (True branch)" if node['conditional'] else " (False branch)"
+                        path_repr[-1] += cond_dir
+
+            path_str = "\n".join(path_repr)
+
+            # Generate constraints using the string format
+            constraints = self.generate_constraints(source_code, path_str)
             results.append((path, constraints))
         return results
 

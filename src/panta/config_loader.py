@@ -8,7 +8,6 @@ SETTINGS_FILES = [
     "java_templates/test_generation_symprompt.toml",
     "java_templates/test_generation_prompt_with_code_coverage_report.toml",
     "java_templates/test_generation_prompt_with_existing_test_code_and_control_flow_analysis.toml",
-    "java_templates/test_generation_prompt_with_existing_test_code_and_control_flow_analysis_and_inputs.toml",
     "java_templates/test_generation_prompt_with_existing_test_code_and_control_flow_analysis_and_constraint_solver.toml",
     "java_templates/analyze_suite_test_insert_line.toml",
     "java_templates/failed_test_feedback_prompt.toml",
@@ -17,6 +16,9 @@ SETTINGS_FILES = [
     "python_templates/test_generation_prompt_if_test_code_already_exixts.toml",
     "python_templates/test_headers_indentation_prompt.toml",
     "python_templates/analyze_suite_test_insert_line.toml",
+    "hits_templates/gen_slice.toml",
+    "hits_templates/gen_code.toml",
+    "hits_templates/test_repair.toml",
 ]
 
 
