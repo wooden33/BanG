@@ -103,7 +103,7 @@
   found: <nulltype>,<nulltype>,java.lang.String
   reason: actual and formal argument lists differ in length
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of XML with empty text content\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root></root>";\n    FromXmlParser parser = new FromXmlParser(null, null, xml);\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport static org.junit.Assert.*;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of XML with empty text content that should be treated as null\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root><value></value></root>";\n    FromXmlParser parser = new FromXmlParser(null, null, xml);\n    parser.nextToken();\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_NULL, parser.nextToken());\n    parser.close();\n}\n', 'new_imports_code': 'import com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -122,7 +122,7 @@
   found: <nulltype>,<nulltype>,java.lang.String
   reason: actual and formal argument lists differ in length
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of XML with simple text content\n', 'test_name': 'testSimpleTextContent\n', 'test_code': '@Test\npublic void testSimpleTextContent() throws Exception {\n    String xml = "<root>test</root>";\n    FromXmlParser parser = new FromXmlParser(null, null, xml);\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("test", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport static org.junit.Assert.*;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of XML with whitespace-only text content that should be treated as empty string\n', 'test_name': 'testWhitespaceOnlyTextContent\n', 'test_code': '@Test\npublic void testWhitespaceOnlyTextContent() throws Exception {\n    String xml = "<root><value>   </value></root>";\n    FromXmlParser parser = new FromXmlParser(null, null, xml);\n    parser.nextToken();\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.nextToken());\n    assertEquals("   ", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -141,14 +141,33 @@
   found: <nulltype>,<nulltype>,java.lang.String
   reason: actual and formal argument lists differ in length
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of XML with nested elements\n', 'test_name': 'testNestedElements\n', 'test_code': '@Test\npublic void testNestedElements() throws Exception {\n    String xml = "<root><child>value</child></root>";\n    FromXmlParser parser = new FromXmlParser(null, null, xml);\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("value", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport static org.junit.Assert.*;'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of XML with nested elements and attributes\n', 'test_name': 'testNestedElementsWithAttributes\n', 'test_code': '@Test\npublic void testNestedElementsWithAttributes() throws Exception {\n    String xml = "<root id=\\"123\\"><child name=\\"test\\">content</child></root>";\n    FromXmlParser parser = new FromXmlParser(null, null, xml);\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // END_OBJECT\n    parser.nextToken(); // END_OBJECT\n    parser.close();\n}\n', 'new_imports_code': 'import com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>g_0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[9,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[18,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>,java.lang.String
+  reason: actual and formal argument lists differ in length
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of XML with CDATA section\n', 'test_name': 'testCDataSection\n', 'test_code': '@Test\npublic void testCDataSection() throws Exception {\n    String xml = "<root><![CDATA[<escaped>content</escaped>]]></root>";\n    FromXmlParser parser = new FromXmlParser(null, null, xml);\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    assertEquals("<escaped>content</escaped>", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport java.io.StringReader;'}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>g_0</td>
-                    <td>23.1943359375</td>
-                    <td>9589</td>
+                    <td>22.668983697891235</td>
+                    <td>9745</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
@@ -168,7 +187,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing empty XML content produces correct tokens\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that empty text content is correctly parsed as JsonToken.VALUE_NULL\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root><value></value></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext and other required parameters\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_NULL, parser.nextToken());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -183,7 +202,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing XML with simple text content produces correct tokens and text\n', 'test_name': 'testSimpleTextContent\n', 'test_code': '@Test\npublic void testSimpleTextContent() throws Exception {\n    String xml = "<root>test</root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("test", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that whitespace-only text content is correctly parsed as JsonToken.VALUE_STRING\n', 'test_name': 'testWhitespaceOnlyTextContent\n', 'test_code': '@Test\npublic void testWhitespaceOnlyTextContent() throws Exception {\n    String xml = "<root><value>   </value></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext and other required parameters\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_STRING, parser.nextToken());\n    assertEquals("   ", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -198,7 +217,22 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing nested XML elements produces correct token sequence\n', 'test_name': 'testNestedElements\n', 'test_code': '@Test\npublic void testNestedElements() throws Exception {\n    String xml = "<root><child>value</child></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("value", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of nested elements with attributes\n', 'test_name': 'testNestedElementsWithAttributes\n', 'test_code': '@Test\npublic void testNestedElementsWithAttributes() throws Exception {\n    String xml = "<root id=\\"123\\"><child name=\\"test\\">content</child></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext and other required parameters\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // END_OBJECT\n    parser.nextToken(); // END_OBJECT\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of CDATA sections\n', 'test_name': 'testCDataSection\n', 'test_code': '@Test\npublic void testCDataSection() throws Exception {\n    String xml = "<root><![CDATA[<escaped>content</escaped>]]></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext and other required parameters\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    assertEquals("<escaped>content</escaped>", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -213,7 +247,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing empty XML content produces correct start and end object tokens\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that empty text content is correctly parsed as JsonToken.VALUE_NULL\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root><value></value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_NULL, parser.nextToken());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -228,7 +262,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing XML with simple text content produces correct tokens and text value\n', 'test_name': 'testSimpleTextContent\n', 'test_code': '@Test\npublic void testSimpleTextContent() throws Exception {\n    String xml = "<root>test</root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("test", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that whitespace-only text content is correctly parsed as JsonToken.VALUE_STRING\n', 'test_name': 'testWhitespaceOnlyTextContent\n', 'test_code': '@Test\npublic void testWhitespaceOnlyTextContent() throws Exception {\n    String xml = "<root><value>   </value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_STRING, parser.nextToken());\n    assertEquals("   ", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -243,7 +277,22 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing nested XML elements produces correct nested object structure\n', 'test_name': 'testNestedElements\n', 'test_code': '@Test\npublic void testNestedElements() throws Exception {\n    String xml = "<root><child>value</child></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("value", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of nested elements with attributes\n', 'test_name': 'testNestedElementsWithAttributes\n', 'test_code': '@Test\npublic void testNestedElementsWithAttributes() throws Exception {\n    String xml = "<root id=\\"123\\"><child name=\\"test\\">content</child></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // END_OBJECT\n    parser.nextToken(); // END_OBJECT\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of CDATA sections\n', 'test_name': 'testCDataSection\n', 'test_code': '@Test\npublic void testCDataSection() throws Exception {\n    String xml = "<root><![CDATA[<escaped>content</escaped>]]></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    assertEquals("<escaped>content</escaped>", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -258,7 +307,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing empty XML content produces correct start and end object tokens\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that empty text content is correctly parsed as JsonToken.VALUE_NULL\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root><value></value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_NULL, parser.nextToken());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -273,7 +322,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing XML with simple text content produces correct tokens and text value\n', 'test_name': 'testSimpleTextContent\n', 'test_code': '@Test\npublic void testSimpleTextContent() throws Exception {\n    String xml = "<root>test</root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("test", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that whitespace-only text content is correctly parsed as JsonToken.VALUE_STRING\n', 'test_name': 'testWhitespaceOnlyTextContent\n', 'test_code': '@Test\npublic void testWhitespaceOnlyTextContent() throws Exception {\n    String xml = "<root><value>   </value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_STRING, parser.nextToken());\n    assertEquals("   ", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -288,14 +337,29 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing nested XML elements produces correct nested object structure\n', 'test_name': 'testNestedElements\n', 'test_code': '@Test\npublic void testNestedElements() throws Exception {\n    String xml = "<root><child>value</child></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("value", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of nested elements with attributes\n', 'test_name': 'testNestedElementsWithAttributes\n', 'test_code': '@Test\npublic void testNestedElementsWithAttributes() throws Exception {\n    String xml = "<root id=\\"123\\"><child name=\\"test\\">content</child></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // END_OBJECT\n    parser.nextToken(); // END_OBJECT\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of CDATA sections\n', 'test_name': 'testCDataSection\n', 'test_code': '@Test\npublic void testCDataSection() throws Exception {\n    String xml = "<root><![CDATA[<escaped>content</escaped>]]></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    assertEquals("<escaped>content</escaped>", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>f_0</td>
-                    <td>124.81119680404663</td>
-                    <td>38053</td>
+                    <td>94.11783123016357</td>
+                    <td>39573</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
@@ -315,7 +379,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of empty XML element with no text content\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of empty text content which should result in VALUE_NULL token\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root><value></value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_NULL, parser.nextToken());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -330,7 +394,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of XML element with simple text content\n', 'test_name': 'testSimpleTextContent\n', 'test_code': '@Test\npublic void testSimpleTextContent() throws Exception {\n    String xml = "<root>test</root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("test", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of whitespace-only text content which should result in VALUE_STRING token with whitespace content\n', 'test_name': 'testWhitespaceOnlyTextContent\n', 'test_code': '@Test\npublic void testWhitespaceOnlyTextContent() throws Exception {\n    String xml = "<root><value>   </value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_STRING, parser.nextToken());\n    assertEquals("   ", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -345,14 +409,29 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of nested XML elements with text content\n', 'test_name': 'testNestedElements\n', 'test_code': '@Test\npublic void testNestedElements() throws Exception {\n    String xml = "<root><child>value</child></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("value", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of nested elements with attributes to ensure proper token sequence\n', 'test_name': 'testNestedElementsWithAttributes\n', 'test_code': '@Test\npublic void testNestedElementsWithAttributes() throws Exception {\n    String xml = "<root id=\\"123\\"><child name=\\"test\\">content</child></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // END_OBJECT\n    parser.nextToken(); // END_OBJECT\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>g_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of CDATA sections to ensure content is properly extracted as string\n', 'test_name': 'testCDataSection\n', 'test_code': '@Test\npublic void testCDataSection() throws Exception {\n    String xml = "<root><![CDATA[<escaped>content</escaped>]]></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    assertEquals("<escaped>content</escaped>", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>g_1</td>
-                    <td>40.837239027023315</td>
-                    <td>10942</td>
+                    <td>26.278232097625732</td>
+                    <td>11319</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
@@ -372,7 +451,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing empty XML content produces correct start and end object tokens\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that empty text content is correctly parsed as JsonToken.VALUE_NULL\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root><value></value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_NULL, parser.nextToken());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -387,7 +466,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing XML with simple text content produces correct tokens and text value\n', 'test_name': 'testSimpleTextContent\n', 'test_code': '@Test\npublic void testSimpleTextContent() throws Exception {\n    String xml = "<root>test</root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("test", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that whitespace-only text content is correctly parsed as JsonToken.VALUE_STRING\n', 'test_name': 'testWhitespaceOnlyTextContent\n', 'test_code': '@Test\npublic void testWhitespaceOnlyTextContent() throws Exception {\n    String xml = "<root><value>   </value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_STRING, parser.nextToken());\n    assertEquals("   ", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -402,7 +481,22 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing nested XML elements produces correct token sequence\n', 'test_name': 'testNestedElements\n', 'test_code': '@Test\npublic void testNestedElements() throws Exception {\n    String xml = "<root><child>value</child></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("value", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of nested elements with attributes\n', 'test_name': 'testNestedElementsWithAttributes\n', 'test_code': '@Test\npublic void testNestedElementsWithAttributes() throws Exception {\n    String xml = "<root id=\\"123\\"><child name=\\"test\\">content</child></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // END_OBJECT\n    parser.nextToken(); // END_OBJECT\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of CDATA sections\n', 'test_name': 'testCDataSection\n', 'test_code': '@Test\npublic void testCDataSection() throws Exception {\n    String xml = "<root><![CDATA[<escaped>content</escaped>]]></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    assertEquals("<escaped>content</escaped>", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -417,7 +511,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing empty XML content produces correct start and end object tokens\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that empty text content is correctly parsed as JsonToken.VALUE_NULL\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root><value></value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_NULL, parser.nextToken());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -432,7 +526,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing XML with simple text content produces correct tokens and text value\n', 'test_name': 'testSimpleTextContent\n', 'test_code': '@Test\npublic void testSimpleTextContent() throws Exception {\n    String xml = "<root>test</root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("test", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that whitespace-only text content is correctly parsed as JsonToken.VALUE_STRING\n', 'test_name': 'testWhitespaceOnlyTextContent\n', 'test_code': '@Test\npublic void testWhitespaceOnlyTextContent() throws Exception {\n    String xml = "<root><value>   </value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_STRING, parser.nextToken());\n    assertEquals("   ", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -447,7 +541,22 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing nested XML elements produces correct nested object structure\n', 'test_name': 'testNestedElements\n', 'test_code': '@Test\npublic void testNestedElements() throws Exception {\n    String xml = "<root><child>value</child></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("value", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of nested elements with attributes\n', 'test_name': 'testNestedElementsWithAttributes\n', 'test_code': '@Test\npublic void testNestedElementsWithAttributes() throws Exception {\n    String xml = "<root id=\\"123\\"><child name=\\"test\\">content</child></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // END_OBJECT\n    parser.nextToken(); // END_OBJECT\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of CDATA sections\n', 'test_name': 'testCDataSection\n', 'test_code': '@Test\npublic void testCDataSection() throws Exception {\n    String xml = "<root><![CDATA[<escaped>content</escaped>]]></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    assertEquals("<escaped>content</escaped>", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -462,7 +571,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing empty XML content produces correct START_OBJECT and END_OBJECT tokens\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that empty text content is correctly parsed as JsonToken.VALUE_NULL\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root><value></value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_NULL, parser.nextToken());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -477,7 +586,7 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing XML with simple text content produces correct tokens and text value\n', 'test_name': 'testSimpleTextContent\n', 'test_code': '@Test\npublic void testSimpleTextContent() throws Exception {\n    String xml = "<root>test</root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("test", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that whitespace-only text content is correctly parsed as JsonToken.VALUE_STRING\n', 'test_name': 'testWhitespaceOnlyTextContent\n', 'test_code': '@Test\npublic void testWhitespaceOnlyTextContent() throws Exception {\n    String xml = "<root><value>   </value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_STRING, parser.nextToken());\n    assertEquals("   ", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
@@ -492,26 +601,403 @@
   symbol:   class FromXmlParser
   location: package com.fasterxml.jackson.dataformat.xml
 </code></pre></td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that parsing nested XML elements produces correct token sequence\n', 'test_name': 'testNestedElements\n', 'test_code': '@Test\npublic void testNestedElements() throws Exception {\n    String xml = "<root><child>value</child></root>";\n    // Create a proper XMLStreamReader from the XML string\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    \n    // Create IOContext\n    IOContext ioContext = new IOContext(null, null, false);\n    \n    // Create parser with correct constructor\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.START_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.VALUE_STRING, parser.getCurrentToken());\n    assertEquals("value", parser.getText());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n    parser.nextToken();\n    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of nested elements with attributes\n', 'test_name': 'testNestedElementsWithAttributes\n', 'test_code': '@Test\npublic void testNestedElementsWithAttributes() throws Exception {\n    String xml = "<root id=\\"123\\"><child name=\\"test\\">content</child></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // END_OBJECT\n    parser.nextToken(); // END_OBJECT\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of CDATA sections\n', 'test_name': 'testCDataSection\n', 'test_code': '@Test\npublic void testCDataSection() throws Exception {\n    String xml = "<root><![CDATA[<escaped>content</escaped>]]></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    assertEquals("<escaped>content</escaped>", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>f_1</td>
-                    <td>129.954106092453</td>
-                    <td>39336</td>
+                    <td>96.20259380340576</td>
+                    <td>40767</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>g_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of empty text content which should result in VALUE_NULL token\n', 'test_name': 'testEmptyTextContent\n', 'test_code': '@Test\npublic void testEmptyTextContent() throws Exception {\n    String xml = "<root><value></value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_NULL, parser.nextToken());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>g_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of whitespace-only text content which should result in VALUE_STRING token with whitespace content\n', 'test_name': 'testWhitespaceOnlyTextContent\n', 'test_code': '@Test\npublic void testWhitespaceOnlyTextContent() throws Exception {\n    String xml = "<root><value>   </value></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    assertEquals(JsonToken.VALUE_STRING, parser.nextToken());\n    assertEquals("   ", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>g_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of nested elements with attributes to ensure proper token sequence\n', 'test_name': 'testNestedElementsWithAttributes\n', 'test_code': '@Test\npublic void testNestedElementsWithAttributes() throws Exception {\n    String xml = "<root id=\\"123\\"><child name=\\"test\\">content</child></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    parser.nextToken(); // END_OBJECT\n    parser.nextToken(); // END_OBJECT\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>g_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,44] cannot find symbol
+  symbol:   class FromXmlParser
+  location: package com.fasterxml.jackson.dataformat.xml
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test parsing of CDATA sections to ensure content is properly extracted as string\n', 'test_name': 'testCDataSection\n', 'test_code': '@Test\npublic void testCDataSection() throws Exception {\n    String xml = "<root><![CDATA[<escaped>content</escaped>]]></root>";\n    XMLInputFactory factory = XMLInputFactory.newInstance();\n    XMLStreamReader reader = factory.createXMLStreamReader(new StringReader(xml));\n    IOContext ioContext = new IOContext(null, null, false);\n    FromXmlParser parser = new FromXmlParser(ioContext, 0, 0, null, reader);\n    \n    parser.nextToken(); // START_OBJECT\n    parser.nextToken(); // FIELD_NAME\n    parser.nextToken(); // VALUE_STRING\n    assertEquals("<escaped>content</escaped>", parser.getText());\n    parser.close();\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.dataformat.xml.FromXmlParser;\nimport com.fasterxml.jackson.core.io.IOContext;\nimport javax.xml.stream.XMLInputFactory;\nimport javax.xml.stream.XMLStreamReader;\nimport java.io.StringReader;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>s_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,39] cannot find symbol
+  symbol:   class Base64Variant
+  location: package com.fasterxml.jackson.core.base
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[11,39] cannot find symbol
+  symbol:   class Base64Variants
+  location: package com.fasterxml.jackson.core.base
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[12,44] cannot find symbol
+  symbol:   class XmlToken
+  location: package com.fasterxml.jackson.dataformat.xml
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[20,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[22,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[29,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[31,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[32,15] cannot assign a value to final variable _xmlTokens
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[32,33] cannot find symbol
+  symbol:   class XmlToken
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[39,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[41,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[49,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[51,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[58,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[60,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[68,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[70,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[71,15] cannot assign a value to final variable _xmlTokens
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[71,33] cannot find symbol
+  symbol:   class XmlToken
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[78,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[80,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[87,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[89,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[96,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[98,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[106,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[108,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[116,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[118,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[126,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[132,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[134,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[145,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[147,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[150,35] cannot find symbol
+  symbol:   variable Base64Variants
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[158,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[160,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[163,47] cannot find symbol
+  symbol:   variable Base64Variants
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[168,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[174,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[180,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[186,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_code': 'public void testGetTextWhenTokenIsNull() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state to have null current token\n    parser._currToken = null;\n    \n    String result = parser.getText();\n    assertNull(result);\n}\n\npublic void testGetTextWhenTokenIsFieldName() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.FIELD_NAME;\n    parser._xmlTokens = new XmlToken("testField");\n    \n    String result = parser.getText();\n    assertEquals("testField", result);\n}\n\npublic void testGetTextWhenTokenIsValueString() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = "testValue";\n    \n    String result = parser.getText();\n    assertEquals("testValue", result);\n}\n\npublic void testGetValueAsStringWithNullToken() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state to have null current token\n    parser._currToken = null;\n    \n    String result = parser.getValueAsString();\n    assertNull(result);\n}\n\npublic void testGetValueAsStringWithFieldValue() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = "testValue";\n    \n    String result = parser.getValueAsString();\n    assertEquals("testValue", result);\n}\n\npublic void testGetValueAsStringWithStartObject() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.START_OBJECT;\n    parser._xmlTokens = new XmlToken("testValue");\n    \n    String result = parser.getValueAsString();\n    assertEquals("testValue", result);\n}\n\npublic void testGetValueAsStringWithScalarValue() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_NUMBER_INT;\n    \n    String result = parser.getValueAsString();\n    assertEquals("0", result);\n}\n\npublic void testGetValueAsStringWithDefaultValue() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.START_ARRAY;\n    \n    String result = parser.getValueAsString("default");\n    assertEquals("default", result);\n}\n\npublic void testGetTextCharactersWhenTextIsNull() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = null;\n    \n    char[] result = parser.getTextCharacters();\n    assertNull(result);\n}\n\npublic void testGetTextLengthWhenTextIsNull() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = null;\n    \n    int result = parser.getTextLength();\n    assertEquals(0, result);\n}\n\npublic void testGetTextOffset() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = "test";\n    \n    int result = parser.getTextOffset();\n    assertEquals(0, result);\n}\n\npublic void testHasTextCharacters() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    boolean result = parser.hasTextCharacters();\n    assertFalse(result);\n}\n\npublic void testGetTextWithWriter() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = "test";\n    \n    StringWriter writer = new StringWriter();\n    int result = parser.getText(writer);\n    \n    assertEquals(4, result);\n    assertEquals("test", writer.toString());\n}\n\npublic void testGetBinaryValueWithInvalidToken() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.START_ARRAY;\n    \n    try {\n        parser.getBinaryValue(Base64Variants.MIME);\n        fail("Expected JsonParseException");\n    } catch (JsonParseException e) {\n        // Expected\n    }\n}\n\npublic void testGetBinaryValueWithValidToken() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = "dGVzdA=="; // base64 for "test"\n    \n    byte[] result = parser.getBinaryValue(Base64Variants.MIME);\n    assertNotNull(result);\n}\n\npublic void testIsEmptyWithNullString() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    boolean result = parser._isEmpty(null);\n    assertTrue(result);\n}\n\npublic void testIsEmptyWithEmptyString() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    boolean result = parser._isEmpty("");\n    assertTrue(result);\n}\n\npublic void testIsEmptyWithWhitespaceString() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    boolean result = parser._isEmpty("   \\t\\n  ");\n    assertTrue(result);\n}\n\npublic void testIsEmptyWithNonWhitespaceString() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    boolean result = parser._isEmpty(" test ");\n    assertFalse(result);\n}\n', 'test_name': 'testGetTextAndGetValueAsString', 'test_behavior': 'Tests various scenarios for getText() and getValueAsString() methods including null tokens, different token types, and edge cases', 'new_imports_code': 'import com.fasterxml.jackson.core.JsonParseException;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.core.base.Base64Variant;\nimport com.fasterxml.jackson.core.base.Base64Variants;\nimport com.fasterxml.jackson.dataformat.xml.XmlToken;\nimport java.io.StringWriter;\nimport static org.junit.Assert.*;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>s_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,39] cannot find symbol
+  symbol:   class Base64Variant
+  location: package com.fasterxml.jackson.core.base
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[11,39] cannot find symbol
+  symbol:   class Base64Variants
+  location: package com.fasterxml.jackson.core.base
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[12,37] cannot find symbol
+  symbol:   class ByteArrayBuilder
+  location: package com.fasterxml.jackson.core.io
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[23,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[25,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[32,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[34,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[35,15] cannot assign a value to final variable _xmlTokens
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[35,33] cannot find symbol
+  symbol:   class XmlToken
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[42,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[44,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[52,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[54,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[61,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[63,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[71,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[73,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[74,15] cannot assign a value to final variable _xmlTokens
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[74,33] cannot find symbol
+  symbol:   class XmlToken
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[81,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[83,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[90,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[92,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[99,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[101,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[109,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[111,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[119,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[121,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[129,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[135,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[137,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[148,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[150,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[153,35] cannot find symbol
+  symbol:   variable Base64Variants
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[161,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[163,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[166,47] cannot find symbol
+  symbol:   variable Base64Variants
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[172,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[173,9] cannot find symbol
+  symbol:   class NumberType
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[178,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[184,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[190,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[196,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[202,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[208,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[214,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[220,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[226,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[232,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[238,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_code': 'public void testGetTextWhenTokenIsNull() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state to have null current token\n    parser._currToken = null;\n    \n    String result = parser.getText();\n    assertNull(result);\n}\n\npublic void testGetTextWhenTokenIsFieldName() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.FIELD_NAME;\n    parser._xmlTokens = new XmlToken("testField");\n    \n    String result = parser.getText();\n    assertEquals("testField", result);\n}\n\npublic void testGetTextWhenTokenIsValueString() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = "testValue";\n    \n    String result = parser.getText();\n    assertEquals("testValue", result);\n}\n\npublic void testGetValueAsStringWithNullToken() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state to have null current token\n    parser._currToken = null;\n    \n    String result = parser.getValueAsString();\n    assertNull(result);\n}\n\npublic void testGetValueAsStringWithFieldValue() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = "testValue";\n    \n    String result = parser.getValueAsString();\n    assertEquals("testValue", result);\n}\n\npublic void testGetValueAsStringWithStartObject() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.START_OBJECT;\n    parser._xmlTokens = new XmlToken("testValue");\n    \n    String result = parser.getValueAsString();\n    assertEquals("testValue", result);\n}\n\npublic void testGetValueAsStringWithScalarValue() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_NUMBER_INT;\n    \n    String result = parser.getValueAsString();\n    assertEquals("0", result);\n}\n\npublic void testGetValueAsStringWithDefaultValue() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.START_ARRAY;\n    \n    String result = parser.getValueAsString("default");\n    assertEquals("default", result);\n}\n\npublic void testGetTextCharactersWhenTextIsNull() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = null;\n    \n    char[] result = parser.getTextCharacters();\n    assertNull(result);\n}\n\npublic void testGetTextLengthWhenTextIsNull() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = null;\n    \n    int result = parser.getTextLength();\n    assertEquals(0, result);\n}\n\npublic void testGetTextOffset() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = "test";\n    \n    int result = parser.getTextOffset();\n    assertEquals(0, result);\n}\n\npublic void testHasTextCharacters() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    boolean result = parser.hasTextCharacters();\n    assertFalse(result);\n}\n\npublic void testGetTextWithWriter() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = "test";\n    \n    StringWriter writer = new StringWriter();\n    int result = parser.getText(writer);\n    \n    assertEquals(4, result);\n    assertEquals("test", writer.toString());\n}\n\npublic void testGetBinaryValueWithInvalidToken() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.START_ARRAY;\n    \n    try {\n        parser.getBinaryValue(Base64Variants.getDefaultVariant());\n        fail("Expected JsonParseException");\n    } catch (JsonParseException e) {\n        // Expected\n    }\n}\n\npublic void testGetBinaryValueWithValidToken() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set up parser state\n    parser._currToken = JsonToken.VALUE_STRING;\n    parser._currText = "dGVzdA=="; // base64 for "test"\n    \n    byte[] result = parser.getBinaryValue(Base64Variants.getDefaultVariant());\n    assertNotNull(result);\n    assertEquals(4, result.length);\n}\n\npublic void testGetNumberTypeReturnsNull() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    NumberType result = parser.getNumberType();\n    assertNull(result);\n}\n\npublic void testGetNumberValueReturnsNull() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    Number result = parser.getNumberValue();\n    assertNull(result);\n}\n\npublic void testGetBigIntegerValueReturnsNull() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    BigInteger result = parser.getBigIntegerValue();\n    assertNull(result);\n}\n\npublic void testGetDecimalValueReturnsNull() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    BigDecimal result = parser.getDecimalValue();\n    assertNull(result);\n}\n\npublic void testGetDoubleValueReturnsZero() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    double result = parser.getDoubleValue();\n    assertEquals(0.0, result, 0.0);\n}\n\npublic void testGetFloatValueReturnsZero() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    float result = parser.getFloatValue();\n    assertEquals(0.0f, result, 0.0f);\n}\n\npublic void testGetIntValueReturnsZero() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    int result = parser.getIntValue();\n    assertEquals(0, result);\n}\n\npublic void testGetLongValueReturnsZero() throws Exception {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    long result = parser.getLongValue();\n    assertEquals(0L, result);\n}\n\npublic void testIsEmptyWithNullString() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    boolean result = parser._isEmpty(null);\n    assertTrue(result);\n}\n\npublic void testIsEmptyWithEmptyString() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    boolean result = parser._isEmpty("");\n    assertTrue(result);\n}\n\npublic void testIsEmptyWithWhitespaceString() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    boolean result = parser._isEmpty("   \\t\\n  ");\n    assertTrue(result);\n}\n\npublic void testIsEmptyWithNonWhitespaceString() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    boolean result = parser._isEmpty(" test ");\n    assertFalse(result);\n}\n', 'test_name': 'testComprehensiveParserBehavior', 'test_behavior': 'Tests comprehensive behavior of FromXmlParser including text retrieval, value handling, binary operations, and number handling', 'new_imports_code': 'import com.fasterxml.jackson.core.JsonParseException;\nimport com.fasterxml.jackson.core.JsonToken;\nimport com.fasterxml.jackson.core.base.Base64Variant;\nimport com.fasterxml.jackson.core.base.Base64Variants;\nimport com.fasterxml.jackson.core.io.ByteArrayBuilder;\nimport com.fasterxml.jackson.databind.util.TokenBuffer;\nimport java.io.StringWriter;\nimport java.math.BigDecimal;\nimport java.math.BigInteger;\nimport static org.junit.Assert.*;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>s_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[14,32] constructor FromXmlParser in class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser cannot be applied to given types;
+  required: com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,javax.xml.stream.XMLStreamReader
+  found: <nulltype>,<nulltype>
+  reason: actual and formal argument lists differ in length
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[16,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_code': 'public void testGetTextWhenTokenIsNull() {\n    FromXmlParser parser = new FromXmlParser(null, null);\n    // Set internal state to have null current token\n    parser._currToken = null;\n    String result = parser.getText();\n    assertNull(result);\n}\n', 'test_name': 'testGetTextWhenTokenIsNull', 'test_behavior': 'Tests getText() method when current token is null, verifying it returns null', 'new_imports_code': 'import static org.junit.Assert.assertNull;'}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>g_2</td>
-                    <td>15.435744047164917</td>
-                    <td>10941</td>
+                    <td>99.33927798271179</td>
+                    <td>0</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
@@ -520,10 +1006,146 @@
                 </tr>
                 
                 <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,34] cannot find symbol
+  symbol:   class IOContext
+  location: package com.fasterxml.jackson.core
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[20,9] cannot find symbol
+  symbol:   class IOContext
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[20,35] cannot find symbol
+  symbol:   class IOContext
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[28,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the function returns the correct output for a specific scenario\n', 'test_name': 'testGetTextWhenTokenIsNull\n', 'test_code': '@Test\npublic void testGetTextWhenTokenIsNull() {\n    // Create a mock IOContext and other required parameters\n    IOContext ioContext = new IOContext(null, null, false);\n    int features = 0;\n    int parserFeatures = 0;\n    ObjectCodec codec = null;\n    XMLStreamReader xmlReader = null;\n    \n    FromXmlParser parser = new FromXmlParser(ioContext, features, parserFeatures, codec, xmlReader);\n    // Set internal state to have null current token\n    parser._currToken = null;\n    String result = parser.getText();\n    assertNull(result);\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport com.fasterxml.jackson.core.IOContext;\nimport com.fasterxml.jackson.core.ObjectCodec;\nimport javax.xml.stream.XMLStreamReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,34] cannot find symbol
+  symbol:   class IOContext
+  location: package com.fasterxml.jackson.core
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[21,9] cannot find symbol
+  symbol:   class IOContext
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[21,35] cannot find symbol
+  symbol:   class IOContext
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[29,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the function handles a specific edge case correctly\n', 'test_name': 'testGetTextWithValidToken\n', 'test_code': '@Test\npublic void testGetTextWithValidToken() {\n    // Create a mock IOContext and other required parameters\n    IOContext ioContext = new IOContext(null, null, false);\n    int features = 0;\n    int parserFeatures = 0;\n    ObjectCodec codec = null;\n    XMLStreamReader xmlReader = null;\n    \n    FromXmlParser parser = new FromXmlParser(ioContext, features, parserFeatures, codec, xmlReader);\n    // Set internal state to have a valid current token\n    parser._currToken = JsonToken.VALUE_STRING;\n    String result = parser.getText();\n    assertNotNull(result);\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport com.fasterxml.jackson.core.IOContext;\nimport com.fasterxml.jackson.core.ObjectCodec;\nimport com.fasterxml.jackson.core.JsonToken;\nimport javax.xml.stream.XMLStreamReader;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,34] cannot find symbol
+  symbol:   class IOContext
+  location: package com.fasterxml.jackson.core
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[20,9] cannot find symbol
+  symbol:   class IOContext
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[20,35] cannot find symbol
+  symbol:   class IOContext
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[28,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that getText() returns null when _currToken is null\n', 'test_name': 'testGetTextWhenTokenIsNull\n', 'test_code': '@Test\npublic void testGetTextWhenTokenIsNull() {\n    // Create a mock IOContext and other required parameters\n    IOContext ioContext = new IOContext(null, null, false);\n    int features = 0;\n    int parserFeatures = 0;\n    ObjectCodec codec = null;\n    XMLStreamReader xmlReader = null;\n    \n    FromXmlParser parser = new FromXmlParser(ioContext, features, parserFeatures, codec, xmlReader);\n    // Set internal state to have null current token\n    parser._currToken = null;\n    String result = parser.getText();\n    assertNull(result);\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport com.fasterxml.jackson.core.IOContext;\nimport com.fasterxml.jackson.core.ObjectCodec;\nimport javax.xml.stream.XMLStreamReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,34] cannot find symbol
+  symbol:   class IOContext
+  location: package com.fasterxml.jackson.core
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[21,9] cannot find symbol
+  symbol:   class IOContext
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[21,35] cannot find symbol
+  symbol:   class IOContext
+  location: class com.fasterxml.jackson.dataformat.xml.deser.FromXmlParserTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[29,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that getText() returns a non-null value when _currToken is JsonToken.VALUE_STRING\n', 'test_name': 'testGetTextWithValidToken\n', 'test_code': '@Test\npublic void testGetTextWithValidToken() {\n    // Create a mock IOContext and other required parameters\n    IOContext ioContext = new IOContext(null, null, false);\n    int features = 0;\n    int parserFeatures = 0;\n    ObjectCodec codec = null;\n    XMLStreamReader xmlReader = null;\n    \n    FromXmlParser parser = new FromXmlParser(ioContext, features, parserFeatures, codec, xmlReader);\n    // Set internal state to have a valid current token\n    parser._currToken = JsonToken.VALUE_STRING;\n    String result = parser.getText();\n    assertNotNull(result);\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport com.fasterxml.jackson.core.IOContext;\nimport com.fasterxml.jackson.core.ObjectCodec;\nimport com.fasterxml.jackson.core.JsonToken;\nimport javax.xml.stream.XMLStreamReader;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,34] cannot find symbol
+  symbol:   class IOContext
+  location: package com.fasterxml.jackson.core
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[20,35] cannot find symbol
+  symbol:   class IOContext
+  location: package com.fasterxml.jackson.core
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[20,88] cannot find symbol
+  symbol:   class IOContext
+  location: package com.fasterxml.jackson.core
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[28,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that getText() returns null when current token is null\n', 'test_name': 'testGetTextWhenTokenIsNull\n', 'test_code': '@Test\npublic void testGetTextWhenTokenIsNull() {\n    // Create a mock IOContext and other required parameters\n    com.fasterxml.jackson.core.IOContext ioContext = new com.fasterxml.jackson.core.IOContext(null, null, false);\n    int features = 0;\n    int parserFeatures = 0;\n    com.fasterxml.jackson.core.ObjectCodec codec = null;\n    javax.xml.stream.XMLStreamReader xmlReader = null;\n    \n    FromXmlParser parser = new FromXmlParser(ioContext, features, parserFeatures, codec, xmlReader);\n    // Set internal state to have null current token\n    parser._currToken = null;\n    String result = parser.getText();\n    assertNull(result);\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport com.fasterxml.jackson.core.IOContext;\nimport com.fasterxml.jackson.core.ObjectCodec;\nimport javax.xml.stream.XMLStreamReader;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[10,34] cannot find symbol
+  symbol:   class IOContext
+  location: package com.fasterxml.jackson.core
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[21,35] cannot find symbol
+  symbol:   class IOContext
+  location: package com.fasterxml.jackson.core
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[21,88] cannot find symbol
+  symbol:   class IOContext
+  location: package com.fasterxml.jackson.core
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/JacksonXml-5f/src/test/java/com/fasterxml/jackson/dataformat/xml/deser/FromXmlParserTest.java:[29,15] _currToken has protected access in com.fasterxml.jackson.core.base.ParserMinimalBase
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that getText() returns the correct string when current token is VALUE_STRING\n', 'test_name': 'testGetTextWithValidToken\n', 'test_code': '@Test\npublic void testGetTextWithValidToken() {\n    // Create a mock IOContext and other required parameters\n    com.fasterxml.jackson.core.IOContext ioContext = new com.fasterxml.jackson.core.IOContext(null, null, false);\n    int features = 0;\n    int parserFeatures = 0;\n    com.fasterxml.jackson.core.ObjectCodec codec = null;\n    javax.xml.stream.XMLStreamReader xmlReader = null;\n    \n    FromXmlParser parser = new FromXmlParser(ioContext, features, parserFeatures, codec, xmlReader);\n    // Set internal state to have a valid current token\n    parser._currToken = com.fasterxml.jackson.core.JsonToken.VALUE_STRING;\n    String result = parser.getText();\n    assertNotNull(result);\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport com.fasterxml.jackson.core.IOContext;\nimport com.fasterxml.jackson.core.ObjectCodec;\nimport com.fasterxml.jackson.core.JsonToken;\nimport javax.xml.stream.XMLStreamReader;'}</code></pre></td>
+                </tr>
+                
+                <tr>
                     <td class="status-INFO">INFO</td>
                     <td>f_2</td>
-                    <td>20.60814929008484</td>
-                    <td>10941</td>
+                    <td>138.5237329006195</td>
+                    <td>40235</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>

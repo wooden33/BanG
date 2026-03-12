@@ -150,39 +150,6 @@ Generate simple input conditions:
             self.logger.error(f"Error in generate_constraints: {str(e)}")
             return ""
 
-    def batch_generate_constraints(self, source_code: str, uncovered_paths: List[Dict[str, Any]]) -> List[Tuple[Dict[str, Any], str]]:
-        """
-        Batch generate input constraints for multiple uncovered paths.
-
-        Args:
-            source_code: Source code of the function under test
-            uncovered_paths: List of uncovered paths (dict format)
-
-        Returns:
-            List[Tuple[Dict[str, Any], str]]: Paths with their corresponding constraints
-        """
-        results = []
-        for path in uncovered_paths:
-            # Convert path dict to string format expected by generate_constraints
-            path_repr = []
-            if "path" in path:
-                for node in path["path"]:
-                    node_statements = [stmt.strip() for stmt in node['statement'].split("\n") if stmt.strip()]
-                    for stmt in node_statements:
-                        path_repr.append(stmt)
-
-                    # Add conditional direction information if available
-                    if node['conditional'] is not None:
-                        cond_dir = " (True branch)" if node['conditional'] else " (False branch)"
-                        path_repr[-1] += cond_dir
-
-            path_str = "\n".join(path_repr)
-
-            # Generate constraints using the string format
-            constraints = self.generate_constraints(source_code, path_str)
-            results.append((path, constraints))
-        return results
-
 
 if __name__ == "__main__":
     # Simple test with mock LLM

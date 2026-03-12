@@ -62,6 +62,7 @@ class UnitTestGenerator:
                  prompt_type: str = "baseline",
                  additional_instructions: str = "",
                  use_constraints: bool = False,
+                 use_backward_slice: bool = False,
                  fix_type: str = None):
 
         self.relevant_line_number_to_insert_tests_after = None
@@ -72,6 +73,7 @@ class UnitTestGenerator:
         self.branch_missed = None
         self.current_coverage = None
         self.code_coverage_report = None
+        self.constraint_solver = None
         self.project_dir = project_dir
         self.source_code_file = source_code_file
         self.test_code_file = test_code_file
@@ -85,14 +87,16 @@ class UnitTestGenerator:
         self.additional_instructions = additional_instructions
         self.language = get_code_language(source_code_file)
         self.use_constraints = use_constraints
+        self.use_backward_slice = use_backward_slice
         self.fix_type = fix_type
 
         self.llm_invoker = LLMInvocation(model=llm_model)
 
         if self.use_constraints:
             self.constraint_solver = LLMConstraintSolver(LLMInvocation(model=solver_model))
-        self.backward_slicer = LLMBackwardSlicer(llm_invoker=LLMInvocation(model=llm_model))
-        self.use_backward_slice = True
+        
+        if self.use_backward_slice:
+            self.backward_slicer = LLMBackwardSlicer(llm_invoker=LLMInvocation(model=llm_model))
 
         self.logger = pantaLogger.initialize_logger(__name__)
         self.logger.info(f"Using fix type: {self.fix_type}")
@@ -354,10 +358,6 @@ class UnitTestGenerator:
         This method identifies methods with low coverage and complexity above threshold,
         then uses backward slicing to determine what inputs/conditions are needed to
         reach the uncovered code, and generates targeted tests.
-
-        Parameters:
-            method_threshold: Minimum cyclomatic complexity threshold (default 3)
-            max_tokens: Maximum tokens for LLM response (default 4096)
 
         Returns:
             list: List of method analysis results with backward slices and generated tests

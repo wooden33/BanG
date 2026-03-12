@@ -97,6 +97,7 @@ class Panta:
             prompt_type=args.prompt_type,
             additional_instructions=args.additional_instructions,
             use_constraints=args.use_constraints,
+            use_backward_slice=args.use_backward_slice,
             fix_type=args.fix_type,
             llm_model=args.model,
             solver_model=args.solver_model)
@@ -220,26 +221,34 @@ class Panta:
                 self.logger.info(f"Current line Coverage: {cur_line_cov}%, branch coverage: {cur_branch_cov}%")
                 g_label = f"g_{iteration_count}"
                 f_label = f"f_{iteration_count}"
+                s_label = f"s_{iteration_count}"
 
                 time_start = time.time()
                 token_count = 0
                 if int(cur_line_cov) == 0 and int(cur_branch_cov) == 0 or iteration_count == 0:
                     self.logger.info(f"initial tests generation using baseline type of prompt")
-                    generated_tests_dict, gen_token_count = self.test_gen.generate_init_tests(g_label, max_tokens=4096)
-                elif self.args.use_backward_slice and no_coverage_increase >= self.beta * self.args.no_coverage_increase_iterations:
-                    backward_results = self.test_gen.generate_tests_by_slice(method_threshold=3, max_tokens=4096)
-                    generated_tests_dict = {"new_tests": []}
-                    for result in backward_results:
-                        generated_tests_dict["new_tests"].extend(result.get("generated_tests", []))
-                    gen_token_count = 0                
+                    generated_tests_dict, gen_token_count = self.test_gen.generate_init_tests(g_label, max_tokens=4096)              
                 else:
                     generated_tests_dict, gen_token_count = self.test_gen.generate_tests(g_label, max_tokens=4096,
                                                                         pick_two_paths=self.args.pick_two_paths)
+                    
+                if self.args.use_backward_slice and no_coverage_increase >= self.beta * self.args.no_coverage_increase_iterations:
+                    backward_results = self.test_gen.generate_tests_by_slice(method_threshold=10, max_tokens=4096)
+                    generated_tests_dict["slice_tests"] = []
+                    for result in backward_results:
+                        generated_tests_dict["slice_tests"].extend(result.get("generated_tests", []))
+                    gen_token_count = 0  
+                
                 token_count += gen_token_count
 
                 for generated_test in (generated_tests_dict.get("new_tests") or []):
                     test_result = self.test_gen.validate_test(generated_test)
                     test_result["label"] = g_label
+                    test_results_list.append(test_result)
+                    
+                for generated_test in (generated_tests_dict.get("slice_tests") or []):
+                    test_result = self.test_gen.validate_test(generated_test)
+                    test_result["label"] = s_label
                     test_results_list.append(test_result)
 
                 # collect code coverage after generation phase
@@ -309,10 +318,7 @@ class Panta:
                 }
                 detailed_path_history.append(iteration_path_data)
 
-                iteration_count += 1
-
-                
-                    
+                iteration_count += 1              
         except Exception as e:
             self.logger.error("iteration stops due to error: %s", e)
 
@@ -335,8 +341,7 @@ class Panta:
             self.logger.error(failure_message)
         file_name = self.args.source_code_file.split("/")[-1]
         file_name = file_name.split(".")[0]
-        name_list = [file_name, self.args.prompt_type, self.args.report_filepath]
-        # report_file = "_".join(name_list)
+
         report_file = self.args.report_filepath
 
         current_file = os.path.abspath(__file__)

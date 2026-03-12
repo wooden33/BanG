@@ -88,382 +88,326 @@
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[14,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[14,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
                     <td><pre><code class="language-python">{'test_behavior': 'Test the euality method with two equal vectors\n', 'test_name': 'testEqualsWithEqualVectors\n', 'test_code': '@Test\npublic void testEqualsWithEqualVectors() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    ArrayFieldVector<Integer> vector2 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertTrue(vector1.equals(vector2));\n}\n', 'new_imports_code': ''}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the equality method with two different vectors\n', 'test_name': 'testEqualsWithDifferentVectors\n', 'test_code': '@Test\npublic void testEqualsWithDifferentVectors() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    ArrayFieldVector<Integer> vector2 = new ArrayFieldVector<>(new Integer[]{1, 2, 4});\n    assertFalse(vector1.equals(vector2));\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[14,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[14,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the euality method with two different vectors\n', 'test_name': 'testEqualsWithDifferentVectors\n', 'test_code': '@Test\npublic void testEqualsWithDifferentVectors() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    ArrayFieldVector<Integer> vector2 = new ArrayFieldVector<>(new Integer[]{1, 2, 4});\n    assertFalse(vector1.equals(vector2));\n}\n', 'new_imports_code': ''}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the equality method with a null object\n', 'test_name': 'testEqualsWithNull\n', 'test_code': '@Test\npublic void testEqualsWithNull() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertFalse(vector.equals(null));\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[14,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[14,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the euality method with a null vector\n', 'test_name': 'testEqualsWithNullVector\n', 'test_code': '@Test\npublic void testEqualsWithNullVector() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertFalse(vector1.equals(null));\n}\n', 'new_imports_code': ''}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the hashCode method\n', 'test_name': 'testHashCode\n', 'test_code': '@Test\npublic void testHashCode() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    ArrayFieldVector<Integer> vector2 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertEquals(vector1.hashCode(), vector2.hashCode());\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[14,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[14,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the euality method with a different type of object\n', 'test_name': 'testEqualsWithDifferentType\n', 'test_code': '@Test\npublic void testEqualsWithDifferentType() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertFalse(vector1.equals("not a vector"));\n}\n', 'new_imports_code': ''}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the getDimension method\n', 'test_name': 'testGetDimension\n', 'test_code': '@Test\npublic void testGetDimension() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertEquals(3, vector.getDimension());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setEntry method with valid index\n', 'test_name': 'testSetEntryValidIndex\n', 'test_code': '@Test\npublic void testSetEntryValidIndex() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    vector.setEntry(1, 5);\n    assertEquals(5, vector.getEntry(1).intValue());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setEntry method with invalid index\n', 'test_name': 'testSetEntryInvalidIndex\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.OutOfRangeException.class)\npublic void testSetEntryInvalidIndex() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    vector.setEntry(5, 5);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the getEntry method with valid index\n', 'test_name': 'testGetEntryValidIndex\n', 'test_code': '@Test\npublic void testGetEntryValidIndex() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertEquals(2, vector.getEntry(1).intValue());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the getEntry method with invalid index\n', 'test_name': 'testGetEntryInvalidIndex\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.OutOfRangeException.class)\npublic void testGetEntryInvalidIndex() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    vector.getEntry(5);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the set method with valid indices\n', 'test_name': 'testSetValidIndices\n', 'test_code': '@Test\npublic void testSetValidIndices() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20});\n    vector.set(1, setVector);\n    assertEquals(10, vector.getEntry(1).intValue());\n    assertEquals(20, vector.getEntry(2).intValue());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the set method with invalid indices\n', 'test_name': 'testSetInvalidIndices\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.OutOfRangeException.class)\npublic void testSetInvalidIndices() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20});\n    vector.set(4, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with valid indices\n', 'test_name': 'testSetSubVectorValidIndices\n', 'test_code': '@Test\npublic void testSetSubVectorValidIndices() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20});\n    vector.setSubVector(1, setVector);\n    assertEquals(10, vector.getEntry(1).intValue());\n    assertEquals(20, vector.getEntry(2).intValue());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with invalid indices\n', 'test_name': 'testSetSubVectorInvalidIndices\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.OutOfRangeException.class)\npublic void testSetSubVectorInvalidIndices() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20});\n    vector.setSubVector(4, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the set method with a vector of different size\n', 'test_name': 'testSetWithDifferentSizeVector\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.DimensionMismatchException.class)\npublic void testSetWithDifferentSizeVector() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20, 30});\n    vector.set(1, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the set method with a null vector\n', 'test_name': 'testSetWithNullVector\n', 'test_code': '@Test(expected = java.lang.NullPointerException.class)\npublic void testSetWithNullVector() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    vector.set(1, null);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the set method with a negative index\n', 'test_name': 'testSetWithNegativeIndex\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.OutOfRangeException.class)\npublic void testSetWithNegativeIndex() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20});\n    vector.set(-1, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the set method with an index out of bounds\n', 'test_name': 'testSetWithIndexOutOfBounds\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.OutOfRangeException.class)\npublic void testSetWithIndexOutOfBounds() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20});\n    vector.set(5, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the set method with a vector that starts at an index that would go out of bounds\n', 'test_name': 'testSetWithVectorOutOfBounds\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.OutOfRangeException.class)\npublic void testSetWithVectorOutOfBounds() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20, 30});\n    vector.set(3, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with a null vector\n', 'test_name': 'testSetSubVectorWithNullVector\n', 'test_code': '@Test(expected = java.lang.NullPointerException.class)\npublic void testSetSubVectorWithNullVector() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    vector.setSubVector(1, null);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with a negative index\n', 'test_name': 'testSetSubVectorWithNegativeIndex\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.OutOfRangeException.class)\npublic void testSetSubVectorWithNegativeIndex() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20});\n    vector.setSubVector(-1, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with an index out of bounds\n', 'test_name': 'testSetSubVectorWithIndexOutOfBounds\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.OutOfRangeException.class)\npublic void testSetSubVectorWithIndexOutOfBounds() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20});\n    vector.setSubVector(5, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with a vector that starts at an index that would go out of bounds\n', 'test_name': 'testSetSubVectorWithVectorOutOfBounds\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.OutOfRangeException.class)\npublic void testSetSubVectorWithVectorOutOfBounds() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20, 30});\n    vector.setSubVector(3, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the set method with a vector that is larger than the remaining space\n', 'test_name': 'testSetWithLargerVector\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.DimensionMismatchException.class)\npublic void testSetWithLargerVector() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20, 30, 40});\n    vector.set(1, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with a vector that is larger than the remaining space\n', 'test_name': 'testSetSubVectorWithLargerVector\n', 'test_code': '@Test(expected = org.apache.commons.math3.exception.DimensionMismatchException.class)\npublic void testSetSubVectorWithLargerVector() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20, 30, 40});\n    vector.setSubVector(1, setVector);\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with a vector that is smaller than the remaining space\n', 'test_name': 'testSetSubVectorWithSmallerVector\n', 'test_code': '@Test\npublic void testSetSubVectorWithSmallerVector() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20});\n    vector.setSubVector(1, setVector);\n    assertEquals(10, vector.getEntry(1).intValue());\n    assertEquals(20, vector.getEntry(2).intValue());\n    assertEquals(3, vector.getEntry(3).intValue());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with a vector that is the same size as the remaining space\n', 'test_name': 'testSetSubVectorWithSameSizeVector\n', 'test_code': '@Test\npublic void testSetSubVectorWithSameSizeVector() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20, 30});\n    vector.setSubVector(1, setVector);\n    assertEquals(10, vector.getEntry(1).intValue());\n    assertEquals(20, vector.getEntry(2).intValue());\n    assertEquals(30, vector.getEntry(3).intValue());\n    assertEquals(4, vector.getEntry(4).intValue());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with a vector that is the same size as the remaining space and starts at the end\n', 'test_name': 'testSetSubVectorWithSameSizeVectorAtEnd\n', 'test_code': '@Test\npublic void testSetSubVectorWithSameSizeVectorAtEnd() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20, 30});\n    vector.setSubVector(2, setVector);\n    assertEquals(1, vector.getEntry(0).intValue());\n    assertEquals(2, vector.getEntry(1).intValue());\n    assertEquals(10, vector.getEntry(2).intValue());\n    assertEquals(20, vector.getEntry(3).intValue());\n    assertEquals(30, vector.getEntry(4).intValue());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with a vector that is the same size as the remaining space and starts at the beginning\n', 'test_name': 'testSetSubVectorWithSameSizeVectorAtBeginning\n', 'test_code': '@Test\npublic void testSetSubVectorWithSameSizeVectorAtBeginning() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20, 30});\n    vector.setSubVector(0, setVector);\n    assertEquals(10, vector.getEntry(0).intValue());\n    assertEquals(20, vector.getEntry(1).intValue());\n    assertEquals(30, vector.getEntry(2).intValue());\n    assertEquals(4, vector.getEntry(3).intValue());\n    assertEquals(5, vector.getEntry(4).intValue());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with a vector that is the same size as the remaining space and starts in the middle\n', 'test_name': 'testSetSubVectorWithSameSizeVectorInMiddle\n', 'test_code': '@Test\npublic void testSetSubVectorWithSameSizeVectorInMiddle() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10, 20, 30});\n    vector.setSubVector(1, setVector);\n    assertEquals(1, vector.getEntry(0).intValue());\n    assertEquals(10, vector.getEntry(1).intValue());\n    assertEquals(20, vector.getEntry(2).intValue());\n    assertEquals(30, vector.getEntry(3).intValue());\n    assertEquals(5, vector.getEntry(4).intValue());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_0</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the setSubVector method with a vector that is the same size as the remaining space and starts at the end\n', 'test_name': 'testSetSubVectorWithSameSizeVectorAtEnd2\n', 'test_code': '@Test\npublic void testSetSubVectorWithSameSizeVectorAtEnd2() {\n    ArrayFieldVector<Integer> vector = new ArrayFieldVector<>(new Integer[]{1, 2, 3, 4, 5});\n    ArrayFieldVector<Integer> setVector = new ArrayFieldVector<>(new Integer[]{10'}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[14,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[14,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the hash code method\n', 'test_name': 'testHashCode\n', 'test_code': '@Test\npublic void testHashCode() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    ArrayFieldVector<Integer> vector2 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertEquals(vector1.hashCode(), vector2.hashCode());\n}\n', 'new_imports_code': ''}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>g_0</td>
-                    <td>192.36796879768372</td>
-                    <td>14158</td>
+                    <td>80.70900392532349</td>
+                    <td>10681</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,26] type argument java.lang.Number is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,44] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.lang.Number is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,44] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that two equal ArrayFieldVector instances are correctly identified as equal\n', 'test_name': 'testEqualsWithEqualVectors\n', 'test_code': '@Test\npublic void testEqualsWithEqualVectors() {\n    ArrayFieldVector<Number> vector1 = new ArrayFieldVector<>(new Number[]{1, 2, 3});\n    ArrayFieldVector<Number> vector2 = new ArrayFieldVector<>(new Number[]{1, 2, 3});\n    assertTrue(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,26] type argument java.lang.Number is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,44] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.lang.Number is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,44] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that two different ArrayFieldVector instances are correctly identified as not equal\n', 'test_name': 'testEqualsWithDifferentVectors\n', 'test_code': '@Test\npublic void testEqualsWithDifferentVectors() {\n    ArrayFieldVector<Number> vector1 = new ArrayFieldVector<>(new Number[]{1, 2, 3});\n    ArrayFieldVector<Number> vector2 = new ArrayFieldVector<>(new Number[]{1, 2, 4});\n    assertFalse(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,26] type argument java.lang.Number is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,44] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that an ArrayFieldVector instance is correctly identified as not equal to null\n', 'test_name': 'testEqualsWithNullVector\n', 'test_code': '@Test\npublic void testEqualsWithNullVector() {\n    ArrayFieldVector<Number> vector1 = new ArrayFieldVector<>(new Number[]{1, 2, 3});\n    assertFalse(vector1.equals(null));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,26] type argument java.lang.Number is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,44] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that an ArrayFieldVector instance is correctly identified as not equal to a different type\n', 'test_name': 'testEqualsWithDifferentType\n', 'test_code': '@Test\npublic void testEqualsWithDifferentType() {\n    ArrayFieldVector<Number> vector1 = new ArrayFieldVector<>(new Number[]{1, 2, 3});\n    assertFalse(vector1.equals("not a vector"));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,26] type argument java.lang.Number is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,44] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.lang.Number is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,44] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the hash code of two equal ArrayFieldVector instances is the same\n', 'test_name': 'testHashCode\n', 'test_code': '@Test\npublic void testHashCode() {\n    ArrayFieldVector<Number> vector1 = new ArrayFieldVector<>(new Number[]{1, 2, 3});\n    ArrayFieldVector<Number> vector2 = new ArrayFieldVector<>(new Number[]{1, 2, 3});\n    assertEquals(vector1.hashCode(), vector2.hashCode());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that two equal vectors are correctly identified as equal\n', 'test_name': 'testEqualsWithEqualVectors\n', 'test_code': '@Test\npublic void testEqualsWithEqualVectors() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    ArrayFieldVector<Integer> vector2 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertTrue(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that two different vectors are correctly identified as not equal\n', 'test_name': 'testEqualsWithDifferentVectors\n', 'test_code': '@Test\npublic void testEqualsWithDifferentVectors() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    ArrayFieldVector<Integer> vector2 = new ArrayFieldVector<>(new Integer[]{1, 2, 4});\n    assertFalse(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that comparison with a null vector returns false\n', 'test_name': 'testEqualsWithNullVector\n', 'test_code': '@Test\npublic void testEqualsWithNullVector() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertFalse(vector1.equals(null));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that comparison with a different type returns false\n', 'test_name': 'testEqualsWithDifferentType\n', 'test_code': '@Test\npublic void testEqualsWithDifferentType() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertFalse(vector1.equals("not a vector"));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.lang.Integer is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,45] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that hash codes are equal for equal vectors\n', 'test_name': 'testHashCode\n', 'test_code': '@Test\npublic void testHashCode() {\n    ArrayFieldVector<Integer> vector1 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    ArrayFieldVector<Integer> vector2 = new ArrayFieldVector<>(new Integer[]{1, 2, 3});\n    assertEquals(vector1.hashCode(), vector2.hashCode());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[18,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[18,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that two equal ArrayFieldVector instances are correctly identified as equal\n', 'test_name': 'testEqualsWithEqualVectors\n', 'test_code': '@Test\npublic void testEqualsWithEqualVectors() {\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertTrue(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport java.math.BigInteger;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[18,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[18,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that two different ArrayFieldVector instances are correctly identified as not equal\n', 'test_name': 'testEqualsWithDifferentVectors\n', 'test_code': '@Test\npublic void testEqualsWithDifferentVectors() {\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(4)});\n    assertFalse(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport java.math.BigInteger;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that comparison with a null vector returns false\n', 'test_name': 'testEqualsWithNullVector\n', 'test_code': '@Test\npublic void testEqualsWithNullVector() {\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertFalse(vector1.equals(null));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport java.math.BigInteger;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that comparison with a different type returns false\n', 'test_name': 'testEqualsWithDifferentType\n', 'test_code': '@Test\npublic void testEqualsWithDifferentType() {\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertFalse(vector1.equals("not a vector"));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport java.math.BigInteger;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_0_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[18,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[18,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that hash codes are equal for equal vectors\n', 'test_name': 'testHashCode\n', 'test_code': '@Test\npublic void testHashCode() {\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertEquals(vector1.hashCode(), vector2.hashCode());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport java.math.BigInteger;'}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>f_0</td>
-                    <td>197.07179069519043</td>
-                    <td>14158</td>
+                    <td>288.4789764881134</td>
+                    <td>43451</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
@@ -472,94 +416,423 @@
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_1</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the equals method with two identical ArrayVector instances\n', 'test_name': 'testArrayVectorEqualsIdentical\n', 'test_code': '@Test\npublic void testArrayVectorEqualsIdentical() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    ArrayVector v2 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    assertTrue(v1.equals(v2));\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test equality of two equal ArrayFieldVector instances with BigInteger elements\n', 'test_name': 'testEqualsWithEqualVectors\n', 'test_code': '@Test\npublic void testEqualsWithEqualVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertTrue(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_1</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the equals method with two different ArrayVector instances\n', 'test_name': 'testArrayVectorEqualsDifferent\n', 'test_code': '@Test\npublic void testArrayVectorEqualsDifferent() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    ArrayVector v2 = new ArrayVector(new double[]{1.0, 2.0, 4.0});\n    assertFalse(v1.equals(v2));\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test equality of two different ArrayFieldVector instances with BigInteger elements\n', 'test_name': 'testEqualsWithDifferentVectors\n', 'test_code': '@Test\npublic void testEqualsWithDifferentVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(4)});\n    assertFalse(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_1</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the equals method with a null object\n', 'test_name': 'testArrayVectorEqualsNull\n', 'test_code': '@Test\npublic void testArrayVectorEqualsNull() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    assertFalse(v1.equals(null));\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test equality of ArrayFieldVector with null vector\n', 'test_name': 'testEqualsWithNullVector\n', 'test_code': '@Test\npublic void testEqualsWithNullVector() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertFalse(vector1.equals(null));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_1</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the equals method with a non-ArrayVector object\n', 'test_name': 'testArrayVectorEqualsNonArrayVector\n', 'test_code': '@Test\npublic void testArrayVectorEqualsNonArrayVector() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    assertFalse(v1.equals("not a vector"));\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test equality of ArrayFieldVector with different type object\n', 'test_name': 'testEqualsWithDifferentType\n', 'test_code': '@Test\npublic void testEqualsWithDifferentType() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertFalse(vector1.equals("not a vector"));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_1</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the hashCode method consistency\n', 'test_name': 'testArrayVectorHashCodeConsistency\n', 'test_code': '@Test\npublic void testArrayVectorHashCodeConsistency() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    ArrayVector v2 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    assertEquals(v1.hashCode(), v2.hashCode());\n}\n', 'new_imports_code': ''}</code></pre></td>
-                </tr>
-                
-                <tr>
-                    <td class="status-PASS">PASS</td>
-                    <td>g_1</td>
-                    <td></td>
-                    <td>0</td>
-                    <td>0.0</td>
-                    <td>0.0</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test the clone method functionality\n', 'test_name': 'testArrayVectorClone\n', 'test_code': '@Test\npublic void testArrayVectorClone() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    ArrayVector v2 = (ArrayVector) v1.clone();\n    assertTrue(v1.equals(v2));\n    assertFalse(v1 == v2);\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test hash code of equal ArrayFieldVector instances with BigInteger elements\n', 'test_name': 'testHashCode\n', 'test_code': '@Test\npublic void testHashCode() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertEquals(vector1.hashCode(), vector2.hashCode());\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;'}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>g_1</td>
-                    <td>41.90062427520752</td>
-                    <td>13487</td>
+                    <td>85.2271375656128</td>
+                    <td>12587</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that two equal vectors have the same hash code\n', 'test_name': 'testHashCode\n', 'test_code': '@Test\npublic void testHashCode() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertEquals(vector1.hashCode(), vector2.hashCode());\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[22,9] cannot find symbol
+  symbol:   method assertNotEquals(int,int)
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that two different vectors have different hash codes\n', 'test_name': 'testHashCodeDifferentVectors\n', 'test_code': '@Test\npublic void testHashCodeDifferentVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(4)});\n    assertNotEquals(vector1.hashCode(), vector2.hashCode());\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that a vector is equal to itself\n', 'test_name': 'testEqualsSelf\n', 'test_code': '@Test\npublic void testEqualsSelf() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertTrue(vector1.equals(vector1));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that a vector is not equal to null\n', 'test_name': 'testEqualsWithNullVector\n', 'test_code': '@Test\npublic void testEqualsWithNullVector() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertFalse(vector1.equals(null));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that a vector is not equal to an object of different type\n', 'test_name': 'testEqualsWithDifferentType\n', 'test_code': '@Test\npublic void testEqualsWithDifferentType() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertFalse(vector1.equals("not a vector"));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that two equal vectors are equal\n', 'test_name': 'testEqualsWithEqualVectors\n', 'test_code': '@Test\npublic void testEqualsWithEqualVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertTrue(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[12,38] package org.apache.commons.math3.field does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that two different vectors are not equal\n', 'test_name': 'testEqualsWithDifferentVectors\n', 'test_code': '@Test\npublic void testEqualsWithDifferentVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(4)});\n    assertFalse(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport java.math.BigInteger;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.field.BigIntegerField;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the function handles equality correctly for equal vectors\n', 'test_name': 'testEqualsWithEqualVectors\n', 'test_code': '@Test\npublic void testEqualsWithEqualVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertTrue(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.linear.ArrayFieldVector;\nimport java.math.BigInteger;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the function handles equality correctly for different vectors\n', 'test_name': 'testEqualsWithDifferentVectors\n', 'test_code': '@Test\npublic void testEqualsWithDifferentVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(4)});\n    assertFalse(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.linear.ArrayFieldVector;\nimport java.math.BigInteger;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the function handles equality correctly for equal vectors\n', 'test_name': 'testEqualsWithEqualVectors\n', 'test_code': '@Test\npublic void testEqualsWithEqualVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertTrue(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.linear.ArrayFieldVector;\nimport java.math.BigInteger;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the function handles equality correctly for different vectors\n', 'test_name': 'testEqualsWithDifferentVectors\n', 'test_code': '@Test\npublic void testEqualsWithDifferentVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(4)});\n    assertFalse(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.linear.ArrayFieldVector;\nimport java.math.BigInteger;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the function handles equality correctly for equal vectors\n', 'test_name': 'testEqualsWithEqualVectors\n', 'test_code': '@Test\npublic void testEqualsWithEqualVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    assertTrue(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.linear.ArrayFieldVector;\nimport java.math.BigInteger;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,39] cannot find symbol
+  symbol:   class BigIntegerField
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[20,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,26] type argument java.math.BigInteger is not within bounds of type-variable T
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,48] cannot infer type arguments for org.apache.commons.math3.linear.ArrayFieldVector<>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the function handles equality correctly for different vectors\n', 'test_name': 'testEqualsWithDifferentVectors\n', 'test_code': '@Test\npublic void testEqualsWithDifferentVectors() {\n    Field<BigInteger> field = new BigIntegerField();\n    ArrayFieldVector<BigInteger> vector1 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(3)});\n    ArrayFieldVector<BigInteger> vector2 = new ArrayFieldVector<>(field, new BigInteger[]{BigInteger.ONE, BigInteger.valueOf(2), BigInteger.valueOf(4)});\n    assertFalse(vector1.equals(vector2));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.Field;\nimport org.apache.commons.math3.linear.ArrayFieldVector;\nimport java.math.BigInteger;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the function returns the correct output for a specific scenario\n', 'test_name': 'testSpecificScenario\n', 'test_code': '@Test\npublic void testSpecificScenario() {\n    // test implementation\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_1_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the function handles a specific edge case correctly\n', 'test_name': 'testEdgeCase\n', 'test_code': '@Test\npublic void testEdgeCase() {\n    // test implementation\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;'}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>f_1</td>
-                    <td>46.74708104133606</td>
-                    <td>13487</td>
+                    <td>314.07504510879517</td>
+                    <td>51724</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
@@ -568,107 +841,460 @@
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_2</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that equals method returns false when comparing with null\n', 'test_name': 'testArrayVectorEqualsNull\n', 'test_code': '@Test\npublic void testArrayVectorEqualsNull() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    assertFalse(v1.equals(null));\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the constructor with a single element array\n', 'test_name': 'testConstructorWithSingleElementArray\n', 'test_code': '@Test\npublic void testConstructorWithSingleElementArray() {\n    FieldElement[] array = {new BigFraction(1, 2)};\n    ArrayFieldVector<BigFraction> vector = new ArrayFieldVector<BigFraction>(array);\n    assertEquals(1, vector.getDimension());\n    assertEquals(new BigFraction(1, 2), vector.getEntry(0));\n}\n', 'new_imports_code': 'import org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_2</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that equals method returns false when comparing with non-ArrayVector object\n', 'test_name': 'testArrayVectorEqualsNonArrayVector\n', 'test_code': '@Test\npublic void testArrayVectorEqualsNonArrayVector() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    assertFalse(v1.equals("not a vector"));\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the getEntry method with valid index\n', 'test_name': 'testGetEntryWithValidIndex\n', 'test_code': '@Test\npublic void testGetEntryWithValidIndex() {\n    FieldElement[] array = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    ArrayFieldVector<BigFraction> vector = new ArrayFieldVector<BigFraction>(array);\n    assertEquals(new BigFraction(1, 2), vector.getEntry(0));\n    assertEquals(new BigFraction(3, 4), vector.getEntry(1));\n}\n', 'new_imports_code': 'import org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_2</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that hashCode method produces consistent results for identical vectors\n', 'test_name': 'testArrayVectorHashCodeConsistency\n', 'test_code': '@Test\npublic void testArrayVectorHashCodeConsistency() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    ArrayVector v2 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    assertEquals(v1.hashCode(), v2.hashCode());\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the set method with valid index\n', 'test_name': 'testSetWithValidIndex\n', 'test_code': '@Test\npublic void testSetWithValidIndex() {\n    FieldElement[] array = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    ArrayFieldVector<BigFraction> vector = new ArrayFieldVector<BigFraction>(array);\n    vector.setEntry(0, new BigFraction(5, 6));\n    assertEquals(new BigFraction(5, 6), vector.getEntry(0));\n}\n', 'new_imports_code': 'import org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_2</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that clone method creates a distinct but equal vector\n', 'test_name': 'testArrayVectorClone\n', 'test_code': '@Test\npublic void testArrayVectorClone() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0});\n    ArrayVector v2 = (ArrayVector) v1.clone();\n    assertTrue(v1.equals(v2));\n    assertFalse(v1 == v2);\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the add method with valid vectors\n', 'test_name': 'testAddWithValidVectors\n', 'test_code': '@Test\npublic void testAddWithValidVectors() {\n    FieldElement[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    FieldElement[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<BigFraction>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<BigFraction>(array2);\n    ArrayFieldVector<BigFraction> result = (ArrayFieldVector<BigFraction>) vector1.add(vector2);\n    assertEquals(new BigFraction(8, 6), result.getEntry(0));\n    assertEquals(new BigFraction(10, 8), result.getEntry(1));\n}\n', 'new_imports_code': 'import org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_2</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that setSubVector works correctly when setting a vector at the beginning\n', 'test_name': 'testSetSubVectorAtBeginning\n', 'test_code': '@Test\npublic void testSetSubVectorAtBeginning() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0, 4.0, 5.0});\n    ArrayVector v2 = new ArrayVector(new double[]{10.0, 20.0, 30.0});\n    v1.setSubVector(0, v2);\n    assertArrayEquals(new double[]{10.0, 20.0, 30.0, 4.0, 5.0}, v1.toArray(), 1e-10);\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the subtract method with valid vectors\n', 'test_name': 'testSubtractWithValidVectors\n', 'test_code': '@Test\npublic void testSubtractWithValidVectors() {\n    FieldElement[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    FieldElement[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<BigFraction>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<BigFraction>(array2);\n    ArrayFieldVector<BigFraction> result = (ArrayFieldVector<BigFraction>) vector1.subtract(vector2);\n    assertEquals(new BigFraction(-4, 6), result.getEntry(0));\n    assertEquals(new BigFraction(-4, 8), result.getEntry(1));\n}\n', 'new_imports_code': 'import org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_2</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that setSubVector works correctly when setting a vector in the middle\n', 'test_name': 'testSetSubVectorInMiddle\n', 'test_code': '@Test\npublic void testSetSubVectorInMiddle() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0, 4.0, 5.0});\n    ArrayVector v2 = new ArrayVector(new double[]{10.0, 20.0, 30.0});\n    v1.setSubVector(1, v2);\n    assertArrayEquals(new double[]{1.0, 10.0, 20.0, 30.0, 5.0}, v1.toArray(), 1e-10);\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[17,86] cannot find symbol
+  symbol:   method scalarMultiply(org.apache.commons.math3.fraction.BigFraction)
+  location: variable vector of type org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the scalarMultiply method with valid scalar\n', 'test_name': 'testScalarMultiplyWithValidScalar\n', 'test_code': '@Test\npublic void testScalarMultiplyWithValidScalar() {\n    FieldElement[] array = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    ArrayFieldVector<BigFraction> vector = new ArrayFieldVector<BigFraction>(array);\n    ArrayFieldVector<BigFraction> result = (ArrayFieldVector<BigFraction>) vector.scalarMultiply(new BigFraction(2));\n    assertEquals(new BigFraction(1), result.getEntry(0));\n    assertEquals(new BigFraction(3, 2), result.getEntry(1));\n}\n', 'new_imports_code': 'import org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
                 </tr>
                 
                 <tr>
-                    <td class="status-PASS">PASS</td>
+                    <td class="status-FAIL">FAIL</td>
                     <td>g_2</td>
-                    <td></td>
-                    <td>0</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the dotProduct method with valid vectors\n', 'test_name': 'testDotProductWithValidVectors\n', 'test_code': '@Test\npublic void testDotProductWithValidVectors() {\n    FieldElement[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    FieldElement[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<BigFraction>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<BigFraction>(array2);\n    FieldElement result = vector1.dotProduct(vector2);\n    assertEquals(new BigFraction(31, 24), result);\n}\n', 'new_imports_code': 'import org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>g_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
                     <td>&nbsp;</td>
-                    <td><pre><code class="language-python">{'test_behavior': 'Test that setSubVector works correctly when setting a vector at the end\n', 'test_name': 'testSetSubVectorAtEnd\n', 'test_code': '@Test\npublic void testSetSubVectorAtEnd() {\n    ArrayVector v1 = new ArrayVector(new double[]{1.0, 2.0, 3.0, 4.0, 5.0});\n    ArrayVector v2 = new ArrayVector(new double[]{10.0, 20.0, 30.0});\n    v1.setSubVector(2, v2);\n    assertArrayEquals(new double[]{1.0, 2.0, 10.0, 20.0, 30.0}, v1.toArray(), 1e-10);\n}\n', 'new_imports_code': ''}</code></pre></td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[15,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[16,9] cannot find symbol
+  symbol:   class FieldElement
+  location: class org.apache.commons.math3.linear.ArrayFieldVectorTest
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,32] cannot find symbol
+  symbol:   method getDistance(org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>)
+  location: variable vector1 of type org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test the getDistance method with valid vectors\n', 'test_name': 'testGetDistanceWithValidVectors\n', 'test_code': '@Test\npublic void testGetDistanceWithValidVectors() {\n    FieldElement[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    FieldElement[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<BigFraction>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<BigFraction>(array2);\n    double result = vector1.getDistance(vector2);\n    assertEquals(Math.sqrt(0.5), result, 1e-10);\n}\n', 'new_imports_code': 'import org.apache.commons.math3.fraction.BigFraction;'}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>g_2</td>
-                    <td>50.23487210273743</td>
-                    <td>14206</td>
+                    <td>126.43213057518005</td>
+                    <td>11956</td>
                     <td>0.0</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the constructor correctly initializes a vector with a single element\n', 'test_name': 'testConstructorWithSingleElement\n', 'test_code': '@Test\npublic void testConstructorWithSingleElement() {\n    BigFraction[] elements = {new BigFraction(1, 2)};\n    ArrayFieldVector<BigFraction> vector = new ArrayFieldVector<>(elements);\n    assertEquals(1, vector.getDimension());\n    assertEquals(new BigFraction(1, 2), vector.getEntry(0));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the add method correctly adds two vectors\n', 'test_name': 'testAddMethod\n', 'test_code': '@Test\npublic void testAddMethod() {\n    BigFraction[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    BigFraction[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<>(array2);\n    ArrayFieldVector<BigFraction> result = (ArrayFieldVector<BigFraction>) vector1.add(vector2);\n    assertEquals(new BigFraction(8, 6), result.getEntry(0));\n    assertEquals(new BigFraction(10, 8), result.getEntry(1));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[19,86] cannot find symbol
+  symbol:   method scalarMultiply(org.apache.commons.math3.fraction.BigFraction)
+  location: variable vector of type org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the scalarMultiply method correctly multiplies a vector by a scalar\n', 'test_name': 'testScalarMultiplyMethod\n', 'test_code': '@Test\npublic void testScalarMultiplyMethod() {\n    BigFraction[] array = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    ArrayFieldVector<BigFraction> vector = new ArrayFieldVector<>(array);\n    ArrayFieldVector<BigFraction> result = (ArrayFieldVector<BigFraction>) vector.scalarMultiply(new BigFraction(2));\n    assertEquals(new BigFraction(1), result.getEntry(0));\n    assertEquals(new BigFraction(3, 2), result.getEntry(1));\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the dotProduct method correctly computes the dot product of two vectors\n', 'test_name': 'testDotProductMethod\n', 'test_code': '@Test\npublic void testDotProductMethod() {\n    BigFraction[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    BigFraction[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<>(array2);\n    BigFraction result = vector1.dotProduct(vector2);\n    assertEquals(new BigFraction(31, 24), result);\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_1</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[8,36] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[9,29] package org.junit.jupiter.api does not exist
+[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[21,32] cannot find symbol
+  symbol:   method getDistance(org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>)
+  location: variable vector1 of type org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the getDistance method correctly computes the Euclidean distance between two vectors\n', 'test_name': 'testGetDistanceMethod\n', 'test_code': '@Test\npublic void testGetDistanceMethod() {\n    BigFraction[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    BigFraction[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<>(array2);\n    double result = vector1.getDistance(vector2);\n    assertEquals(Math.sqrt(0.5), result, 1e-10);\n}\n', 'new_imports_code': 'import static org.junit.jupiter.api.Assertions.*;\nimport org.junit.jupiter.api.Test;\nimport org.apache.commons.math3.fraction.BigFraction;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-PASS">PASS</td>
+                    <td>f_2_2</td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the constructor correctly initializes a vector with a single element\n', 'test_name': 'testConstructorWithSingleElement\n', 'test_code': '@Test\npublic void testConstructorWithSingleElement() {\n    BigFraction[] elements = {new BigFraction(1, 2)};\n    ArrayFieldVector<BigFraction> vector = new ArrayFieldVector<>(elements);\n    assertEquals(1, vector.getDimension());\n    assertEquals(new BigFraction(1, 2), vector.getEntry(0));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_2</td>
+                    <td>Test failures</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell"> - in org.apache.commons.math3.linear.ArrayFieldVectorTest
+testAddMethod(org.apache.commons.math3.linear.ArrayFieldVectorTest)  Time elapsed: 0.013 sec  <<< FAILURE!
+java.lang.AssertionError: expected:<5 / 4> but was:<13 / 8>
+	at org.junit.Assert.fail(Assert.java:93)
+	at org.junit.Assert.failNotEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:128)
+	at org.junit.Assert.assertEquals(Assert.java:147)
+	at org.apache.commons.math3.linear.ArrayFieldVectorTest.testAddMethod(ArrayFieldVectorTest.java:32)</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the add method correctly adds two vectors\n', 'test_name': 'testAddMethod\n', 'test_code': '@Test\npublic void testAddMethod() {\n    BigFraction[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    BigFraction[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<>(array2);\n    ArrayFieldVector<BigFraction> result = (ArrayFieldVector<BigFraction>) vector1.add(vector2);\n    assertEquals(new BigFraction(8, 6), result.getEntry(0));\n    assertEquals(new BigFraction(10, 8), result.getEntry(1));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[28,86] cannot find symbol
+  symbol:   method scalarMultiply(org.apache.commons.math3.fraction.BigFraction)
+  location: variable vector of type org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the scalarMultiply method correctly multiplies a vector by a scalar\n', 'test_name': 'testScalarMultiplyMethod\n', 'test_code': '@Test\npublic void testScalarMultiplyMethod() {\n    BigFraction[] array = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    ArrayFieldVector<BigFraction> vector = new ArrayFieldVector<>(array);\n    ArrayFieldVector<BigFraction> result = (ArrayFieldVector<BigFraction>) vector.scalarMultiply(new BigFraction(2));\n    assertEquals(new BigFraction(1), result.getEntry(0));\n    assertEquals(new BigFraction(3, 2), result.getEntry(1));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_2</td>
+                    <td>Test failures</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell"> - in org.apache.commons.math3.linear.ArrayFieldVectorTest
+testDotProductMethod(org.apache.commons.math3.linear.ArrayFieldVectorTest)  Time elapsed: 0.003 sec  <<< FAILURE!
+java.lang.AssertionError: expected:<31 / 24> but was:<103 / 96>
+	at org.junit.Assert.fail(Assert.java:93)
+	at org.junit.Assert.failNotEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:128)
+	at org.junit.Assert.assertEquals(Assert.java:147)
+	at org.apache.commons.math3.linear.ArrayFieldVectorTest.testDotProductMethod(ArrayFieldVectorTest.java:31)</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the dotProduct method correctly computes the dot product of two vectors\n', 'test_name': 'testDotProductMethod\n', 'test_code': '@Test\npublic void testDotProductMethod() {\n    BigFraction[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    BigFraction[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<>(array2);\n    BigFraction result = vector1.dotProduct(vector2);\n    assertEquals(new BigFraction(31, 24), result);\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_2</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[30,32] cannot find symbol
+  symbol:   method getDistance(org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>)
+  location: variable vector1 of type org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the getDistance method correctly computes the Euclidean distance between two vectors\n', 'test_name': 'testGetDistanceMethod\n', 'test_code': '@Test\npublic void testGetDistanceMethod() {\n    BigFraction[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    BigFraction[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<>(array2);\n    double result = vector1.getDistance(vector2);\n    assertEquals(Math.sqrt(0.5), result, 1e-10);\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport org.apache.commons.math3.fraction.BigFraction;'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_3</td>
+                    <td>Test failures</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell"> - in org.apache.commons.math3.linear.ArrayFieldVectorTest
+testAddMethod(org.apache.commons.math3.linear.ArrayFieldVectorTest)  Time elapsed: 0.013 sec  <<< FAILURE!
+java.lang.AssertionError: expected:<5 / 4> but was:<13 / 8>
+	at org.junit.Assert.fail(Assert.java:93)
+	at org.junit.Assert.failNotEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:128)
+	at org.junit.Assert.assertEquals(Assert.java:147)
+	at org.apache.commons.math3.linear.ArrayFieldVectorTest.testAddMethod(ArrayFieldVectorTest.java:32)</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the add method correctly adds two ArrayFieldVector instances\n', 'test_name': 'testAddMethod\n', 'test_code': '@Test\npublic void testAddMethod() {\n    BigFraction[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    BigFraction[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<>(array2);\n    ArrayFieldVector<BigFraction> result = (ArrayFieldVector<BigFraction>) vector1.add(vector2);\n    assertEquals(new BigFraction(8, 6), result.getEntry(0));\n    assertEquals(new BigFraction(10, 8), result.getEntry(1));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[28,86] cannot find symbol
+  symbol:   method scalarMultiply(org.apache.commons.math3.fraction.BigFraction)
+  location: variable vector of type org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the scalarMultiply method correctly multiplies a vector by a scalar\n', 'test_name': 'testScalarMultiplyMethod\n', 'test_code': '@Test\npublic void testScalarMultiplyMethod() {\n    BigFraction[] array = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    ArrayFieldVector<BigFraction> vector = new ArrayFieldVector<>(array);\n    ArrayFieldVector<BigFraction> result = (ArrayFieldVector<BigFraction>) vector.scalarMultiply(new BigFraction(2));\n    assertEquals(new BigFraction(1), result.getEntry(0));\n    assertEquals(new BigFraction(3, 2), result.getEntry(1));\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_3</td>
+                    <td>Test failures</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell"> - in org.apache.commons.math3.linear.ArrayFieldVectorTest
+testDotProductMethod(org.apache.commons.math3.linear.ArrayFieldVectorTest)  Time elapsed: 0.005 sec  <<< FAILURE!
+java.lang.AssertionError: expected:<31 / 24> but was:<103 / 96>
+	at org.junit.Assert.fail(Assert.java:93)
+	at org.junit.Assert.failNotEquals(Assert.java:647)
+	at org.junit.Assert.assertEquals(Assert.java:128)
+	at org.junit.Assert.assertEquals(Assert.java:147)
+	at org.apache.commons.math3.linear.ArrayFieldVectorTest.testDotProductMethod(ArrayFieldVectorTest.java:31)</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the dotProduct method correctly computes the dot product of two vectors\n', 'test_name': 'testDotProductMethod\n', 'test_code': '@Test\npublic void testDotProductMethod() {\n    BigFraction[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    BigFraction[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<>(array2);\n    BigFraction result = vector1.dotProduct(vector2);\n    assertEquals(new BigFraction(31, 24), result);\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport org.apache.commons.math3.fraction.BigFraction;\n'}</code></pre></td>
+                </tr>
+                
+                <tr>
+                    <td class="status-FAIL">FAIL</td>
+                    <td>f_2_3</td>
+                    <td>Compilation failure</td>
+                    <td>1</td>
+                    <td>0.0</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td><pre><code class="language-shell">[ERROR] /mnt/data1/ljh/code/Panta/defects4j-subjects-notests/Math-2f/src/test/java/org/apache/commons/math3/linear/ArrayFieldVectorTest.java:[30,32] cannot find symbol
+  symbol:   method getDistance(org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>)
+  location: variable vector1 of type org.apache.commons.math3.linear.ArrayFieldVector<org.apache.commons.math3.fraction.BigFraction>
+</code></pre></td>
+                    <td><pre><code class="language-python">{'test_behavior': 'Test that the getDistance method correctly computes the Euclidean distance between two vectors\n', 'test_name': 'testGetDistanceMethod\n', 'test_code': '@Test\npublic void testGetDistanceMethod() {\n    BigFraction[] array1 = {new BigFraction(1, 2), new BigFraction(3, 4)};\n    BigFraction[] array2 = {new BigFraction(5, 6), new BigFraction(7, 8)};\n    ArrayFieldVector<BigFraction> vector1 = new ArrayFieldVector<>(array1);\n    ArrayFieldVector<BigFraction> vector2 = new ArrayFieldVector<>(array2);\n    double result = vector1.getDistance(vector2);\n    assertEquals(Math.sqrt(0.5), result, 1e-10);\n}\n', 'new_imports_code': 'import static org.junit.Assert.*;\nimport org.junit.Test;\nimport org.apache.commons.math3.fraction.BigFraction;'}</code></pre></td>
                 </tr>
                 
                 <tr>
                     <td class="status-INFO">INFO</td>
                     <td>f_2</td>
-                    <td>54.98317003250122</td>
-                    <td>14206</td>
+                    <td>365.7688889503479</td>
+                    <td>46525</td>
+                    <td>2.45</td>
                     <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td class="status-INFO">INFO</td>
+                    <td>g_3</td>
+                    <td>169.56495308876038</td>
+                    <td>15310</td>
+                    <td>2.45</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td class="status-INFO">INFO</td>
+                    <td>f_3</td>
+                    <td>181.3630928993225</td>
+                    <td>15310</td>
+                    <td>2.45</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td class="status-INFO">INFO</td>
+                    <td>g_4</td>
+                    <td>169.9319145679474</td>
+                    <td>15310</td>
+                    <td>2.45</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td class="status-INFO">INFO</td>
+                    <td>f_4</td>
+                    <td>181.15818643569946</td>
+                    <td>15310</td>
+                    <td>2.45</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td class="status-INFO">INFO</td>
+                    <td>g_5</td>
+                    <td>170.87466478347778</td>
+                    <td>15310</td>
+                    <td>2.45</td>
+                    <td>0.0</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                
+                <tr>
+                    <td class="status-INFO">INFO</td>
+                    <td>f_5</td>
+                    <td>182.0098102092743</td>
+                    <td>15310</td>
+                    <td>2.45</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -680,7 +1306,7 @@
                     <td></td>
                     <td></td>
                     <td>0</td>
-                    <td>0.0</td>
+                    <td>2.45</td>
                     <td>0.0</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>

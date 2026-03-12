@@ -75,10 +75,9 @@ def extract_config_data(src_file_obj, project_name, max_complexity, prompt_type,
             'enable_fixing': '3',
             'run_symprompt': 'false',
             'prompt_type': prompt_type,
-            'use_constraints': 'true',
             'use_backward_slice': 'true',
             # 'use_constraints': 'false',
-            'fix_type': 'MCTS',
+            # 'fix_type': 'MCTS',
             'pick_two_paths': 'true',
             'additional_instructions': ''
         }
@@ -272,7 +271,7 @@ if __name__ == '__main__':
     defects4j_subject_classes = get_d4j_subject_classes()
 
     # Build result path - include solver_model if specified
-    result_path = os.path.join(ROOT, f"result-files/{prompt}_{model}_constraints_mcts_bs")
+    result_path = os.path.join(ROOT, f"result-files/{prompt}_{model}_mcts_bs")
     # result_path = os.path.join(ROOT, f"result-files/{prompt}_{model}_mcts")
     if solver_model:
         result_path += f"_{solver_model}"
