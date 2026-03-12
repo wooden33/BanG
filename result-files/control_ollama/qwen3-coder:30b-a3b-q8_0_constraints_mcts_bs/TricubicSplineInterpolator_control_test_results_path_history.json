@@ -1,0 +1,56 @@
+{
+  "final_line_coverage": 100.0,
+  "final_branch_coverage": 100.0,
+  "final_lines_missed": [],
+  "final_branches_missed": [],
+  "detailed_path_history": [
+    {
+      "iteration": 0,
+      "line_coverage": 97.47,
+      "branch_coverage": 96.3,
+      "path_history": {},
+      "lines_missed": [
+        46,
+        69,
+        45,
+        68
+      ],
+      "branches_missed": [
+        45,
+        68
+      ],
+      "timestamp": 1772589409.089855
+    },
+    {
+      "iteration": 1,
+      "line_coverage": 98.73,
+      "branch_coverage": 98.15,
+      "path_history": {
+        "interpolate_85_3": 1,
+        "interpolate_85_8": 1
+      },
+      "lines_missed": [
+        46,
+        45
+      ],
+      "branches_missed": [
+        45
+      ],
+      "timestamp": 1772589471.5208807
+    },
+    {
+      "iteration": 2,
+      "line_coverage": 100.0,
+      "branch_coverage": 100.0,
+      "path_history": {
+        "interpolate_85_3": 1,
+        "interpolate_85_8": 1,
+        "interpolate_85_1": 1,
+        "interpolate_85_16": 1
+      },
+      "lines_missed": [],
+      "branches_missed": [],
+      "timestamp": 1772589511.5223267
+    }
+  ]
+}

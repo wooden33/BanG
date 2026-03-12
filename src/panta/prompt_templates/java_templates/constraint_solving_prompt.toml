@@ -15,6 +15,13 @@ The following sequence of branch decisions is required to reach the target:
 {{ path_info|trim }}
 =========
 
+## Hint: First Uncovered Branch
+{% if first_uncovered_branch %}
+First uncovered branch to cover: Line {{ first_uncovered_branch.line }} - {{ first_uncovered_branch.statement }} should be {{ first_uncovered_branch.condition }}
+{% else %}
+No specific branch information available.
+{% endif %} 
+
 ## Task
 Derive the mandatory input conditions for the function parameters to satisfy the path above. 
 

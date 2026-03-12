@@ -13,12 +13,14 @@ SETTINGS_FILES = [
     "java_templates/failed_test_feedback_prompt.toml",
     "java_templates/failed_test_feedback_prompt_with_MCTS.toml",
     "java_templates/constraint_solving_prompt.toml",
+    "java_templates/backward_slice_test_generation.toml",
     "python_templates/test_generation_prompt_if_test_code_already_exixts.toml",
     "python_templates/test_headers_indentation_prompt.toml",
     "python_templates/analyze_suite_test_insert_line.toml",
     "hits_templates/gen_slice.toml",
     "hits_templates/gen_code.toml",
     "hits_templates/test_repair.toml",
+    "slicer_templates/backward_slice.toml"
 ]
 
 

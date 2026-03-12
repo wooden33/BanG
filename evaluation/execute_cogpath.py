@@ -66,7 +66,7 @@ def extract_config_data(src_file_obj, project_name, max_complexity, prompt_type,
             'included_files': '',
             'junit_version': junit_version,
             'model': model,
-            'solver_model': solver_model,
+            # 'solver_model': solver_model,
             'coverage_type': 'jacoco',
             'report_filepath': f"{src_file_obj['src_name']}_{prompt_type}_test_results.html",
             'target_coverage': '100',
@@ -76,6 +76,8 @@ def extract_config_data(src_file_obj, project_name, max_complexity, prompt_type,
             'run_symprompt': 'false',
             'prompt_type': prompt_type,
             'use_constraints': 'true',
+            'use_backward_slice': 'true',
+            # 'use_constraints': 'false',
             'fix_type': 'MCTS',
             'pick_two_paths': 'true',
             'additional_instructions': ''
@@ -270,7 +272,8 @@ if __name__ == '__main__':
     defects4j_subject_classes = get_d4j_subject_classes()
 
     # Build result path - include solver_model if specified
-    result_path = os.path.join(ROOT, f"result-files/{prompt}_{model}_constraints_mcts")
+    result_path = os.path.join(ROOT, f"result-files/{prompt}_{model}_constraints_mcts_bs")
+    # result_path = os.path.join(ROOT, f"result-files/{prompt}_{model}_mcts")
     if solver_model:
         result_path += f"_{solver_model}"
         

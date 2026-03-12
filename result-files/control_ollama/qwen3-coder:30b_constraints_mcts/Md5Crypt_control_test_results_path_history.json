@@ -1,0 +1,124 @@
+{
+  "final_line_coverage": 86.36,
+  "final_branch_coverage": 76.92,
+  "final_lines_missed": [
+    48,
+    72,
+    89,
+    90,
+    92,
+    105,
+    126,
+    141,
+    190,
+    189,
+    223
+  ],
+  "final_branches_missed": [
+    89,
+    189,
+    223
+  ],
+  "detailed_path_history": [
+    {
+      "iteration": 0,
+      "line_coverage": 86.36,
+      "branch_coverage": 76.92,
+      "path_history": {},
+      "lines_missed": [
+        48,
+        72,
+        89,
+        90,
+        92,
+        105,
+        126,
+        141,
+        190,
+        189,
+        223
+      ],
+      "branches_missed": [
+        89,
+        189,
+        223
+      ],
+      "timestamp": 1770370560.3558538
+    },
+    {
+      "iteration": 1,
+      "line_coverage": 86.36,
+      "branch_coverage": 76.92,
+      "path_history": {},
+      "lines_missed": [
+        48,
+        72,
+        89,
+        90,
+        92,
+        105,
+        126,
+        141,
+        190,
+        189,
+        223
+      ],
+      "branches_missed": [
+        89,
+        189,
+        223
+      ],
+      "timestamp": 1770370574.8671522
+    },
+    {
+      "iteration": 2,
+      "line_coverage": 86.36,
+      "branch_coverage": 76.92,
+      "path_history": {},
+      "lines_missed": [
+        48,
+        72,
+        89,
+        90,
+        92,
+        105,
+        126,
+        141,
+        190,
+        189,
+        223
+      ],
+      "branches_missed": [
+        89,
+        189,
+        223
+      ],
+      "timestamp": 1770370589.2183995
+    },
+    {
+      "iteration": 3,
+      "line_coverage": 86.36,
+      "branch_coverage": 76.92,
+      "path_history": {},
+      "lines_missed": [
+        48,
+        72,
+        89,
+        90,
+        92,
+        105,
+        126,
+        141,
+        190,
+        189,
+        223
+      ],
+      "branches_missed": [
+        89,
+        189,
+        223
+      ],
+      "timestamp": 1770370603.7322364
+    }
+  ]
+}

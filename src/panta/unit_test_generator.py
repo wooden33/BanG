@@ -17,6 +17,7 @@ from .cfg.src.comex.codeviews.CFG.CFG_driver import CFGDriver
 from .utils import read_file
 from .config_loader import get_settings
 from .llm_constraint_solver import LLMConstraintSolver
+from .llm_backward_slicer import LLMBackwardSlicer
 
 
 def count_leading_spaces(text):
@@ -87,8 +88,11 @@ class UnitTestGenerator:
         self.fix_type = fix_type
 
         self.llm_invoker = LLMInvocation(model=llm_model)
-        
-        self.constraint_solver = LLMConstraintSolver(LLMInvocation(model=solver_model))
+
+        if self.use_constraints:
+            self.constraint_solver = LLMConstraintSolver(LLMInvocation(model=solver_model))
+        self.backward_slicer = LLMBackwardSlicer(llm_invoker=LLMInvocation(model=llm_model))
+        self.use_backward_slice = True
 
         self.logger = pantaLogger.initialize_logger(__name__)
         self.logger.info(f"Using fix type: {self.fix_type}")
@@ -96,6 +100,7 @@ class UnitTestGenerator:
         # self.preprocessor = FilePreprocessor(self.test_code_file)
         self.failed_test_runs = []
         self.coverage_invalid_tests = []
+        self.branch_miss_count = {}
         self.run_coverage()
         self.prompt_type = prompt_type
         self.path_history = {}
@@ -148,6 +153,13 @@ class UnitTestGenerator:
 
                 # Process the extracted coverage metrics
                 self.current_coverage = (line_percentage, branch_percentage)
+
+                # Update branch miss count for tracking frequent missed branches
+                if self.branch_missed:
+                    for branch_line in self.branch_missed:
+                        self.branch_miss_count[branch_line] = self.branch_miss_count.get(branch_line, 0) + 1
+                    self.logger.debug(f"Branch miss count: {self.branch_miss_count}")
+
                 self.code_coverage_report = (
                     f"Lines missed: {self.lines_missed}\n"
                     f"Branches missed: {self.branch_missed}\n"
@@ -227,7 +239,8 @@ class UnitTestGenerator:
             branch_missed=self.branch_missed,
             path_history=self.path_history,
             test_dependencies=self.test_dependencies,
-            constraint_solver=self.constraint_solver
+            constraint_solver=self.constraint_solver,
+            backward_slicer=self.backward_slicer
         )
         
         # CFG guided test generation strategy
@@ -333,6 +346,187 @@ class UnitTestGenerator:
         self.test_headers_indentation = indents
         self.relevant_line_number_to_insert_tests_before = last_method_start_line
         self.relevant_line_number_to_insert_imports_after = last_line_for_imports
+
+    def generate_tests_by_slice(self, method_threshold: int = 3, max_tokens: int = 4096) -> list:
+        """
+        Analyze low-coverage methods using backward slicing and generate tests.
+
+        This method identifies methods with low coverage and complexity above threshold,
+        then uses backward slicing to determine what inputs/conditions are needed to
+        reach the uncovered code, and generates targeted tests.
+
+        Parameters:
+            method_threshold: Minimum cyclomatic complexity threshold (default 3)
+            max_tokens: Maximum tokens for LLM response (default 4096)
+
+        Returns:
+            list: List of method analysis results with backward slices and generated tests
+        """
+        self.logger.info(f"Analyzing methods by backward slicing (threshold={method_threshold})")
+
+        # Check if backward slicing is properly enabled
+        if not getattr(self, 'use_backward_slice', False):
+            self.logger.warning("Backward slicing is not enabled")
+            return []
+
+        if not hasattr(self, 'backward_slicer') or self.backward_slicer is None:
+            self.logger.warning("Backward slicer not initialized")
+            return []
+
+        if not hasattr(self, 'prompt_builder') or self.prompt_builder is None:
+            self._init_prompt_builder()
+
+        low_coverage_methods = self.prompt_builder.get_lowest_coverage_methods_sorted(
+            cc_threshold=method_threshold,
+            limit=5
+        )
+
+        if not low_coverage_methods:
+            self.logger.info("No low coverage methods found")
+            return []
+
+        analyzed_results = []
+        for method in low_coverage_methods:
+            method_name, coverage, complexity, missed_lines, missed_branches, total_lines = method
+            uncovered_segments = self.prompt_builder.get_longest_uncovered_segments(missed_lines)
+
+            longest_segment = uncovered_segments[0] if uncovered_segments else None
+            if longest_segment:
+                start_line, end_line, length = longest_segment
+                uncovered_code = self._extract_code_segment_for_slicing(start_line, end_line)
+            else:
+                uncovered_code = ""
+
+            backward_slice = None
+            generated_tests = []
+            self.logger.info(f"Processing method {method_name}: uncovered_code={bool(uncovered_code)}, backward_slicer={bool(self.backward_slicer)}")
+            if uncovered_code and self.backward_slicer:
+                try:
+                    backward_slice = self.backward_slicer.slice(
+                        uncovered_code=uncovered_code,
+                        full_fm=self.prompt_builder.source_file
+                    )
+                    self.logger.info(f"Backward slice result for {method_name}: {backward_slice}")
+
+                    # Generate tests using backward slice info
+                    if backward_slice:
+                        generated_tests = self._generate_tests_from_slice(backward_slice, max_tokens)
+                        self.logger.info(f"Generated {len(generated_tests)} tests for {method_name}")
+                    else:
+                        self.logger.warning(f"Backward slice returned empty for {method_name}")
+
+                except Exception as e:
+                    self.logger.error(f"Backward slice failed for {method_name}: {e}")
+
+            analyzed_results.append({
+                "method_name": method_name,
+                "coverage": coverage,
+                "complexity": complexity,
+                "missed_lines": missed_lines,
+                "missed_branches": missed_branches,
+                "total_lines": total_lines,
+                "longest_segment": longest_segment,
+                "backward_slice": backward_slice,
+                "generated_tests": generated_tests
+            })
+
+        self.logger.info(f"Analyzed {len(analyzed_results)} methods, generated {sum(len(r.get('generated_tests', [])) for r in analyzed_results)} tests")
+        return analyzed_results
+
+    def _generate_tests_from_slice(self, backward_slice: dict, max_tokens: int = 4096) -> list:
+        """
+        Generate tests using backward slice information.
+
+        Parameters:
+            backward_slice: The backward slice result containing prerequisites and test hints
+            max_tokens: Maximum tokens for LLM response
+
+        Returns:
+            list: Generated test dictionaries
+        """
+        from jinja2 import Environment, StrictUndefined
+
+        # Build slice_info for template
+        slice_info = []
+        prerequisites = backward_slice.get("prerequisites", {})
+
+        slice_info.append({
+            "index": 1,
+            "slice_code": backward_slice.get("backward_slice_code", []),
+            "input_values": prerequisites.get("input_values", []),
+            "object_states": prerequisites.get("object_states", []),
+            "method_mocks": prerequisites.get("method_mocks", []),
+            "control_flow_logic": prerequisites.get("control_flow_logic", ""),
+            "test_hint": backward_slice.get("test_hint", "")
+        })
+
+        # Prepare variables for template
+        variables = {
+            "slice_info": slice_info,
+            "processed_source_code": self.prompt_builder.processed_source_code if hasattr(self.prompt_builder, 'processed_source_code') else self.prompt_builder.source_file,
+            "test_file_numbered": self.prompt_builder.test_file_numbered,
+            "test_dependencies": self.test_dependencies,
+            "language": self.language
+        }
+
+        try:
+            # Render prompt using template
+            environment = Environment(undefined=StrictUndefined)
+            prompt_config = get_settings().backward_slice_test_generation_prompt
+
+            system_prompt = environment.from_string(prompt_config.system).render()
+            user_prompt = environment.from_string(prompt_config.user).render(variables)
+
+            prompt = {"system": system_prompt, "user": user_prompt}
+
+            # Call LLM to generate tests
+            tests_dict, token_count = self.generate_test_by_prompt_llm(prompt, max_tokens)
+            self.logger.info(f"Parsed tests_dict: {tests_dict}")
+
+            # Handle different return formats
+            tests = []
+            if "new_tests" in tests_dict and tests_dict["new_tests"]:
+                tests = tests_dict["new_tests"]
+            elif "test_code" in tests_dict:
+                # Backward slice template returns a single test object
+                tests = [tests_dict]
+
+            return tests
+
+        except Exception as e:
+            self.logger.error(f"Failed to generate tests from slice: {e}")
+            return []
+
+    def _extract_code_segment_for_slicing(self, start_line: int, end_line: int) -> str:
+        if not hasattr(self, 'prompt_builder'):
+            return ""
+        lines = self.prompt_builder.source_file.split("\n")
+        start_idx = max(0, start_line - 1)
+        end_idx = min(len(lines), end_line)
+        if start_idx >= end_idx:
+            return ""
+        selected_lines = lines[start_idx:end_idx]
+        return "\n".join([f"{start_idx + i + 1} {line}" for i, line in enumerate(selected_lines)])
+
+    def _init_prompt_builder(self):
+        from .prompt_builder import PromptBuilder
+        self.prompt_builder = PromptBuilder(
+            project_dir=self.project_dir,
+            source_code_file=self.source_code_file,
+            test_code_file=self.test_code_file,
+            code_coverage_report=self.code_coverage_report,
+            included_files=self.included_files,
+            additional_instructions=self.additional_instructions,
+            failed_test_runs="",
+            coverage_invalid_tests="",
+            language=self.language,
+            lines_missed=self.lines_missed,
+            branch_missed=self.branch_missed,
+            path_history=self.path_history,
+            test_dependencies=self.test_dependencies,
+            constraint_solver=self.constraint_solver if self.use_constraints else None,
+            backward_slicer=self.backward_slicer
+        )
 
     def generate_tests(self, g_label, max_tokens=4096, pick_two_paths=True):
         self.prompt = self.build_prompt(self.prompt_type, pick_two_paths)
@@ -611,4 +805,3 @@ class UnitTestGenerator:
                     self.logger.error(f"Error processing failed test runs: {e}")
 
         return fix_results_list, token_count
-    

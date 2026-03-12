@@ -301,7 +301,13 @@ class HITS:
             if not yaml_match:
                 yaml_match = re.search(r'```\s*yaml\s*\n([\s\S]*?)\n```', response, re.IGNORECASE)
 
-            yaml_content = yaml_match.group(1).strip() if yaml_match else response
+            if yaml_match:
+                yaml_content = yaml_match.group(1).strip()
+            else:
+                # Fallback: strip markdown code block markers if present
+                yaml_content = response.strip()
+                yaml_content = re.sub(r'^```yaml\s*\n?', '', yaml_content, flags=re.IGNORECASE)
+                yaml_content = re.sub(r'\n?```\s*$', '', yaml_content)
 
             # Parse YAML
             yaml_data = yaml.safe_load(yaml_content)
@@ -309,16 +315,15 @@ class HITS:
             if not yaml_data or 'single_test' not in yaml_data:
                 # Fallback: try to find any yaml content
                 self.logger.warning("Failed to find 'single_test' in YAML response")
-                return response.strip()
+                return {'single_test': []}
 
             return yaml_data
-
         except yaml.YAMLError as e:
             self.logger.error(f"YAML parse error: {e}")
-            return response.strip()
+            return {'single_test': []}
         except Exception as e:
             self.logger.error(f"Error parsing test code: {e}")
-            return response.strip() if response else ""
+            return {'single_test': []}
 
     def gen_slices(self):
         # Build the prompt for slice generation

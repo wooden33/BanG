@@ -1,0 +1,154 @@
+{
+  "final_line_coverage": 93.33,
+  "final_branch_coverage": 100.0,
+  "final_lines_missed": [
+    121,
+    122,
+    123,
+    152
+  ],
+  "final_branches_missed": [],
+  "detailed_path_history": [
+    {
+      "iteration": 0,
+      "line_coverage": 81.67,
+      "branch_coverage": 70.0,
+      "path_history": {},
+      "lines_missed": [
+        110,
+        121,
+        122,
+        123,
+        136,
+        137,
+        138,
+        139,
+        140,
+        143,
+        152,
+        102,
+        109
+      ],
+      "branches_missed": [
+        136,
+        139,
+        102,
+        109
+      ],
+      "timestamp": 1772537507.9325967
+    },
+    {
+      "iteration": 1,
+      "line_coverage": 93.33,
+      "branch_coverage": 90.0,
+      "path_history": {
+        "getPropertyDescriptors_221_5": 1,
+        "getPropertyDescriptors_221_1": 1,
+        "getPropertyDescriptor_380_2": 1,
+        "getPropertyDescriptor_380_1": 1
+      },
+      "lines_missed": [
+        121,
+        122,
+        123,
+        152,
+        102,
+        136
+      ],
+      "branches_missed": [
+        102,
+        136
+      ],
+      "timestamp": 1772537614.8259547
+    },
+    {
+      "iteration": 2,
+      "line_coverage": 93.33,
+      "branch_coverage": 100.0,
+      "path_history": {
+        "getPropertyDescriptors_221_5": 1,
+        "getPropertyDescriptors_221_1": 1,
+        "getPropertyDescriptor_380_2": 2,
+        "getPropertyDescriptor_380_1": 1,
+        "getPropertyDescriptors_221_12": 1,
+        "getPropertyDescriptor_380_0": 1
+      },
+      "lines_missed": [
+        121,
+        122,
+        123,
+        152
+      ],
+      "branches_missed": [],
+      "timestamp": 1772537654.7754438
+    },
+    {
+      "iteration": 3,
+      "line_coverage": 93.33,
+      "branch_coverage": 100.0,
+      "path_history": {
+        "getPropertyDescriptors_221_5": 1,
+        "getPropertyDescriptors_221_1": 1,
+        "getPropertyDescriptor_380_2": 2,
+        "getPropertyDescriptor_380_1": 1,
+        "getPropertyDescriptors_221_12": 1,
+        "getPropertyDescriptor_380_0": 1,
+        "getPropertyDescriptors_221_7": 1
+      },
+      "lines_missed": [
+        121,
+        122,
+        123,
+        152
+      ],
+      "branches_missed": [],
+      "timestamp": 1772537712.3949394
+    },
+    {
+      "iteration": 4,
+      "line_coverage": 93.33,
+      "branch_coverage": 100.0,
+      "path_history": {
+        "getPropertyDescriptors_221_5": 1,
+        "getPropertyDescriptors_221_1": 1,
+        "getPropertyDescriptor_380_2": 2,
+        "getPropertyDescriptor_380_1": 1,
+        "getPropertyDescriptors_221_12": 1,
+        "getPropertyDescriptor_380_0": 1,
+        "getPropertyDescriptors_221_7": 1,
+        "getPropertyDescriptors_221_10": 1
+      },
+      "lines_missed": [
+        121,
+        122,
+        123,
+        152
+      ],
+      "branches_missed": [],
+      "timestamp": 1772537733.60678
+    },
+    {
+      "iteration": 5,
+      "line_coverage": 93.33,
+      "branch_coverage": 100.0,
+      "path_history": {
+        "getPropertyDescriptors_221_5": 1,
+        "getPropertyDescriptors_221_1": 1,
+        "getPropertyDescriptor_380_2": 2,
+        "getPropertyDescriptor_380_1": 1,
+        "getPropertyDescriptors_221_12": 1,
+        "getPropertyDescriptor_380_0": 1,
+        "getPropertyDescriptors_221_7": 1,
+        "getPropertyDescriptors_221_10": 1
+      },
+      "lines_missed": [
+        121,
+        122,
+        123,
+        152
+      ],
+      "branches_missed": [],
+      "timestamp": 1772537798.140664
+    }
+  ]
+}

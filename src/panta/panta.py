@@ -26,11 +26,11 @@ def get_class_name(file_path):
 class Panta:
     def __init__(self, args):
         self.args = args
-        
+
         # Extract project name from project directory path
         project_name = os.path.basename(args.project_directory.rstrip('/'))
-        
-        
+
+
         pantaLogger.set_log_path(
             prompt_type=args.prompt_type,
             llm_model=args.model,
@@ -38,11 +38,11 @@ class Panta:
             fix_type=args.fix_type,
             use_constraints=args.use_constraints
         )
-        
+
         self.logger = pantaLogger.initialize_logger(__name__)
         self.logger.info(f"Project name: {project_name}")
         self.logger.info(f"Log file path: {pantaLogger.log_file}")
-        
+
         # Build report label with think and mcts flags
         if args.run_symprompt:
             report_parts = ['symprompt', args.model]
@@ -55,13 +55,18 @@ class Panta:
         if args.use_constraints:
             report_parts.append("constraints")
 
+        self.beta = 0.6
+
         # Add mcts flag if fix_type is MCTS
         if args.fix_type == "MCTS":
             report_parts.append("mcts")
             
+        if args.use_backward_slice:
+            report_parts.append("bs")
+
         if args.solver_model:
             report_parts.append(args.solver_model)
-        
+
         self.report_label = "_".join(report_parts)
 
         # Validate and map the model argument before passing it to UnitTestGenerator
@@ -99,14 +104,14 @@ class Panta:
     def extract_test_dependency(self):
         """
         Extract test dependencies by running the test dependency command.
-        
+
         Returns:
             str: The output of the test dependency command, or empty string if failed.
         """
         try:
             stdout, stderr, exit_code, time_of_command, command_duration = (
                 CommandExecutor.run_command(
-                    command=self.args.test_dependency_command, 
+                    command=self.args.test_dependency_command,
                     cwd=self.args.test_code_command_dir
                 )
             )
@@ -124,7 +129,7 @@ class Panta:
     def validate_paths(self):
         """
         Validate that the source code file exists and create test file if needed.
-        
+
         Raises:
             FileNotFoundError: If the source code file is not found.
         """
@@ -138,13 +143,13 @@ class Panta:
             os.makedirs(test_file_dir, exist_ok=True)
 
         # Create an empty test file if it does not exist
-        if (not os.path.isfile(self.args.test_code_file) or 
+        if (not os.path.isfile(self.args.test_code_file) or
             os.path.getsize(self.args.test_code_file) == 0):
             self.initial_test_class_skeleton(test_class_name)
 
     def initial_test_class_skeleton(self, test_class_name):
         """
-        In the case, the test class is empty, we create a test class skeleton 
+        In the case, the test class is empty, we create a test class skeleton
         with basic package, imports and dummy test
         :return:
         """
@@ -221,6 +226,12 @@ class Panta:
                 if int(cur_line_cov) == 0 and int(cur_branch_cov) == 0 or iteration_count == 0:
                     self.logger.info(f"initial tests generation using baseline type of prompt")
                     generated_tests_dict, gen_token_count = self.test_gen.generate_init_tests(g_label, max_tokens=4096)
+                elif self.args.use_backward_slice and no_coverage_increase >= self.beta * self.args.no_coverage_increase_iterations:
+                    backward_results = self.test_gen.generate_tests_by_slice(method_threshold=3, max_tokens=4096)
+                    generated_tests_dict = {"new_tests": []}
+                    for result in backward_results:
+                        generated_tests_dict["new_tests"].extend(result.get("generated_tests", []))
+                    gen_token_count = 0                
                 else:
                     generated_tests_dict, gen_token_count = self.test_gen.generate_tests(g_label, max_tokens=4096,
                                                                         pick_two_paths=self.args.pick_two_paths)
@@ -299,6 +310,9 @@ class Panta:
                 detailed_path_history.append(iteration_path_data)
 
                 iteration_count += 1
+
+                
+                    
         except Exception as e:
             self.logger.error("iteration stops due to error: %s", e)
 
@@ -386,7 +400,7 @@ class Panta:
         generated_tests = symprompt.generated_tests
 
         print('generated_tests', generated_tests)
-        
+
         for method in generated_tests.keys():
             for index, g_test in enumerate(generated_tests[method]):
                 test_result = self.test_gen.validate_test(g_test)
@@ -411,7 +425,7 @@ class Panta:
             report_file = self.args.report_filepath
         else:
             report_file = "_".join(name_list) + ".html"
-        
+
         current_file = os.path.abspath(__file__)
         project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
         report_path = os.path.join(project_root, "result-files", self.report_label)
@@ -421,7 +435,7 @@ class Panta:
         self.logger.info(f"Report generated successfully at: {os.path.join(report_path, report_file)}")
         # Cleanup test file after run
         self.cleanup_test_file()
-        
+
     def run_hits(self):
         test_results_list = []
 
@@ -429,10 +443,10 @@ class Panta:
 
         hits = HITS(project_dir=self.args.project_directory, source_code_file=self.args.source_code_file,
                               llm_model=self.args.model, junit_version=self.args.junit_version)
-        
+
         hits.generate_tests()
         generated_tests = hits.generated_tests
-        
+
         for method_signature in generated_tests.keys():
             for index, g_test in enumerate(generated_tests[method_signature]):
                 test_result = self.test_gen.validate_test(g_test)
@@ -449,8 +463,8 @@ class Panta:
             "line_coverage": round(self.test_gen.current_coverage[0] * 100, 2),
             "branch_coverage": round(self.test_gen.current_coverage[1] * 100, 2)
         }
-        
-        
+
+
         test_results_list.append(info_dict)
         file_name = self.args.source_code_file.split("/")[-1]
         file_name = file_name.split(".")[0]
@@ -459,7 +473,7 @@ class Panta:
             report_file = self.args.report_filepath
         else:
             report_file = "_".join(name_list) + ".html"
-        
+
         current_file = os.path.abspath(__file__)
         project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
         report_path = os.path.join(project_root, "result-files", self.report_label)

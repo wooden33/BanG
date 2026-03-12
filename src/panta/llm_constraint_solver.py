@@ -75,22 +75,28 @@ Generate simple input conditions:
 """
         }
 
-    def _render_prompt(self, source_code: str, path_info: str) -> Dict[str, str]:
+    def _render_prompt(self, source_code: str, path_info: str, first_uncovered_branch: Dict = None) -> Dict[str, str]:
         """
         Render the constraint solving prompt using Jinja2.
 
         Args:
             source_code: Source code of the function under test
             path_info: String representation of the path information
+            first_uncovered_branch: Information about the first uncovered branch
 
         Returns:
             Dict[str, str]: Rendered system and user prompts
         """
+        variables = {
+            "source_code": source_code,
+            "path_info": path_info,
+            "first_uncovered_branch": first_uncovered_branch
+        }
+
+        user_template = self.template["user"]
+
         try:
-            user_prompt = self.jinja_env.from_string(self.template["user"]).render(
-                source_code=source_code,
-                path_info=path_info
-            )
+            user_prompt = self.jinja_env.from_string(user_template).render(**variables)
 
             return {
                 "system": self.template["system"],
@@ -99,18 +105,22 @@ Generate simple input conditions:
         except Exception as e:
             self.logger.error(f"Failed to render constraint solving prompt: {str(e)}")
             # Fallback to basic prompt without Jinja2
+            branch_info = ""
+            if first_uncovered_branch:
+                branch_info = f"\n\nFirst uncovered branch (Line {first_uncovered_branch['line']}): {first_uncovered_branch['statement']} should be {first_uncovered_branch['condition']}"
             return {
                 "system": self.template["system"],
-                "user": f"Analyze this code:\n{source_code}\n\nPath to reach:\n{path_info}\n\nGenerate input conditions:"
+                "user": f"Analyze this code:\n{source_code}\n\nPath to reach:\n{path_info}{branch_info}\n\nGenerate input conditions:"
             }
 
-    def generate_constraints(self, source_code: str, uncovered_path: str) -> str:
+    def generate_constraints(self, source_code: str, uncovered_path: str, first_uncovered_branch: Dict = None) -> str:
         """
         Generate input constraints for a single uncovered path.
 
         Args:
             source_code: Source code of the function under test
             uncovered_path: Detailed information about the uncovered path (from CFG analysis)
+            first_uncovered_branch: Information about the first uncovered branch
 
         Returns:
             str: Generated constraints
@@ -123,8 +133,8 @@ Generate simple input conditions:
             # uncovered_path is already a string, use it directly
             path_info = uncovered_path
 
-            # Render the prompt
-            prompt = self._render_prompt(source_code, path_info)
+            # Render the prompt with first uncovered branch info
+            prompt = self._render_prompt(source_code, path_info, first_uncovered_branch)
             self.logger.debug(f"Generated constraint prompt: {prompt}")
 
             # Call LLM and get response

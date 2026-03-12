@@ -46,6 +46,7 @@ def config_to_namespace(config):
         run_hits=config.getboolean("run_hits"),
         prompt_type=config.get('prompt_type'),
         use_constraints=config.getboolean("use_constraints"),
+        use_backward_slice=config.getboolean("use_backward_slice"),
         fix_type=config.get('fix_type', None),
         pick_two_paths=config.getboolean("pick_two_paths"),
         additional_instructions=config.get('additional_instructions')
